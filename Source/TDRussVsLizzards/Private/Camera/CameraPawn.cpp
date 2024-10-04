@@ -16,6 +16,10 @@ ACameraPawn::ACameraPawn()
 
     CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
     CameraComponent->SetupAttachment(SpringArmComponent);
+
+    FVector StartingCameraLocation(0.0, 0.0, 0.0);
+    FRotator StartingCameraRotation(0.0, 0.0, 0.0);
+    SetActorLocationAndRotation(StartingCameraLocation, StartingCameraRotation.Quaternion());
 }
 
 void ACameraPawn::BeginPlay()
