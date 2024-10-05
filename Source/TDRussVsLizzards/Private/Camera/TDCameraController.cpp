@@ -1,19 +1,24 @@
 // TD Russ Vs Lizzards Game
 
-
 #include "Camera/TDCameraController.h"
 #include "EnhancedInputComponent.h"
 #include "InputActionValue.h"
 #include "EnhancedInputSubsystems.h"
+#include "Camera/CameraPawn.h"
+#include "Kismet/GameplayStatics.h"
+
+DEFINE_LOG_CATEGORY_STATIC(LogCameraController, Display, Display);
 
 ATDCameraController::ATDCameraController() {}
 
-void ATDCameraController::BeginPlay() 
+void ATDCameraController::BeginPlay()
 {
     Super::BeginPlay();
+
+    CameraPawn = Cast<ACameraPawn>(GetPawn());
 }
 
-void ATDCameraController::SetupInputComponent() 
+void ATDCameraController::SetupInputComponent()
 {
     Super::SetupInputComponent();
 
@@ -33,31 +38,70 @@ void ATDCameraController::SetupInputComponent()
     }
     else
     {
-        UE_LOG(LogTemp, Error,
-            TEXT("'%s' Failed to find an Enhanced Input Component! This template is built to use the Enhanced Input system. If you intend "
-                 "to use the legacy system, then you will need to update this C++ file."),
+        UE_LOG(LogCameraController, Error,
+            TEXT(
+                "'%s' Failed to find an Enhanced Input Component! This template is built to use the Enhanced Input system. If you intend "),
             *GetNameSafe(this));
     }
 }
 
-void ATDCameraController::MoveCameraUp() 
+void ATDCameraController::MoveCameraUp()
 {
-    GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, TEXT("UP"));
+
+    if (CameraPawn)
+    {
+        float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
+        CameraPawn->SetActorLocation(CameraPawn->GetActorLocation() + CameraPawn->GetActorForwardVector() * SpeedCamera * DeltaTime);
+    }
+    else
+    {
+        UE_LOG(LogCameraController, Error, TEXT(" Camera pawn not initialize "));
+        checkNoEntry();
+    }
 }
 
-void ATDCameraController::MoveCameraDown() 
+void ATDCameraController::MoveCameraDown()
 {
-    GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, TEXT("DOWN"));
+
+    if (CameraPawn)
+    {
+        float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
+        CameraPawn->SetActorLocation(
+            CameraPawn->GetActorLocation() + CameraPawn->GetActorForwardVector() * -1.0f * SpeedCamera * DeltaTime);
+    }
+    else
+    {
+        UE_LOG(LogCameraController, Error, TEXT(" Camera pawn not initialize "));
+        checkNoEntry();
+    }
 }
 
-void ATDCameraController::MoveCameraRight() 
+void ATDCameraController::MoveCameraRight()
 {
-    GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, TEXT("RIGHT"));
+
+    if (CameraPawn)
+    {
+        float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
+        CameraPawn->SetActorLocation(CameraPawn->GetActorLocation() + CameraPawn->GetActorRightVector() * SpeedCamera * DeltaTime);
+    }
+    else
+    {
+        UE_LOG(LogCameraController, Error, TEXT(" Camera pawn not initialize "));
+        checkNoEntry();
+    }
 }
 
 void ATDCameraController::MoveCameraLeft()
 {
-    GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, TEXT("LEFT"));
+
+    if (CameraPawn)
+    {
+        float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
+        CameraPawn->SetActorLocation(CameraPawn->GetActorLocation() + CameraPawn->GetActorRightVector() * -1.0f * SpeedCamera * DeltaTime);
+    }
+    else
+    {
+        UE_LOG(LogCameraController, Error, TEXT(" Camera pawn not initialize "));
+        checkNoEntry();
+    }
 }
-
-

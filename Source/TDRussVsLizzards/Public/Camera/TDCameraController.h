@@ -21,6 +21,8 @@ protected:
     virtual void BeginPlay() override;
     virtual void SetupInputComponent() override;
 
+    UPROPERTY()
+    APawn* CameraPawn;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
     UInputMappingContext* DefaultMappingContext;
@@ -37,6 +39,8 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
     UInputAction* MoveCameraLeftAction;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Input")
+    float SpeedCamera = 3000.0f;
 
 private:
     void MoveCameraUp();
