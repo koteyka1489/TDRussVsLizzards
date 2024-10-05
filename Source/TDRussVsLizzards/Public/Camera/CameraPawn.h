@@ -33,10 +33,11 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     UCameraComponent* CameraComponent;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Speed")
+    float SpeedCamera = 200.f;
+
 
 private:
-    void MoveCameraUp();
-    void MoveCameraDown();
-    void MoveCameraRight();
-    void MoveCameraLeft();
+    void MoveCameraUp(float Amount);
+    void MoveCameraRight(float Amount);
 };

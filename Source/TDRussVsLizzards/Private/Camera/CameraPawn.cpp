@@ -35,28 +35,25 @@ void ACameraPawn::Tick(float DeltaTime)
 void ACameraPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
-    PlayerInputComponent->BindAction("Up", EInputEvent::IE_Pressed, this, &ACameraPawn::MoveCameraUp);
-    PlayerInputComponent->BindAction("Down", EInputEvent::IE_Pressed, this, &ACameraPawn::MoveCameraDown);
-    PlayerInputComponent->BindAction("Right", EInputEvent::IE_Pressed, this, &ACameraPawn::MoveCameraRight);
-    PlayerInputComponent->BindAction("Left", EInputEvent::IE_Pressed, this, &ACameraPawn::MoveCameraLeft);
+    PlayerInputComponent->BindAxis("MoveUp", this, &ACameraPawn::MoveCameraUp);
+    PlayerInputComponent->BindAxis("MoveRight", this, &ACameraPawn::MoveCameraRight);
 }
 
-void ACameraPawn::MoveCameraUp() 
+void ACameraPawn::MoveCameraUp(float Amount)
 {
-    GEngine->AddOnScreenDebugMessage(1, 3, FColor::Red, TEXT("UP"));
+    GEngine->AddOnScreenDebugMessage(1, 0.5, FColor::Red, TEXT("UP"));
+
+    FVector NewLocation = GetActorLocation() + GetActorForwardVector() * Amount * SpeedCamera;
+    SetActorLocation(NewLocation);
 }
 
-void ACameraPawn::MoveCameraDown()
+
+
+void ACameraPawn::MoveCameraRight(float Amount)
 {
-    GEngine->AddOnScreenDebugMessage(1, 3, FColor::Red, TEXT("Down"));
+    GEngine->AddOnScreenDebugMessage(2, 0.5, FColor::Red, TEXT("Right"));
+
+    FVector NewLocation = GetActorLocation() + GetActorRightVector() * Amount * SpeedCamera;
+    SetActorLocation(NewLocation);
 }
 
-void ACameraPawn::MoveCameraRight()
-{
-    GEngine->AddOnScreenDebugMessage(1, 3, FColor::Red, TEXT("Right"));
-}
-
-void ACameraPawn::MoveCameraLeft()
-{
-    GEngine->AddOnScreenDebugMessage(1, 3, FColor::Red, TEXT("Left"));
-}
