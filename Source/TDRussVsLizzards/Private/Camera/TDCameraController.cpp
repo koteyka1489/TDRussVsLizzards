@@ -3,3 +3,6 @@
 
 #include "Camera/TDCameraController.h"
 
+ATDCameraController::ATDCameraController() {}
+
+

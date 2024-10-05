@@ -33,9 +33,10 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     UCameraComponent* CameraComponent;
 
-    
 
 private:
-
-
+    void MoveCameraUp();
+    void MoveCameraDown();
+    void MoveCameraRight();
+    void MoveCameraLeft();
 };

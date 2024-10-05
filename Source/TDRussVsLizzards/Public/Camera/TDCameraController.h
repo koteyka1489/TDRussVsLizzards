@@ -7,11 +7,17 @@
 #include "TDCameraController.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class TDRUSSVSLIZZARDS_API ATDCameraController : public APlayerController
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
+
+public:
+    ATDCameraController();
+
+private:
+
+
 };

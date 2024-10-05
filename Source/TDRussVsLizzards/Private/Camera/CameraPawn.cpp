@@ -35,4 +35,28 @@ void ACameraPawn::Tick(float DeltaTime)
 void ACameraPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
+    PlayerInputComponent->BindAction("Up", EInputEvent::IE_Pressed, this, &ACameraPawn::MoveCameraUp);
+    PlayerInputComponent->BindAction("Down", EInputEvent::IE_Pressed, this, &ACameraPawn::MoveCameraDown);
+    PlayerInputComponent->BindAction("Right", EInputEvent::IE_Pressed, this, &ACameraPawn::MoveCameraRight);
+    PlayerInputComponent->BindAction("Left", EInputEvent::IE_Pressed, this, &ACameraPawn::MoveCameraLeft);
+}
+
+void ACameraPawn::MoveCameraUp() 
+{
+    GEngine->AddOnScreenDebugMessage(1, 3, FColor::Red, TEXT("UP"));
+}
+
+void ACameraPawn::MoveCameraDown()
+{
+    GEngine->AddOnScreenDebugMessage(1, 3, FColor::Red, TEXT("Down"));
+}
+
+void ACameraPawn::MoveCameraRight()
+{
+    GEngine->AddOnScreenDebugMessage(1, 3, FColor::Red, TEXT("Right"));
+}
+
+void ACameraPawn::MoveCameraLeft()
+{
+    GEngine->AddOnScreenDebugMessage(1, 3, FColor::Red, TEXT("Left"));
 }
