@@ -22,9 +22,6 @@ void ACameraPawn::BeginPlay()
 {
     Super::BeginPlay();
 
-    FVector StartingCameraLocation(0.0, 0.0, 1200.0);
-    FRotator StartingCameraRotation(0.0, 0.0, 0.0);
-    SetActorLocationAndRotation(StartingCameraLocation, StartingCameraRotation.Quaternion());
 }
 
 void ACameraPawn::Tick(float DeltaTime)
