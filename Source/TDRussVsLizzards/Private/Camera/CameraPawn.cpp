@@ -16,15 +16,15 @@ ACameraPawn::ACameraPawn()
 
     CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
     CameraComponent->SetupAttachment(SpringArmComponent);
-
-    FVector StartingCameraLocation(0.0, 0.0, 0.0);
-    FRotator StartingCameraRotation(0.0, 0.0, 0.0);
-    SetActorLocationAndRotation(StartingCameraLocation, StartingCameraRotation.Quaternion());
 }
 
 void ACameraPawn::BeginPlay()
 {
     Super::BeginPlay();
+
+    FVector StartingCameraLocation(0.0, 0.0, 1200.0);
+    FRotator StartingCameraRotation(0.0, 0.0, 0.0);
+    SetActorLocationAndRotation(StartingCameraLocation, StartingCameraRotation.Quaternion());
 }
 
 void ACameraPawn::Tick(float DeltaTime)
@@ -47,8 +47,6 @@ void ACameraPawn::MoveCameraUp(float Amount)
     SetActorLocation(NewLocation);
 }
 
-
-
 void ACameraPawn::MoveCameraRight(float Amount)
 {
     GEngine->AddOnScreenDebugMessage(2, 0.5, FColor::Red, TEXT("Right"));
@@ -56,4 +54,3 @@ void ACameraPawn::MoveCameraRight(float Amount)
     FVector NewLocation = GetActorLocation() + GetActorRightVector() * Amount * SpeedCamera;
     SetActorLocation(NewLocation);
 }
-
