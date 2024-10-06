@@ -50,11 +50,9 @@ protected:
     float SpeedCamera = 3000.0f;
 
 private:
-    void MoveCameraUp();
-    void MoveCameraDown();
-    void MoveCameraRight();
-    void MoveCameraLeft();
-    void ZoomUpCamera(const FInputActionValue& Value);
-    void ZoomDownCamera(const FInputActionValue& Value);
+    void MoveCameraUpDown(const FInputActionValue& Value);
+    void MoveCameraRightLeft(const FInputActionValue& Value);
+    void ZoomUpAction(const FInputActionValue& Value);
+
 
 };

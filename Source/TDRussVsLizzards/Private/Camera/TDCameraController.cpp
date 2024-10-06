@@ -31,12 +31,12 @@ void ATDCameraController::SetupInputComponent()
     // Set up action bindings
     if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent))
     {
-        EnhancedInputComponent->BindAction(MoveCameraUpAction, ETriggerEvent::Triggered, this, &ATDCameraController::MoveCameraUp);
-        EnhancedInputComponent->BindAction(MoveCameraDownAction, ETriggerEvent::Triggered, this, &ATDCameraController::MoveCameraDown);
-        EnhancedInputComponent->BindAction(MoveCameraRightAction, ETriggerEvent::Triggered, this, &ATDCameraController::MoveCameraRight);
-        EnhancedInputComponent->BindAction(MoveCameraLeftAction, ETriggerEvent::Triggered, this, &ATDCameraController::MoveCameraLeft);
-        EnhancedInputComponent->BindAction(ZoomUpCameraAction, ETriggerEvent::Triggered, this, &ATDCameraController::ZoomUpCamera);
-        EnhancedInputComponent->BindAction(ZoomDownCameraAction, ETriggerEvent::Triggered, this, &ATDCameraController::ZoomDownCamera);
+        EnhancedInputComponent->BindAction(MoveCameraUpAction, ETriggerEvent::Triggered, this, &ATDCameraController::MoveCameraUpDown);
+        EnhancedInputComponent->BindAction(MoveCameraDownAction, ETriggerEvent::Triggered, this, &ATDCameraController::MoveCameraUpDown);
+        EnhancedInputComponent->BindAction(MoveCameraRightAction, ETriggerEvent::Triggered, this, &ATDCameraController::MoveCameraRightLeft);
+        EnhancedInputComponent->BindAction(MoveCameraLeftAction, ETriggerEvent::Triggered, this, &ATDCameraController::MoveCameraRightLeft);
+        EnhancedInputComponent->BindAction(ZoomUpCameraAction, ETriggerEvent::Triggered, this, &ATDCameraController::ZoomUpAction);
+        EnhancedInputComponent->BindAction(ZoomDownCameraAction, ETriggerEvent::Triggered, this, &ATDCameraController::ZoomUpAction);
 
     }
     else
@@ -48,29 +48,14 @@ void ATDCameraController::SetupInputComponent()
     }
 }
 
-void ATDCameraController::MoveCameraUp()
-{
-
-    if (CameraPawn)
-    {
-        float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
-        CameraPawn->SetActorLocation(CameraPawn->GetActorLocation() + CameraPawn->GetActorForwardVector() * SpeedCamera * DeltaTime);
-    }
-    else
-    {
-        UE_LOG(LogCameraController, Error, TEXT(" Camera pawn not initialize "));
-        checkNoEntry();
-    }
-}
-
-void ATDCameraController::MoveCameraDown()
+void ATDCameraController::MoveCameraUpDown(const FInputActionValue& Value)
 {
 
     if (CameraPawn)
     {
         float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
         CameraPawn->SetActorLocation(
-            CameraPawn->GetActorLocation() + CameraPawn->GetActorForwardVector() * -1.0f * SpeedCamera * DeltaTime);
+            CameraPawn->GetActorLocation() + CameraPawn->GetActorForwardVector() * Value.Get<float>() * SpeedCamera * DeltaTime);
     }
     else
     {
@@ -79,13 +64,16 @@ void ATDCameraController::MoveCameraDown()
     }
 }
 
-void ATDCameraController::MoveCameraRight()
+
+
+void ATDCameraController::MoveCameraRightLeft(const FInputActionValue& Value)
 {
 
     if (CameraPawn)
     {
         float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
-        CameraPawn->SetActorLocation(CameraPawn->GetActorLocation() + CameraPawn->GetActorRightVector() * SpeedCamera * DeltaTime);
+        CameraPawn->SetActorLocation(
+            CameraPawn->GetActorLocation() + CameraPawn->GetActorRightVector() * Value.Get<float>() * SpeedCamera * DeltaTime);
     }
     else
     {
@@ -94,31 +82,11 @@ void ATDCameraController::MoveCameraRight()
     }
 }
 
-void ATDCameraController::MoveCameraLeft()
-{
 
-    if (CameraPawn)
-    {
-        float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
-        CameraPawn->SetActorLocation(CameraPawn->GetActorLocation() + CameraPawn->GetActorRightVector() * -1.0f * SpeedCamera * DeltaTime);
-    }
-    else
-    {
-        UE_LOG(LogCameraController, Error, TEXT(" Camera pawn not initialize "));
-        checkNoEntry();
-    }
-}
-
-void ATDCameraController::ZoomUpCamera(const FInputActionValue& Value)
+void ATDCameraController::ZoomUpAction(const FInputActionValue& Value)
 {
     float val = Value.Get<float>();
     FString message = FString::Printf(TEXT("ZOOM UP %f"), val);
     GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, message);
 }
 
-void ATDCameraController::ZoomDownCamera(const FInputActionValue& Value)
-{
-    float val1 = Value.Get<float>();
-    FString message = FString::Printf(TEXT("ZOOM Down %f"), val1);
-    GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, message);
-}
