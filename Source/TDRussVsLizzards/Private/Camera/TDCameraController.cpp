@@ -12,6 +12,11 @@ ATDCameraController::ATDCameraController() {}
 void ATDCameraController::BeginPlay()
 {
     Super::BeginPlay();
+    bShowMouseCursor       = true;
+    bEnableClickEvents     = true;
+    bEnableMouseOverEvents = true;
+
+    
 }
 
 void ATDCameraController::SetupInputComponent()
@@ -82,14 +87,14 @@ void ATDCameraController::ZoomUpAction(const FInputActionValue& Value)
     }
 }
 
-void ATDCameraController::RotateCamera(const FInputActionValue& Value) 
+void ATDCameraController::RotateCamera(const FInputActionValue& Value)
 {
     if (OnRotateCamera.ExecuteIfBound(Value.Get<float>()))
-    {}
+    {
+    }
     else
     {
         UE_LOG(LogCameraController, Error, TEXT(" OnRotateCamera Delegate is not bound "));
         checkNoEntry();
     }
-
 }
