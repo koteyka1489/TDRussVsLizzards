@@ -19,7 +19,7 @@ ACameraPawn::ACameraPawn()
     CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
     CameraComponent->SetupAttachment(SpringArmComponent);
 
-    SpringArmComponent->TargetArmLength = 3000.0f;
+    SpringArmComponent->TargetArmLength = ZoomStart;
 }
 
 void ACameraPawn::BeginPlay()
