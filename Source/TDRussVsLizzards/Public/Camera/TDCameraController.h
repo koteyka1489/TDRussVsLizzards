@@ -29,7 +29,6 @@ protected:
     virtual void BeginPlay() override;
     virtual void SetupInputComponent() override;
 
-
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
     UInputMappingContext* DefaultMappingContext;
 
@@ -51,12 +50,15 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
     UInputAction* ZoomDownCameraAction;
 
-    
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+    UInputAction* RotateRightCameraAction;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+    UInputAction* RotateLeftCameraAction;
 
 private:
     void MoveCameraUpDown(const FInputActionValue& Value);
     void MoveCameraRightLeft(const FInputActionValue& Value);
     void ZoomUpAction(const FInputActionValue& Value);
-
-
+    void RotateCamera(const FInputActionValue& Value);
 };

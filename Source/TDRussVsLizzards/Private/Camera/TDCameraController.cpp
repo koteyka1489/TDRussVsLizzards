@@ -34,6 +34,8 @@ void ATDCameraController::SetupInputComponent()
         EnhancedInputComponent->BindAction(MoveCameraLeftAction, ETriggerEvent::Triggered, this, &ATDCameraController::MoveCameraRightLeft);
         EnhancedInputComponent->BindAction(ZoomUpCameraAction, ETriggerEvent::Triggered, this, &ATDCameraController::ZoomUpAction);
         EnhancedInputComponent->BindAction(ZoomDownCameraAction, ETriggerEvent::Triggered, this, &ATDCameraController::ZoomUpAction);
+        EnhancedInputComponent->BindAction(RotateRightCameraAction, ETriggerEvent::Triggered, this, &ATDCameraController::RotateCamera);
+        EnhancedInputComponent->BindAction(RotateLeftCameraAction, ETriggerEvent::Triggered, this, &ATDCameraController::RotateCamera);
     }
     else
     {
@@ -78,4 +80,10 @@ void ATDCameraController::ZoomUpAction(const FInputActionValue& Value)
         UE_LOG(LogCameraController, Error, TEXT(" OnZoomChanged Delegate is not bound "));
         checkNoEntry();
     }
+}
+
+void ATDCameraController::RotateCamera(const FInputActionValue& Value) 
+{
+    FString Message = FString::Printf(TEXT("Rotate Value %f"), Value.Get<float>());
+    GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, Message);
 }
