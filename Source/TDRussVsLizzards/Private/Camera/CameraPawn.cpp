@@ -32,6 +32,7 @@ void ACameraPawn::BeginPlay()
         CameraController->OnZoomChanged.BindUObject(this, &ACameraPawn::OnZoomChanged);
         CameraController->OnMoveCameraUpDown.BindUObject(this, &ACameraPawn::OnMoveCameraUpDown);
         CameraController->OnMoveCameraRightLeft.BindUObject(this, &ACameraPawn::OnMoveCameraRightLeft);
+        CameraController->OnRotateCamera.BindUObject(this, &ACameraPawn::OnRotateCamera);
     }
 }
 
@@ -47,7 +48,8 @@ void ACameraPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void ACameraPawn::OnZoomChanged(float Direction)
 {
-    float ArmLengthOffset = SpeedZoom * Direction;
+    float DeltaTime                     = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
+    float ArmLengthOffset               = SpeedZoom * Direction * DeltaTime;
     SpringArmComponent->TargetArmLength = FMath::Clamp(SpringArmComponent->TargetArmLength += ArmLengthOffset, ZoomMin, ZoomMax);
 }
 
@@ -61,4 +63,11 @@ void ACameraPawn::OnMoveCameraRightLeft(float Direction)
 {
     float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
     SetActorLocation(GetActorLocation() + GetActorRightVector() * Direction * SpeedCamera * DeltaTime);
+}
+
+void ACameraPawn::OnRotateCamera(float Direction) 
+{
+    float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
+    FRotator NewRotate = GetActorRotation() + FRotator(0.0f, Direction * SpeedRotateCamera * DeltaTime, 0.0f);
+    SetActorRotation(NewRotate);
 }

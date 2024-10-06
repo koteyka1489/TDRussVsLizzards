@@ -84,6 +84,12 @@ void ATDCameraController::ZoomUpAction(const FInputActionValue& Value)
 
 void ATDCameraController::RotateCamera(const FInputActionValue& Value) 
 {
-    FString Message = FString::Printf(TEXT("Rotate Value %f"), Value.Get<float>());
-    GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, Message);
+    if (OnRotateCamera.ExecuteIfBound(Value.Get<float>()))
+    {}
+    else
+    {
+        UE_LOG(LogCameraController, Error, TEXT(" OnRotateCamera Delegate is not bound "));
+        checkNoEntry();
+    }
+
 }

@@ -13,6 +13,8 @@ struct FInputActionValue;
 DECLARE_DELEGATE_OneParam(FOnZoomChanged, float);
 DECLARE_DELEGATE_OneParam(FOnMoveCameraUpDown, float);
 DECLARE_DELEGATE_OneParam(FOnMoveCameraRightLeft, float);
+DECLARE_DELEGATE_OneParam(FOnRotateCamera, float);
+
 
 UCLASS()
 class TDRUSSVSLIZZARDS_API ATDCameraController : public APlayerController
@@ -21,9 +23,12 @@ class TDRUSSVSLIZZARDS_API ATDCameraController : public APlayerController
 
 public:
     ATDCameraController();
+
+    // Delegates
     FOnZoomChanged OnZoomChanged;
     FOnMoveCameraUpDown OnMoveCameraUpDown;
     FOnMoveCameraRightLeft OnMoveCameraRightLeft;
+    FOnRotateCamera OnRotateCamera;
 
 protected:
     virtual void BeginPlay() override;

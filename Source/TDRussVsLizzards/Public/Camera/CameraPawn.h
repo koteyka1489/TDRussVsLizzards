@@ -39,13 +39,17 @@ protected:
     float ZoomMax = 5000.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-    float SpeedZoom = 100.0f;
+    float SpeedZoom = 2000.0f;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Camera")
     float SpeedCamera = 3000.0f;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Camera")
+    float SpeedRotateCamera = 100.0f;
 
 private:
     void OnZoomChanged(float Direction);
     void OnMoveCameraUpDown(float Direction);
     void OnMoveCameraRightLeft(float Direction);
+    void OnRotateCamera(float Direction);
 };
