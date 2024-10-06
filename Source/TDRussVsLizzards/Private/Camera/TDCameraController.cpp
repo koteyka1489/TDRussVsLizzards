@@ -41,6 +41,9 @@ void ATDCameraController::SetupInputComponent()
         EnhancedInputComponent->BindAction(ZoomDownCameraAction, ETriggerEvent::Triggered, this, &ATDCameraController::ZoomUpAction);
         EnhancedInputComponent->BindAction(RotateRightCameraAction, ETriggerEvent::Triggered, this, &ATDCameraController::RotateCamera);
         EnhancedInputComponent->BindAction(RotateLeftCameraAction, ETriggerEvent::Triggered, this, &ATDCameraController::RotateCamera);
+
+        EnhancedInputComponent->BindAction(
+            SetHeroDestinationAction, ETriggerEvent::Triggered, this, &ATDCameraController::SetHeroDestinationTriggered);
     }
     else
     {
@@ -97,4 +100,31 @@ void ATDCameraController::RotateCamera(const FInputActionValue& Value)
         UE_LOG(LogCameraController, Error, TEXT(" OnRotateCamera Delegate is not bound "));
         checkNoEntry();
     }
+}
+
+void ATDCameraController::SetHeroDestinationTriggered()
+{
+    std::pair<bool, FVector> HitResultAction = GetHeroDestination();
+    bool bHitSuccessfull                      = HitResultAction.first;
+    FVector HeroDestination                  = HitResultAction.second;
+    if (OnSetHeroDestination.ExecuteIfBound(bHitSuccessfull, HeroDestination))
+    {
+    }
+    else
+    {
+        UE_LOG(LogCameraController, Error, TEXT(" OnSetHeroDestination Delegate is not bound "));
+        checkNoEntry();
+    }
+}
+
+std::pair<bool, FVector> ATDCameraController::GetHeroDestination()
+{
+    FHitResult Hit;
+    bool bHitSuccessful = false;
+    bHitSuccessful      = GetHitResultUnderFinger(ETouchIndex::Touch1, ECollisionChannel::ECC_Visibility, true, Hit);
+    if (bHitSuccessful)
+    {
+        return {bHitSuccessful, Hit.Location};
+    }
+    return {bHitSuccessful, FVector{}};
 }

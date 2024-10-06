@@ -14,6 +14,7 @@ DECLARE_DELEGATE_OneParam(FOnZoomChanged, float);
 DECLARE_DELEGATE_OneParam(FOnMoveCameraUpDown, float);
 DECLARE_DELEGATE_OneParam(FOnMoveCameraRightLeft, float);
 DECLARE_DELEGATE_OneParam(FOnRotateCamera, float);
+DECLARE_DELEGATE_TwoParams(FOnSetHeroDestination, bool, FVector);
 
 
 UCLASS()
@@ -29,6 +30,7 @@ public:
     FOnMoveCameraUpDown OnMoveCameraUpDown;
     FOnMoveCameraRightLeft OnMoveCameraRightLeft;
     FOnRotateCamera OnRotateCamera;
+    FOnSetHeroDestination OnSetHeroDestination;
 
 protected:
     virtual void BeginPlay() override;
@@ -61,9 +63,15 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
     UInputAction* RotateLeftCameraAction;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+    UInputAction* SetHeroDestinationAction;
+
 private:
+
     void MoveCameraUpDown(const FInputActionValue& Value);
     void MoveCameraRightLeft(const FInputActionValue& Value);
     void ZoomUpAction(const FInputActionValue& Value);
     void RotateCamera(const FInputActionValue& Value);
+    void SetHeroDestinationTriggered();
+    std::pair<bool, FVector> GetHeroDestination();
 };

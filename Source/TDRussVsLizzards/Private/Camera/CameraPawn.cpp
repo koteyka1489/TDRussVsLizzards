@@ -71,3 +71,4 @@ void ACameraPawn::OnRotateCamera(float Direction)
     FRotator NewRotate = GetActorRotation() + FRotator(0.0f, Direction * SpeedRotateCamera * DeltaTime, 0.0f);
     SetActorRotation(NewRotate);
 }
+
