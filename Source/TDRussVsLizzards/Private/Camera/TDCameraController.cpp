@@ -9,6 +9,7 @@
 
 DEFINE_LOG_CATEGORY_STATIC(LogCameraController, Display, Display);
 
+
 ATDCameraController::ATDCameraController() {}
 
 void ATDCameraController::BeginPlay()
@@ -85,8 +86,6 @@ void ATDCameraController::MoveCameraRightLeft(const FInputActionValue& Value)
 
 void ATDCameraController::ZoomUpAction(const FInputActionValue& Value)
 {
-    float val = Value.Get<float>();
-    FString message = FString::Printf(TEXT("ZOOM UP %f"), val);
-    GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, message);
+    OnZoomChanged.ExecuteIfBound(Value.Get<float>());
 }
 

@@ -10,6 +10,8 @@ class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
 
+DECLARE_DELEGATE_OneParam(FOnZoomChanged, float);
+
 UCLASS()
 class TDRUSSVSLIZZARDS_API ATDCameraController : public APlayerController
 {
@@ -17,6 +19,7 @@ class TDRUSSVSLIZZARDS_API ATDCameraController : public APlayerController
 
 public:
     ATDCameraController();
+    FOnZoomChanged OnZoomChanged;
 
 protected:
     virtual void BeginPlay() override;

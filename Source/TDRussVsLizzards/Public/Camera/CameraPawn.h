@@ -23,7 +23,6 @@ public:
 protected:
     virtual void BeginPlay() override;
 
-    
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     USceneComponent* SceneComponent;
 
@@ -33,4 +32,15 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     UCameraComponent* CameraComponent;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Zoom")
+    float ZoomMin = 200.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Zoom")
+    float ZoomMax = 5000.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Zoom")
+    float SpeedZoom = 100.0f;
+
+private:
+    void OnZoomChanged(float Direction);
 };

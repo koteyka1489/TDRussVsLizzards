@@ -3,6 +3,7 @@
 #include "Camera/CameraPawn.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Camera/TDCameraController.h"
 
 ACameraPawn::ACameraPawn()
 {
@@ -17,7 +18,6 @@ ACameraPawn::ACameraPawn()
     CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
     CameraComponent->SetupAttachment(SpringArmComponent);
 
-
     SpringArmComponent->TargetArmLength = 3000.0f;
 }
 
@@ -25,6 +25,11 @@ void ACameraPawn::BeginPlay()
 {
     Super::BeginPlay();
 
+    auto CameraController = Cast<ATDCameraController>(GetController());
+    if (CameraController)
+    {
+        CameraController->OnZoomChanged.BindUObject(this, &ACameraPawn::OnZoomChanged);
+    }
 }
 
 void ACameraPawn::Tick(float DeltaTime)
@@ -35,6 +40,11 @@ void ACameraPawn::Tick(float DeltaTime)
 void ACameraPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
 
+void ACameraPawn::OnZoomChanged(float Direction)
+{
+    float ArmLengthOffset = SpeedZoom * Direction;
+
+    SpringArmComponent->TargetArmLength = FMath::Clamp(SpringArmComponent->TargetArmLength += ArmLengthOffset, ZoomMin, ZoomMax);
+}
