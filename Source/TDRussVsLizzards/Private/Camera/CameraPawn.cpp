@@ -4,6 +4,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/TDCameraController.h"
+#include "Kismet/GameplayStatics.h"
 
 ACameraPawn::ACameraPawn()
 {
@@ -29,6 +30,8 @@ void ACameraPawn::BeginPlay()
     if (CameraController)
     {
         CameraController->OnZoomChanged.BindUObject(this, &ACameraPawn::OnZoomChanged);
+        CameraController->OnMoveCameraUpDown.BindUObject(this, &ACameraPawn::OnMoveCameraUpDown);
+        CameraController->OnMoveCameraRightLeft.BindUObject(this, &ACameraPawn::OnMoveCameraRightLeft);
     }
 }
 
@@ -45,6 +48,17 @@ void ACameraPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 void ACameraPawn::OnZoomChanged(float Direction)
 {
     float ArmLengthOffset = SpeedZoom * Direction;
-
     SpringArmComponent->TargetArmLength = FMath::Clamp(SpringArmComponent->TargetArmLength += ArmLengthOffset, ZoomMin, ZoomMax);
+}
+
+void ACameraPawn::OnMoveCameraUpDown(float Direction)
+{
+    float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
+    SetActorLocation(GetActorLocation() + GetActorForwardVector() * Direction * SpeedCamera * DeltaTime);
+}
+
+void ACameraPawn::OnMoveCameraRightLeft(float Direction)
+{
+    float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
+    SetActorLocation(GetActorLocation() + GetActorRightVector() * Direction * SpeedCamera * DeltaTime);
 }

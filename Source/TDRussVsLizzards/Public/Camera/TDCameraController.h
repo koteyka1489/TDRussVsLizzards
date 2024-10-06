@@ -11,6 +11,8 @@ class UInputAction;
 struct FInputActionValue;
 
 DECLARE_DELEGATE_OneParam(FOnZoomChanged, float);
+DECLARE_DELEGATE_OneParam(FOnMoveCameraUpDown, float);
+DECLARE_DELEGATE_OneParam(FOnMoveCameraRightLeft, float);
 
 UCLASS()
 class TDRUSSVSLIZZARDS_API ATDCameraController : public APlayerController
@@ -20,13 +22,13 @@ class TDRUSSVSLIZZARDS_API ATDCameraController : public APlayerController
 public:
     ATDCameraController();
     FOnZoomChanged OnZoomChanged;
+    FOnMoveCameraUpDown OnMoveCameraUpDown;
+    FOnMoveCameraRightLeft OnMoveCameraRightLeft;
 
 protected:
     virtual void BeginPlay() override;
     virtual void SetupInputComponent() override;
 
-    UPROPERTY()
-    APawn* CameraPawn;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
     UInputMappingContext* DefaultMappingContext;
@@ -49,8 +51,7 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
     UInputAction* ZoomDownCameraAction;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Input")
-    float SpeedCamera = 3000.0f;
+    
 
 private:
     void MoveCameraUpDown(const FInputActionValue& Value);

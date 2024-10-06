@@ -32,15 +32,20 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     UCameraComponent* CameraComponent;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Zoom")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
     float ZoomMin = 200.0f;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Zoom")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
     float ZoomMax = 5000.0f;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Zoom")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
     float SpeedZoom = 100.0f;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Camera")
+    float SpeedCamera = 3000.0f;
 
 private:
     void OnZoomChanged(float Direction);
+    void OnMoveCameraUpDown(float Direction);
+    void OnMoveCameraRightLeft(float Direction);
 };
