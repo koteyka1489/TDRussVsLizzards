@@ -8,6 +8,7 @@
 
 class UInputMappingContext;
 class UInputAction;
+struct FInputActionValue;
 
 UCLASS()
 class TDRUSSVSLIZZARDS_API ATDCameraController : public APlayerController
@@ -39,6 +40,12 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
     UInputAction* MoveCameraLeftAction;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+    UInputAction* ZoomUpCameraAction;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+    UInputAction* ZoomDownCameraAction;
+
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Input")
     float SpeedCamera = 3000.0f;
 
@@ -47,4 +54,7 @@ private:
     void MoveCameraDown();
     void MoveCameraRight();
     void MoveCameraLeft();
+    void ZoomUpCamera(const FInputActionValue& Value);
+    void ZoomDownCamera(const FInputActionValue& Value);
+
 };
