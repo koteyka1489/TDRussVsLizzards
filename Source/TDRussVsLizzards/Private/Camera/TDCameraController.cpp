@@ -4,6 +4,7 @@
 #include "EnhancedInputComponent.h"
 #include "InputActionValue.h"
 #include "EnhancedInputSubsystems.h"
+#include "DrawDebugHelpers.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogCameraController, Display, Display);
 
@@ -15,8 +16,6 @@ void ATDCameraController::BeginPlay()
     bShowMouseCursor       = true;
     bEnableClickEvents     = true;
     bEnableMouseOverEvents = true;
-
-    
 }
 
 void ATDCameraController::SetupInputComponent()
@@ -104,10 +103,7 @@ void ATDCameraController::RotateCamera(const FInputActionValue& Value)
 
 void ATDCameraController::SetHeroDestinationTriggered()
 {
-    std::pair<bool, FVector> HitResultAction = GetHeroDestination();
-    bool bHitSuccessfull                      = HitResultAction.first;
-    FVector HeroDestination                  = HitResultAction.second;
-    if (OnSetHeroDestination.ExecuteIfBound(bHitSuccessfull, HeroDestination))
+    if (OnSetHeroDestination.ExecuteIfBound(GetHeroDestination()))
     {
     }
     else
@@ -117,14 +113,35 @@ void ATDCameraController::SetHeroDestinationTriggered()
     }
 }
 
-std::pair<bool, FVector> ATDCameraController::GetHeroDestination()
+FVector ATDCameraController::GetHeroDestination()
 {
     FHitResult Hit;
     bool bHitSuccessful = false;
-    bHitSuccessful      = GetHitResultUnderFinger(ETouchIndex::Touch1, ECollisionChannel::ECC_Visibility, true, Hit);
+    FVector MouseWorldLocation{};
+    FVector MouseWorldDirection{};
+
+    bHitSuccessful = DeprojectMousePositionToWorld(MouseWorldLocation, MouseWorldDirection);
     if (bHitSuccessful)
     {
-        return {bHitSuccessful, Hit.Location};
+        FVector TraceEnd = MouseWorldLocation + MouseWorldDirection * 20000;
+        bHitSuccessful   = GetWorld()->LineTraceSingleByChannel(Hit, MouseWorldLocation, TraceEnd, ECollisionChannel::ECC_Visibility);
+        DrawDebugLine(GetWorld(), MouseWorldLocation, TraceEnd, FColor::Red, false, 3.0f);
+        if (bHitSuccessful)
+        {
+            return Hit.Location;
+        }
+        else
+        {
+            UE_LOG(LogCameraController, Error, TEXT(" No HIT"));
+            checkNoEntry();
+        }
     }
-    return {bHitSuccessful, FVector{}};
+    else
+    {
+        UE_LOG(LogCameraController, Error, TEXT(" Unable to determine value Mouse Click"));
+        checkNoEntry();
+    }
+    Hit.Location;
+
+    return FVector::Zero();
 }

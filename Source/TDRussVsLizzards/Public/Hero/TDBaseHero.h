@@ -21,6 +21,6 @@ protected:
 
 
 	private:
-    void OnSetHeroDestination(bool OnHitSucefull, FVector HeroDestination);
+    void OnSetHeroDestination(FVector HeroDestination);
 
 };

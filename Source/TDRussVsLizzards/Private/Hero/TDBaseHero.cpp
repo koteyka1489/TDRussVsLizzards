@@ -35,28 +35,15 @@ void ATDBaseHero::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 }
 
-// Called to bind functionality to input
 void ATDBaseHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-void ATDBaseHero::OnSetHeroDestination(bool OnHitSucefull, FVector HeroDestination) 
+void ATDBaseHero::OnSetHeroDestination( FVector HeroDestination) 
 {
-    auto MovementComponent = GetMovementComponent();
-    FString Message        = FString::Printf(TEXT("OnHitSucefull - %s"), OnHitSucefull ? TEXT("TRUE") : TEXT("FALSE"));
-    GEngine->AddOnScreenDebugMessage(0, 1, FColor::Red, Message);
 
     FString Message1 = FString::Printf(TEXT("VECTOR DESTINATION - %s"), *HeroDestination.ToString());
     GEngine->AddOnScreenDebugMessage(1, 1, FColor::Red, Message1);
 
-    if (OnHitSucefull)
-    {
-
-    }
-    else
-    {
-        
-
-    }
 }

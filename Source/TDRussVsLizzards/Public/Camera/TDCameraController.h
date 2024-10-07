@@ -14,7 +14,7 @@ DECLARE_DELEGATE_OneParam(FOnZoomChanged, float);
 DECLARE_DELEGATE_OneParam(FOnMoveCameraUpDown, float);
 DECLARE_DELEGATE_OneParam(FOnMoveCameraRightLeft, float);
 DECLARE_DELEGATE_OneParam(FOnRotateCamera, float);
-DECLARE_DELEGATE_TwoParams(FOnSetHeroDestination, bool, FVector);
+DECLARE_DELEGATE_OneParam(FOnSetHeroDestination, FVector);
 
 
 UCLASS()
@@ -73,5 +73,5 @@ private:
     void ZoomUpAction(const FInputActionValue& Value);
     void RotateCamera(const FInputActionValue& Value);
     void SetHeroDestinationTriggered();
-    std::pair<bool, FVector> GetHeroDestination();
+    FVector GetHeroDestination();
 };
