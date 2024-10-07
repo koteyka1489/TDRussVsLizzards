@@ -123,9 +123,8 @@ FVector ATDCameraController::GetHeroDestination()
     bHitSuccessful = DeprojectMousePositionToWorld(MouseWorldLocation, MouseWorldDirection);
     if (bHitSuccessful)
     {
-        FVector TraceEnd = MouseWorldLocation + MouseWorldDirection * 20000;
+        FVector TraceEnd = MouseWorldLocation + MouseWorldDirection * 50000;
         bHitSuccessful   = GetWorld()->LineTraceSingleByChannel(Hit, MouseWorldLocation, TraceEnd, ECollisionChannel::ECC_Visibility);
-        DrawDebugLine(GetWorld(), MouseWorldLocation, TraceEnd, FColor::Red, false, 3.0f);
         if (bHitSuccessful)
         {
             return Hit.Location;
