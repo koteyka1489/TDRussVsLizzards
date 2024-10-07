@@ -2,20 +2,19 @@
 
 #include "Hero/TDBaseHero.h"
 #include "Camera/TDCameraController.h"
+#include "Kismet\GameplayStatics.h"
 
-// Sets default values
+
 ATDBaseHero::ATDBaseHero()
 {
-    // Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = true;
 }
 
-// Called when the game starts or when spawned
 void ATDBaseHero::BeginPlay()
 {
     Super::BeginPlay();
 
-    auto CameraController = Cast<ATDCameraController>(GetController());
+    auto CameraController = Cast<ATDCameraController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
     if (CameraController)
     {
         GEngine->AddOnScreenDebugMessage(3, 10, FColor::Red, TEXT("nSetHeroDestination BIND"));
@@ -48,7 +47,7 @@ void ATDBaseHero::OnSetHeroDestination(bool OnHitSucefull, FVector HeroDestinati
     FString Message        = FString::Printf(TEXT("OnHitSucefull - %s"), OnHitSucefull ? TEXT("TRUE") : TEXT("FALSE"));
     GEngine->AddOnScreenDebugMessage(0, 1, FColor::Red, Message);
 
-    FString Message1 = FString::Printf(TEXT("VECTOR DESTINATION"), *HeroDestination.ToString());
+    FString Message1 = FString::Printf(TEXT("VECTOR DESTINATION - %s"), *HeroDestination.ToString());
     GEngine->AddOnScreenDebugMessage(1, 1, FColor::Red, Message1);
 
     if (OnHitSucefull)
