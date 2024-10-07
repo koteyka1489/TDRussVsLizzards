@@ -3,6 +3,7 @@
 #include "Hero/TDBaseHero.h"
 #include "Camera/TDCameraController.h"
 #include "Kismet\GameplayStatics.h"
+#include "AI/TDAIController.h"
 
 
 ATDBaseHero::ATDBaseHero()
@@ -27,9 +28,6 @@ void ATDBaseHero::BeginPlay()
     }
 }
 
-
-
-// Called every frame
 void ATDBaseHero::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
@@ -42,8 +40,15 @@ void ATDBaseHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void ATDBaseHero::OnSetHeroDestination( FVector HeroDestination) 
 {
-
-    FString Message1 = FString::Printf(TEXT("VECTOR DESTINATION - %s"), *HeroDestination.ToString());
-    GEngine->AddOnScreenDebugMessage(1, 1, FColor::Red, Message1);
+    auto ControllerAI = Cast<ATDAIController>(GetController());
+    if (ControllerAI)
+    {
+        ControllerAI->MoveToLocation(HeroDestination);
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT(" Cast to Ai controller Fail "));
+        checkNoEntry();
+    }
 
 }
