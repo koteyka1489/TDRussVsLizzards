@@ -8,6 +8,8 @@
 
 class UHealthComponent;
 class USkeletalMeshComponent;
+class ATDGoal;
+class UCapsuleComponent;
 
 UCLASS()
 class TDRUSSVSLIZZARDS_API ABaseCreepPawn : public APawn
@@ -23,10 +25,15 @@ protected:
     virtual void BeginPlay() override;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+    UCapsuleComponent* CapsuleComponent;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
     USkeletalMeshComponent* SkeletalMeshComponent;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
     UHealthComponent* HealthComponent;
 
 private:
+    TObjectPtr<ATDGoal> Goal;
+    
 };
