@@ -21,7 +21,7 @@ protected:
     
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
-    float Speed = 600.0f;
+    float Speed = 400.0f;
 
 private:
     FVector Destination{};

@@ -9,7 +9,6 @@
 class UHealthComponent;
 class USkeletalMeshComponent;
 class ATDGoal;
-class UCapsuleComponent;
 class UTDPawnMovementComponent;
 
 UCLASS()
@@ -25,8 +24,7 @@ public:
 protected:
     virtual void BeginPlay() override;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
-    UCapsuleComponent* CapsuleComponent;
+
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
     USkeletalMeshComponent* SkeletalMeshComponent;
