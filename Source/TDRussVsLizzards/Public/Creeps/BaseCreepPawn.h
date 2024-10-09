@@ -10,6 +10,7 @@ class UHealthComponent;
 class USkeletalMeshComponent;
 class ATDGoal;
 class UTDPawnMovementComponent;
+class UCapsuleComponent;
 
 UCLASS()
 class TDRUSSVSLIZZARDS_API ABaseCreepPawn : public APawn
@@ -24,7 +25,8 @@ public:
 protected:
     virtual void BeginPlay() override;
 
-
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+    UCapsuleComponent* CapsuleComponent;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
     USkeletalMeshComponent* SkeletalMeshComponent;

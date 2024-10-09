@@ -5,13 +5,17 @@
 #include "Kismet/GameplayStatics.h"
 #include "Goal/TDGoal.h"
 #include "Components/TDPawnMovementComponent.h"
+#include "Components/CapsuleComponent.h"
 
 ABaseCreepPawn::ABaseCreepPawn()
 {
     PrimaryActorTick.bCanEverTick = true;
 
+    CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>("CapsuleComponent");
+    SetRootComponent(CapsuleComponent);
+
     SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>("SkeletalMeshComponent");
-    SetRootComponent(SkeletalMeshComponent);
+    SkeletalMeshComponent->SetupAttachment(CapsuleComponent);
 
     HealthComponent         = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
     TDPawnMovementComponent = CreateDefaultSubobject<UTDPawnMovementComponent>("TDPawnMovementComponent");
@@ -28,6 +32,7 @@ void ABaseCreepPawn::BeginPlay()
         checkNoEntry();
     }
 
+    TDPawnMovementComponent->RotateToLocation(Goal->GetActorLocation());
     TDPawnMovementComponent->MoveToLocation(Goal->GetActorLocation());
 }
 

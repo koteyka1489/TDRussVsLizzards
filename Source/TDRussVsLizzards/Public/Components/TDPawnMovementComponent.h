@@ -14,19 +14,25 @@ class TDRUSSVSLIZZARDS_API UTDPawnMovementComponent : public UPawnMovementCompon
 public:
     UTDPawnMovementComponent();
     void MoveToLocation(FVector Location);
+    void RotateToLocation(FVector Location);
 
 protected:
     virtual void BeginPlay() override;
     virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-    
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
-    float Speed = 400.0f;
+    float SpeedMoving = 400.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+    float SpeedRotating = 100.0f;
 
 private:
-    FVector Destination{};
-    bool bDestinationIsSet = false;
+    FVector DestinationToMoving{};
+    FVector DestinationToRotating{};
+    bool bDestinationToMovingIsSet   = false;
+    bool bDestinationToRotatingIsSet = false;
 
+    void MovingToLocation(float DeltaTime);
+    void RotatingToLocation(float DeltaTime);
 
-    void MoveToLocation(float DeltaTime);
 };
