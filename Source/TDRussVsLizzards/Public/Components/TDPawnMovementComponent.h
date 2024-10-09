@@ -26,6 +26,9 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
     float SpeedRotating = 100.0f;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+    bool bAutoOrientToMovement = false;
+
 private:
     FVector DestinationToMoving{};
     FVector DestinationToRotating{};

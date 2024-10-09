@@ -32,6 +32,10 @@ void UTDPawnMovementComponent::MoveToLocation(FVector Location)
 {
     DestinationToMoving       = Location;
     bDestinationToMovingIsSet = true;
+    if (bAutoOrientToMovement)
+    {
+        RotateToLocation(Location);
+    }
 }
 
 void UTDPawnMovementComponent::RotateToLocation(FVector Location)
@@ -42,6 +46,8 @@ void UTDPawnMovementComponent::RotateToLocation(FVector Location)
 
 void UTDPawnMovementComponent::MovingToLocation(float DeltaTime)
 {
+
+
     auto OwnerPawn = Cast<ABaseCreepPawn>(GetOwner());
     if (OwnerPawn)
     {

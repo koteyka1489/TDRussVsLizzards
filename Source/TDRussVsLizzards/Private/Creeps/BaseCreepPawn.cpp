@@ -32,7 +32,7 @@ void ABaseCreepPawn::BeginPlay()
         checkNoEntry();
     }
 
-    TDPawnMovementComponent->RotateToLocation(Goal->GetActorLocation());
+    
     TDPawnMovementComponent->MoveToLocation(Goal->GetActorLocation());
 }
 
