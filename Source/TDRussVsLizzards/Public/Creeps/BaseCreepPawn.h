@@ -10,6 +10,7 @@ class UHealthComponent;
 class USkeletalMeshComponent;
 class ATDGoal;
 class UCapsuleComponent;
+class UTDPawnMovementComponent;
 
 UCLASS()
 class TDRUSSVSLIZZARDS_API ABaseCreepPawn : public APawn
@@ -33,7 +34,8 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
     UHealthComponent* HealthComponent;
 
-    
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+    UTDPawnMovementComponent* TDPawnMovementComponent;
 
 private:
     TObjectPtr<ATDGoal> Goal;

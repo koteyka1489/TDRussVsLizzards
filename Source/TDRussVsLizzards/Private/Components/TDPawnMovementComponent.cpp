@@ -41,6 +41,7 @@ void UTDPawnMovementComponent::MoveToLocation(float DeltaTime)
         else
         {
             FVector Direction   = VecToDestination.GetSafeNormal();
+            Direction.Z         = 0.0f;
             FVector Offset      = Direction * Speed * DeltaTime;
             FVector NewLocation = OwnerPawn->GetActorLocation() + Offset;
             OwnerPawn->SetActorLocation(NewLocation);

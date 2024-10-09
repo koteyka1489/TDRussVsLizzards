@@ -7,6 +7,7 @@
 #include "AI/TDAIController.h"
 #include "GameFramework/PawnMovementComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/TDPawnMovementComponent.h"
 
 ABaseCreepPawn::ABaseCreepPawn()
 {
@@ -19,6 +20,7 @@ ABaseCreepPawn::ABaseCreepPawn()
     SkeletalMeshComponent->SetupAttachment(CapsuleComponent);
 
     HealthComponent = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
+    TDPawnMovementComponent = CreateDefaultSubobject<UTDPawnMovementComponent>("TDPawnMovementComponent");
 }
 
 void ABaseCreepPawn::BeginPlay()
@@ -32,6 +34,8 @@ void ABaseCreepPawn::BeginPlay()
         checkNoEntry();
     }
 
+
+    TDPawnMovementComponent->MoveToLocation(Goal->GetActorLocation());
 }
 
 
@@ -39,7 +43,6 @@ void ABaseCreepPawn::BeginPlay()
 void ABaseCreepPawn::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
-
 
 }
 
