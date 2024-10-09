@@ -31,17 +31,20 @@ void ABaseCreepPawn::BeginPlay()
         UE_LOG(LogTemp, Error, TEXT("Goal Cast Failed"));
         checkNoEntry();
     }
+
 }
+
+
 
 void ABaseCreepPawn::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    FVector Direction = (Goal->GetActorLocation() - GetActorLocation()).GetSafeNormal();
-    AddMovementInput(Direction, 1.0f);
+
 }
 
 void ABaseCreepPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
+

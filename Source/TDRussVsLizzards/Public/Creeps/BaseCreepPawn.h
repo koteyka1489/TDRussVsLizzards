@@ -33,7 +33,11 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
     UHealthComponent* HealthComponent;
 
+    
+
 private:
     TObjectPtr<ATDGoal> Goal;
+
+
     
 };
