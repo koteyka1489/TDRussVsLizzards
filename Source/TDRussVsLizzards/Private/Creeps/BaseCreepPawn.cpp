@@ -1,11 +1,17 @@
 // TD Russ Vs Lizzards Game
 
 #include "Creeps/BaseCreepPawn.h"
+#include "Components/HealthComponent.h"
 
 ABaseCreepPawn::ABaseCreepPawn()
 {
-
     PrimaryActorTick.bCanEverTick = true;
+
+    SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>("SkeletalMeshComponent");
+    SetRootComponent(SkeletalMeshComponent);
+
+    HealthComponent = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
+
 }
 
 void ABaseCreepPawn::BeginPlay()

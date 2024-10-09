@@ -6,6 +6,9 @@
 #include "GameFramework/Pawn.h"
 #include "BaseCreepPawn.generated.h"
 
+class UHealthComponent;
+class USkeletalMeshComponent;
+
 UCLASS()
 class TDRUSSVSLIZZARDS_API ABaseCreepPawn : public APawn
 {
@@ -18,6 +21,12 @@ public:
 
 protected:
     virtual void BeginPlay() override;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+    USkeletalMeshComponent* SkeletalMeshComponent;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+    UHealthComponent* HealthComponent;
 
 private:
 };
