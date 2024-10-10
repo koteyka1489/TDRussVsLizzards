@@ -10,37 +10,29 @@
 
 ABaseCreepPawn::ABaseCreepPawn()
 {
-    PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bCanEverTick = false;
 
-    CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>("CapsuleComponent");
-    SetRootComponent(CapsuleComponent);
+    SceneComponent = CreateDefaultSubobject<USceneComponent>("SceneComponent");
+    SetRootComponent(SceneComponent);
 
     SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>("SkeletalMeshComponent");
-    SkeletalMeshComponent->SetupAttachment(CapsuleComponent);
+    SkeletalMeshComponent->SetupAttachment(SceneComponent);
 
     HealthComponent         = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
     TDPawnMovementComponent = CreateDefaultSubobject<UTDPawnMovementComponent>("TDPawnMovementComponent");
 
     // Init Pawn
-    AutoPossessAI     = EAutoPossessAI::PlacedInWorldOrSpawned;
-    AIControllerClass = ATDAIController::StaticClass();
-
-    // Init Capsule
-    CapsuleComponent->SetCapsuleHalfHeight(100.0f);
-    CapsuleComponent->SetCapsuleRadius(60.0f);
-    CapsuleComponent->SetSimulatePhysics(false);
-    CapsuleComponent->SetEnableGravity(false);
-    CapsuleComponent->bIgnoreRadialForce = true;
-    CapsuleComponent->bIgnoreRadialForce = true;
+    AutoPossessAI     = EAutoPossessAI::Disabled;
+    AIControllerClass = nullptr;
 
     SkeletalMeshComponent->SetRelativeLocation(FVector(0.0, 0.0, -90.0));
     SkeletalMeshComponent->SetRelativeRotation(FRotator(0.0, -90.0, 0.0));
     SkeletalMeshComponent->SetSimulatePhysics(false);
     SkeletalMeshComponent->SetEnableGravity(false);
-    SkeletalMeshComponent->bDisableClothSimulation = true;
-    SkeletalMeshComponent->bAllowClothActors       = false;
-    SkeletalMeshComponent->bIgnoreRadialForce      = true;
-    SkeletalMeshComponent->bIgnoreRadialImpulse    = true;
+    SkeletalMeshComponent->bDisableClothSimulation            = true;
+    SkeletalMeshComponent->bAllowClothActors                  = false;
+    SkeletalMeshComponent->bIgnoreRadialForce                 = true;
+    SkeletalMeshComponent->bIgnoreRadialImpulse               = true;
     SkeletalMeshComponent->bReplicatePhysicsToAutonomousProxy = false;
     SkeletalMeshComponent->CastShadow                         = 0u;
     SkeletalMeshComponent->IndirectLightingCacheQuality       = EIndirectLightingCacheQuality::ILCQ_Off;
@@ -49,8 +41,6 @@ ABaseCreepPawn::ABaseCreepPawn()
     SkeletalMeshComponent->bVisibleInRealTimeSkyCaptures      = false;
     SkeletalMeshComponent->bVisibleInReflectionCaptures       = false;
     SkeletalMeshComponent->bEnablePhysicsOnDedicatedServer    = false;
-   
-
 
     static ConstructorHelpers::FObjectFinder<USkeletalMesh> CreepMesh(
         TEXT("/Script/Engine.SkeletalMesh'/Game/Fantasy_Pack/Characters/Orc_Hummer/Mesh/SK_Orc_Hummer.SK_Orc_Hummer'"));
@@ -89,11 +79,6 @@ void ABaseCreepPawn::BeginPlay()
     }
     SkeletalMeshComponent->PlayAnimation(CreepRunAnimation, true);
     TDPawnMovementComponent->MoveToLocation(Goal->GetActorLocation());
-}
-
-void ABaseCreepPawn::Tick(float DeltaTime)
-{
-    Super::Tick(DeltaTime);
 }
 
 void ABaseCreepPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

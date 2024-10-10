@@ -10,7 +10,7 @@ class UHealthComponent;
 class USkeletalMeshComponent;
 class ATDGoal;
 class UTDPawnMovementComponent;
-class UCapsuleComponent;
+class USceneComponent;
 
 UCLASS()
 class TDRUSSVSLIZZARDS_API ABaseCreepPawn : public APawn
@@ -19,14 +19,13 @@ class TDRUSSVSLIZZARDS_API ABaseCreepPawn : public APawn
 
 public:
     ABaseCreepPawn();
-    virtual void Tick(float DeltaTime) override;
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
     virtual void BeginPlay() override;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
-    UCapsuleComponent* CapsuleComponent;
+    USceneComponent* SceneComponent;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
     TObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
