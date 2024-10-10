@@ -37,6 +37,20 @@ ABaseCreepPawn::ABaseCreepPawn()
     SkeletalMeshComponent->SetRelativeRotation(FRotator(0.0, -90.0, 0.0));
     SkeletalMeshComponent->SetSimulatePhysics(false);
     SkeletalMeshComponent->SetEnableGravity(false);
+    SkeletalMeshComponent->bDisableClothSimulation = true;
+    SkeletalMeshComponent->bAllowClothActors       = false;
+    SkeletalMeshComponent->bIgnoreRadialForce      = true;
+    SkeletalMeshComponent->bIgnoreRadialImpulse    = true;
+    SkeletalMeshComponent->bReplicatePhysicsToAutonomousProxy = false;
+    SkeletalMeshComponent->CastShadow                         = 0u;
+    SkeletalMeshComponent->IndirectLightingCacheQuality       = EIndirectLightingCacheQuality::ILCQ_Off;
+    SkeletalMeshComponent->HLODBatchingPolicy                 = EHLODBatchingPolicy::Instancing;
+    SkeletalMeshComponent->bVisibleInRayTracing               = false;
+    SkeletalMeshComponent->bVisibleInRealTimeSkyCaptures      = false;
+    SkeletalMeshComponent->bVisibleInReflectionCaptures       = false;
+    SkeletalMeshComponent->bEnablePhysicsOnDedicatedServer    = false;
+   
+
 
     static ConstructorHelpers::FObjectFinder<USkeletalMesh> CreepMesh(
         TEXT("/Script/Engine.SkeletalMesh'/Game/Fantasy_Pack/Characters/Orc_Hummer/Mesh/SK_Orc_Hummer.SK_Orc_Hummer'"));
