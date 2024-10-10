@@ -35,7 +35,6 @@ ABaseCreepPawn::ABaseCreepPawn()
 
     SkeletalMeshComponent->SetRelativeLocation(FVector(0.0, 0.0, -90.0));
     SkeletalMeshComponent->SetRelativeRotation(FRotator(0.0, -90.0, 0.0));
-    SkeletalMeshComponent->SetAnimationMode(EAnimationMode::AnimationSingleNode);
     SkeletalMeshComponent->SetSimulatePhysics(false);
     SkeletalMeshComponent->SetEnableGravity(false);
 
@@ -44,11 +43,22 @@ ABaseCreepPawn::ABaseCreepPawn()
     if (CreepMesh.Succeeded())
     {
         SkeletalMeshComponent->SetSkeletalMesh(CreepMesh.Object.Get());
-        
     }
     else
     {
-        UE_LOG(LogTemp, Error, TEXT("Wrong path adress of Skeletal Mesh"));
+        UE_LOG(LogTemp, Error, TEXT("Wrong Reference of Skeletal Mesh"));
+        checkNoEntry();
+    }
+
+    static ConstructorHelpers::FObjectFinder<UAnimSequence> CreepRunAnimRef(
+        TEXT("/Script/Engine.AnimSequence'/Game/Fantasy_Pack/Characters/Orc_Hummer/Animations/Anim_Orc_Hummer_Run.Anim_Orc_Hummer_Run'"));
+    if (CreepRunAnimRef.Succeeded())
+    {
+        CreepRunAnimation = CreepRunAnimRef.Object;
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("Wrong Reference of Animation"));
         checkNoEntry();
     }
 }
@@ -63,7 +73,7 @@ void ABaseCreepPawn::BeginPlay()
         UE_LOG(LogTemp, Error, TEXT("Goal Cast Failed"));
         checkNoEntry();
     }
-
+    SkeletalMeshComponent->PlayAnimation(CreepRunAnimation, true);
     TDPawnMovementComponent->MoveToLocation(Goal->GetActorLocation());
 }
 
