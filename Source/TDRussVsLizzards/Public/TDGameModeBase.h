@@ -16,7 +16,7 @@ struct FGameData
     GENERATED_USTRUCT_BODY()
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Creeps", meta = (ClampMin = "5", ClampMax = "1000"))
-    int32 CreepsNum = 100;
+    int32 CreepsNum = 5000;
 };
 
 UCLASS()
