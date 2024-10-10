@@ -16,7 +16,7 @@ struct FGameData
     GENERATED_USTRUCT_BODY()
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Creeps", meta = (ClampMin = "5", ClampMax = "1000"))
-    int32 CreepsNum = 50;
+    int32 CreepsNum = 3000;
 };
 
 UCLASS()
@@ -42,12 +42,8 @@ protected:
 
 
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "SpawnCreeps")
-    int32 CreepsInRow = 10;
-
-
 private:
-    TArray<TObjectPtr<ABaseCreepPawn>> SpawnedCrepps;
+    TArray<TObjectPtr<ABaseCreepPawn>> SpawnedCreeps;
 
 
     void SpawnCreeps();

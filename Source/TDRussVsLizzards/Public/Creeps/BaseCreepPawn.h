@@ -40,7 +40,4 @@ protected:
 private:
     TObjectPtr<ATDGoal> Goal;
     TObjectPtr<UAnimSequence> CreepRunAnimation;
-
-
-    
 };

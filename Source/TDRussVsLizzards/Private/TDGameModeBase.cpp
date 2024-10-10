@@ -25,32 +25,26 @@ UClass* ATDGameModeBase::GetDefaultPawnClassForController_Implementation(AContro
         return CreepPawn;
     }
 
-
     return Super::GetDefaultPawnClassForController_Implementation(InController);
 }
 
 void ATDGameModeBase::SpawnCreeps()
 {
-    int32 CreepsRows = GameData.CreepsNum / CreepsInRow;
+
+    int32 CreepsRows    = FMath::FloorToInt(FMath::Sqrt((float)GameData.CreepsNum));
+    int32 CreepsColumns = CreepsRows;
+
     FActorSpawnParameters SpawnInfo;
     SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
+    for (int32 y = 0; y < CreepsRows; y++)
+    {
+        for (int32 x = 0; x < CreepsColumns; x++)
+        {
+            FRotator SpawnRotation = FRotator::ZeroRotator;
+            FVector SpawnLocation  = FVector(200.0 * (double)x, 200.0 * (double)y, 90.0);
 
-
-
-
-
-
-
-    //for (int32 y = 0; y < CreepsRows; y++)
-    //{
-    //    for (int32 x = 0; x < CreepsInRow; x++)
-    //    {
-    //        FRotator BaseRotation = FRotator::ZeroRotator;
-    //        FVector BaseLocation  = FVector(50.0 * (double)x, 50.0 * (double)y, 0.0);
-
-    //        const auto CreepAiController = GetWorld()->SpawnActor<ATDAIController>(CreepController, SpawnInfo);
-    //        RestartPlayer(CreepAiController);
-    //    }
-    //}
+            SpawnedCreeps.Add(GetWorld()->SpawnActor<ABaseCreepPawn>(SpawnLocation, SpawnRotation, SpawnInfo));
+        }
+    }
 }
