@@ -6,6 +6,7 @@
 #include "Goal/TDGoal.h"
 #include "Components/TDPawnMovementComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "AI/TDAIController.h"
 
 ABaseCreepPawn::ABaseCreepPawn()
 {
@@ -19,6 +20,32 @@ ABaseCreepPawn::ABaseCreepPawn()
 
     HealthComponent         = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
     TDPawnMovementComponent = CreateDefaultSubobject<UTDPawnMovementComponent>("TDPawnMovementComponent");
+
+    // Init Pawn
+    AutoPossessAI     = EAutoPossessAI::PlacedInWorldOrSpawned;
+    AIControllerClass = ATDAIController::StaticClass();
+
+    // Init Capsule
+    CapsuleComponent->SetCapsuleHalfHeight(100.0f);
+    CapsuleComponent->SetCapsuleRadius(60.0f);
+    CapsuleComponent->SetSimulatePhysics(false);
+    CapsuleComponent->SetEnableGravity(false);
+    CapsuleComponent->bIgnoreRadialForce = true;
+    CapsuleComponent->bIgnoreRadialForce = true;
+
+    SkeletalMeshComponent->SetRelativeLocation(FVector(0.0, 0.0, -90.0));
+    SkeletalMeshComponent->SetRelativeRotation(FRotator(0.0, -90.0, 0.0));
+    SkeletalMeshComponent->SetAnimationMode(EAnimationMode::AnimationSingleNode);
+    SkeletalMeshComponent->SetSimulatePhysics(false);
+    SkeletalMeshComponent->SetEnableGravity(false);
+
+    static ConstructorHelpers::FObjectFinder<USkeletalMesh> CreepMesh(
+        TEXT("/Script/Engine.SkeletalMesh'/Game/Fantasy_Pack/Characters/Orc_Hummer/Mesh/SK_Orc_Hummer.SK_Orc_Hummer'"));
+    if (CreepMesh.Succeeded())
+    {
+        SkeletalMeshComponent->SetSkeletalMesh(CreepMesh.Object.Get());
+        
+    }
 }
 
 void ABaseCreepPawn::BeginPlay()
@@ -32,7 +59,6 @@ void ABaseCreepPawn::BeginPlay()
         checkNoEntry();
     }
 
-    
     TDPawnMovementComponent->MoveToLocation(Goal->GetActorLocation());
 }
 

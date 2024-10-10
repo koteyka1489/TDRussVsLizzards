@@ -36,15 +36,21 @@ void ATDGameModeBase::SpawnCreeps()
     SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 
-    for (int32 y = 0; y < CreepsRows; y++)
-    {
-        for (int32 x = 0; x < CreepsInRow; x++)
-        {
-            FRotator BaseRotation = FRotator::ZeroRotator;
-            FVector BaseLocation  = FVector(50.0 * (double)x, 50.0 * (double)y, 0.0);
 
-            const auto CreepAiController = GetWorld()->SpawnActor<AAIController>(CreepController, SpawnInfo);
-            RestartPlayer(CreepAiController);
-        }
-    }
+
+
+
+
+
+    //for (int32 y = 0; y < CreepsRows; y++)
+    //{
+    //    for (int32 x = 0; x < CreepsInRow; x++)
+    //    {
+    //        FRotator BaseRotation = FRotator::ZeroRotator;
+    //        FVector BaseLocation  = FVector(50.0 * (double)x, 50.0 * (double)y, 0.0);
+
+    //        const auto CreepAiController = GetWorld()->SpawnActor<ATDAIController>(CreepController, SpawnInfo);
+    //        RestartPlayer(CreepAiController);
+    //    }
+    //}
 }

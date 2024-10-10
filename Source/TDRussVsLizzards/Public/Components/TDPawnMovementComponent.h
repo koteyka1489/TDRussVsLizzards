@@ -21,13 +21,13 @@ protected:
     virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
-    float SpeedMoving = 400.0f;
+    float SpeedMoving = 500.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
-    float SpeedRotating = 100.0f;
+    float SpeedRotating = 150.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
-    bool bAutoOrientToMovement = false;
+    bool bAutoOrientToMovement = true;
 
 private:
     FVector DestinationToMoving{};

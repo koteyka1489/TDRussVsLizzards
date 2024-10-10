@@ -29,7 +29,7 @@ protected:
     UCapsuleComponent* CapsuleComponent;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
-    USkeletalMeshComponent* SkeletalMeshComponent;
+    TObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
     UHealthComponent* HealthComponent;
