@@ -46,6 +46,11 @@ ABaseCreepPawn::ABaseCreepPawn()
         SkeletalMeshComponent->SetSkeletalMesh(CreepMesh.Object.Get());
         
     }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("Wrong path adress of Skeletal Mesh"));
+        checkNoEntry();
+    }
 }
 
 void ABaseCreepPawn::BeginPlay()
