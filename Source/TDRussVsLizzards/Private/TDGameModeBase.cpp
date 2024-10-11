@@ -4,7 +4,7 @@
 #include "Camera/TDCameraController.h"
 #include "Camera/CameraPawn.h"
 #include "Creeps/BaseCreepPawn.h"
-#include "AI/TDAIController.h"
+#include "Creeps/BaseCreepActor.h"
 
 ATDGameModeBase::ATDGameModeBase()
 {
@@ -19,15 +19,7 @@ void ATDGameModeBase::StartPlay()
     SpawnCreeps();
 }
 
-UClass* ATDGameModeBase::GetDefaultPawnClassForController_Implementation(AController* InController)
-{
-    if (InController && InController->IsA<AAIController>())
-    {
-        return CreepPawn;
-    }
 
-    return Super::GetDefaultPawnClassForController_Implementation(InController);
-}
 
 void ATDGameModeBase::SpawnCreeps()
 {
@@ -45,7 +37,7 @@ void ATDGameModeBase::SpawnCreeps()
             FRotator SpawnRotation = FRotator::ZeroRotator;
             FVector SpawnLocation  = FVector(200.0 * (double)x, 200.0 * (double)y, 90.0);
 
-            SpawnedCreeps.Add(GetWorld()->SpawnActor<ABaseCreepPawn>(SpawnLocation, SpawnRotation, SpawnInfo));
+            SpawnedCreeps.Add(GetWorld()->SpawnActor<ABaseCreepActor>(SpawnLocation, SpawnRotation, SpawnInfo));
         }
     }
 }

@@ -7,16 +7,15 @@
 #include "TDGameModeBase.generated.h"
 
 class ABaseCreepPawn;
-class AAIController;
-
+class ABaseCreepActor;
 
 USTRUCT(BlueprintType)
 struct FGameData
 {
     GENERATED_USTRUCT_BODY()
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Creeps", meta = (ClampMin = "5", ClampMax = "1000"))
-    int32 CreepsNum = 5000;
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Creeps", meta = (ClampMin = "5", ClampMax = "5000"))
+    int32 CreepsNum = 1000;
 };
 
 UCLASS()
@@ -27,24 +26,16 @@ class TDRUSSVSLIZZARDS_API ATDGameModeBase : public AGameModeBase
 public:
     ATDGameModeBase();
     virtual void StartPlay() override;
-    virtual UClass* GetDefaultPawnClassForController_Implementation(AController* InController) override;
 
 protected:
-
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "SpawnCreeps")
     FGameData GameData;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "SpawnCreeps")
-    TSubclassOf<AAIController> CreepController;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "SpawnCreeps")
-    TSubclassOf<ABaseCreepPawn> CreepPawn;
-
-
+    TSubclassOf<ABaseCreepActor> CreepActor;
 
 private:
-    TArray<TObjectPtr<ABaseCreepPawn>> SpawnedCreeps;
-
+    TArray<TObjectPtr<ABaseCreepActor>> SpawnedCreeps;
 
     void SpawnCreeps();
 };

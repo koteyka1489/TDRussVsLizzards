@@ -1,19 +1,19 @@
 // TD Russ Vs Lizzards Game
 
-#include "Components/TDPawnMovementComponent.h"
-#include "Creeps/BaseCreepPawn.h"
+#include "Components/ActorMovementComponent.h"
+#include "Creeps\BaseCreepActor.h"
 
-UTDPawnMovementComponent::UTDPawnMovementComponent()
+UActorMovementComponent::UActorMovementComponent()
 {
     PrimaryComponentTick.bCanEverTick = true;
 }
 
-void UTDPawnMovementComponent::BeginPlay()
+void UActorMovementComponent::BeginPlay()
 {
     Super::BeginPlay();
 }
 
-void UTDPawnMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UActorMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
@@ -27,7 +27,7 @@ void UTDPawnMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
     }
 }
 
-void UTDPawnMovementComponent::MoveToLocation(FVector Location)
+void UActorMovementComponent::MoveToLocation(FVector Location)
 {
     DestinationToMoving       = Location;
     bDestinationToMovingIsSet = true;
@@ -37,16 +37,15 @@ void UTDPawnMovementComponent::MoveToLocation(FVector Location)
     }
 }
 
-void UTDPawnMovementComponent::RotateToLocation(FVector Location)
+void UActorMovementComponent::RotateToLocation(FVector Location)
 {
     DestinationToRotating       = Location;
     bDestinationToRotatingIsSet = true;
 }
 
-void UTDPawnMovementComponent::MovingToLocation(float DeltaTime)
+void UActorMovementComponent::MovingToLocation(float DeltaTime)
 {
-
-    auto OwnerPawn = Cast<ABaseCreepPawn>(GetOwner());
+    auto OwnerPawn = Cast<ABaseCreepActor>(GetOwner());
     if (OwnerPawn)
     {
         FVector VecToDestination = DestinationToMoving - OwnerPawn->GetActorLocation();
@@ -71,9 +70,9 @@ void UTDPawnMovementComponent::MovingToLocation(float DeltaTime)
     }
 }
 
-void UTDPawnMovementComponent::RotatingToLocation(float DeltaTime)
+void UActorMovementComponent::RotatingToLocation(float DeltaTime)
 {
-    auto OwnerPawn = Cast<ABaseCreepPawn>(GetOwner());
+    auto OwnerPawn = Cast<ABaseCreepActor>(GetOwner());
     if (OwnerPawn)
     {
         FVector VecToDestinationNormalize = (DestinationToRotating - OwnerPawn->GetActorLocation()).GetSafeNormal();
