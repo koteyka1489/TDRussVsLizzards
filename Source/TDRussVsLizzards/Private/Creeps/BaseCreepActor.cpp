@@ -16,7 +16,7 @@ ABaseCreepActor::ABaseCreepActor()
     SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>("SkeletalMeshComponent");
     SkeletalMeshComponent->SetupAttachment(SceneComponent);
 
-    HealthComponent = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
+    HealthComponent   = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
     MovementComponent = CreateDefaultSubobject<UActorMovementComponent>("MovementComponent");
 
     SkeletalMeshComponent->SetRelativeLocation(FVector(0.0, 0.0, -90.0));
@@ -36,6 +36,29 @@ ABaseCreepActor::ABaseCreepActor()
     SkeletalMeshComponent->bVisibleInReflectionCaptures       = false;
     SkeletalMeshComponent->bEnablePhysicsOnDedicatedServer    = false;
 
+    InitSkeletalMesh();
+
+    InitAnimations();
+}
+
+void ABaseCreepActor::BeginPlay()
+{
+    Super::BeginPlay();
+
+    Goal = Cast<ATDGoal>(UGameplayStatics::GetActorOfClass(GetWorld(), ATDGoal::StaticClass()));
+    if (Goal)
+    {
+        SkeletalMeshComponent->PlayAnimation(CreepIdleAnimation, true);
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("Goal Cast Failed"));
+        checkNoEntry();
+    }
+}
+
+void ABaseCreepActor::InitSkeletalMesh()
+{
     static ConstructorHelpers::FObjectFinder<USkeletalMesh> CreepMesh(
         TEXT("/Script/Engine.SkeletalMesh'/Game/Fantasy_Pack/Characters/Orc_Hummer/Mesh/SK_Orc_Hummer.SK_Orc_Hummer'"));
     if (CreepMesh.Succeeded())
@@ -47,7 +70,37 @@ ABaseCreepActor::ABaseCreepActor()
         UE_LOG(LogTemp, Error, TEXT("Wrong Reference of Skeletal Mesh"));
         checkNoEntry();
     }
+}
 
+void ABaseCreepActor::InitAnimations()
+{
+    // IDLE
+    static ConstructorHelpers::FObjectFinder<UAnimSequence> CreepIdleAnimationRef(
+        TEXT("/Script/Engine.AnimSequence'/Game/Fantasy_Pack/Characters/Orc_Hummer/Animations/Anim_Orc_Hummer_Idle.Anim_Orc_Hummer_Idle'"));
+    if (CreepIdleAnimationRef.Succeeded())
+    {
+        CreepIdleAnimation = CreepIdleAnimationRef.Object;
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("Wrong Reference of Animation"));
+        checkNoEntry();
+    }
+
+    // WALK
+    static ConstructorHelpers::FObjectFinder<UAnimSequence> CreepWalkAnimationRef(
+        TEXT("/Script/Engine.AnimSequence'/Game/Fantasy_Pack/Characters/Orc_Hummer/Animations/Anim_Orc_Hummer_Walk.Anim_Orc_Hummer_Walk'"));
+    if (CreepWalkAnimationRef.Succeeded())
+    {
+        CreepWalkAnimation = CreepWalkAnimationRef.Object;
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("Wrong Reference of Animation"));
+        checkNoEntry();
+    }
+
+    // RUN
     static ConstructorHelpers::FObjectFinder<UAnimSequence> CreepRunAnimRef(
         TEXT("/Script/Engine.AnimSequence'/Game/Fantasy_Pack/Characters/Orc_Hummer/Animations/Anim_Orc_Hummer_Run.Anim_Orc_Hummer_Run'"));
     if (CreepRunAnimRef.Succeeded())
@@ -57,23 +110,6 @@ ABaseCreepActor::ABaseCreepActor()
     else
     {
         UE_LOG(LogTemp, Error, TEXT("Wrong Reference of Animation"));
-        checkNoEntry();
-    }
-}
-
-void ABaseCreepActor::BeginPlay()
-{
-    Super::BeginPlay();
-
-    Goal = Cast<ATDGoal>(UGameplayStatics::GetActorOfClass(GetWorld(), ATDGoal::StaticClass()));
-    if (Goal)
-    {
-        SkeletalMeshComponent->PlayAnimation(CreepRunAnimation, true);
-        //MovementComponent->MoveToLocation(Goal->GetActorLocation());
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("Goal Cast Failed"));
         checkNoEntry();
     }
 }

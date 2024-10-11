@@ -12,6 +12,7 @@ void ABaseSquadCreeps::BeginPlay()
 {
     Super::BeginPlay();
 
+    Creeps.Reserve(CreepsNum);
     SpawnCreeps();
 
 
@@ -53,7 +54,8 @@ void ABaseSquadCreeps::SpawnCreeps()
         for (int32 x = 0; x < CreepsRemainder ; x++)
         {
             FRotator SpawnRotation = FRotator::ZeroRotator;
-            FVector SpawnLocation  = FVector(200.0 * (double)x, 200.0 * (double)y, 90.0);
+            FVector SpawnLocation =
+                FVector(Squadlocation.X + 200.0 * (double)x, Squadlocation.Y + 200.0 * (double)y, Squadlocation.Z + 90.0);
 
             Creeps.Add(GetWorld()->SpawnActor<ABaseCreepActor>(SpawnLocation, SpawnRotation, SpawnInfo));
         }

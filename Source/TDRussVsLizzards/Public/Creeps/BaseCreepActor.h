@@ -37,5 +37,13 @@ protected:
 
 private:
     TObjectPtr<ATDGoal> Goal;
+
+    TObjectPtr<UAnimSequence> CreepIdleAnimation;
+    TObjectPtr<UAnimSequence> CreepWalkAnimation;
     TObjectPtr<UAnimSequence> CreepRunAnimation;
+
+
+    void InitSkeletalMesh();
+    void InitAnimations();
+
 };
