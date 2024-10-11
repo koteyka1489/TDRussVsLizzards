@@ -17,6 +17,11 @@ void UActorMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+    if (!OwnerPawn)
+    {
+        OwnerPawn = Cast<ABaseCreepActor>(GetOwner());
+    }
+
     if (bDestinationToRotatingIsSet)
     {
         RotatingToLocation(DeltaTime);
@@ -25,6 +30,12 @@ void UActorMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType
     {
         MovingToLocation(DeltaTime);
     }
+}
+
+void UActorMovementComponent::InitializeComponent()
+{
+    Super::InitializeComponent();
+    
 }
 
 void UActorMovementComponent::MoveToLocation(FVector Location)
@@ -45,7 +56,6 @@ void UActorMovementComponent::RotateToLocation(FVector Location)
 
 void UActorMovementComponent::MovingToLocation(float DeltaTime)
 {
-    auto OwnerPawn = Cast<ABaseCreepActor>(GetOwner());
     if (OwnerPawn)
     {
         FVector VecToDestination = DestinationToMoving - OwnerPawn->GetActorLocation();
@@ -72,7 +82,6 @@ void UActorMovementComponent::MovingToLocation(float DeltaTime)
 
 void UActorMovementComponent::RotatingToLocation(float DeltaTime)
 {
-    auto OwnerPawn = Cast<ABaseCreepActor>(GetOwner());
     if (OwnerPawn)
     {
         FVector VecToDestinationNormalize = (DestinationToRotating - OwnerPawn->GetActorLocation()).GetSafeNormal();

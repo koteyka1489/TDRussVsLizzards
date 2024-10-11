@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "ActorMovementComponent.generated.h"
 
+class ABaseCreepActor;
+
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class TDRUSSVSLIZZARDS_API UActorMovementComponent : public UActorComponent
 {
@@ -15,6 +17,7 @@ public:
     UActorMovementComponent();
     virtual void BeginPlay() override;
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+    virtual void InitializeComponent() override;
 
     void MoveToLocation(FVector Location);
     void RotateToLocation(FVector Location);
@@ -28,6 +31,8 @@ private:
     FVector DestinationToRotating{};
     bool bDestinationToMovingIsSet   = false;
     bool bDestinationToRotatingIsSet = false;
+
+    TObjectPtr<ABaseCreepActor> OwnerPawn;
 
     void MovingToLocation(float DeltaTime);
     void RotatingToLocation(float DeltaTime);
