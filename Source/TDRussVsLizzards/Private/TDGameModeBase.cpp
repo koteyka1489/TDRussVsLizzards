@@ -15,8 +15,8 @@ ATDGameModeBase::ATDGameModeBase()
 void ATDGameModeBase::StartPlay()
 {
     Super::StartPlay();
-    SpawnedCreeps.Reserve(GameData.CreepsNum);
-    SpawnCreeps();
+    //SpawnedCreeps.Reserve(GameData.CreepsNum);
+    //SpawnCreeps();
 }
 
 

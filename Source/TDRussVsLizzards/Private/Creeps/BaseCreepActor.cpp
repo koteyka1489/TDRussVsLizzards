@@ -69,7 +69,7 @@ void ABaseCreepActor::BeginPlay()
     if (Goal)
     {
         SkeletalMeshComponent->PlayAnimation(CreepRunAnimation, true);
-        MovementComponent->MoveToLocation(Goal->GetActorLocation());
+        //MovementComponent->MoveToLocation(Goal->GetActorLocation());
     }
     else
     {
