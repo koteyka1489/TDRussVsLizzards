@@ -18,7 +18,7 @@ void ATDBaseHero::BeginPlay()
     auto CameraController = Cast<ATDCameraController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
     if (CameraController)
     {
-        CameraController->OnSetHeroDestination.BindUObject(this, &ATDBaseHero::OnSetHeroDestination);
+//        CameraController->OnSetHeroDestination.BindUObject(this, &ATDBaseHero::OnSetHeroDestination);
     }
     else
     {

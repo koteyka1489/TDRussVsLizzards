@@ -45,16 +45,9 @@ void ABaseCreepActor::BeginPlay()
 {
     Super::BeginPlay();
 
-    Goal = Cast<ATDGoal>(UGameplayStatics::GetActorOfClass(GetWorld(), ATDGoal::StaticClass()));
-    if (Goal)
-    {
-        SkeletalMeshComponent->PlayAnimation(CreepIdleAnimation, true);
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("Goal Cast Failed"));
-        checkNoEntry();
-    }
+    // Goal = Cast<ATDGoal>(UGameplayStatics::GetActorOfClass(GetWorld(), ATDGoal::StaticClass()));
+
+    SkeletalMeshComponent->PlayAnimation(CreepIdleAnimation, true);
 }
 
 void ABaseCreepActor::InitSkeletalMesh()

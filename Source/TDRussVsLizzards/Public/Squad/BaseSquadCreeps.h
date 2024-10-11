@@ -19,14 +19,11 @@ public:
     virtual void Tick(float DeltaTime) override;
 
 protected:
-
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Squad")
     int32 CreepsNum = 50;
 
 private:
     TArray<TObjectPtr<ABaseCreepActor>> Creeps;
 
-
     void SpawnCreeps();
-
 };
