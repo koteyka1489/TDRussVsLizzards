@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "BaseWeapon.generated.h"
 
-class UStaticMesh;
+class UStaticMeshComponent;
 
 UCLASS()
 class TDRUSSVSLIZZARDS_API ABaseWeapon : public AActor
@@ -16,9 +16,10 @@ class TDRUSSVSLIZZARDS_API ABaseWeapon : public AActor
 public:
     ABaseWeapon();
     virtual void BeginPlay() override;
+    void SetWeaponMesh(TObjectPtr<UStaticMesh> WeaponMeshIn);
 
 protected:
-    UPROPERTY()
-    UStaticMesh* WeaponMesh;
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+    UStaticMeshComponent* WeaponStaticMesh;
 
 };

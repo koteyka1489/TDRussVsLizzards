@@ -4,6 +4,8 @@
 #include "Components/HealthComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/ActorMovementComponent.h"
+#include "Components/WeaponComponent.h"
+#include "Weapon/BaseWeapon.h"
 
 ABaseCreepActor::ABaseCreepActor()
 {
@@ -17,6 +19,8 @@ ABaseCreepActor::ABaseCreepActor()
 
     HealthComponent   = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
     MovementComponent = CreateDefaultSubobject<UActorMovementComponent>("MovementComponent");
+    WeaponComponent   = CreateDefaultSubobject<UWeaponComponent>("WeaponComponent");
+
 
     SkeletalMeshComponent->SetRelativeLocation(FVector(0.0, 0.0, -90.0));
     SkeletalMeshComponent->SetRelativeRotation(FRotator(0.0, -90.0, 0.0));
@@ -39,9 +43,20 @@ ABaseCreepActor::ABaseCreepActor()
 void ABaseCreepActor::BeginPlay()
 {
     Super::BeginPlay();
+    AttachWeaponToSocket();
     SkeletalMeshComponent->PlayAnimation(CreepIdleAnimation, true);
+    
 }
 
 void ABaseCreepActor::InitSkeletalMesh() {}
 
 void ABaseCreepActor::InitAnimations() {}
+
+void ABaseCreepActor::InitWeapon() {}
+
+void ABaseCreepActor::AttachWeaponToSocket() 
+{
+    FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
+    auto WeaponInst = WeaponComponent->GetWepaonInstPtr();
+    WeaponInst->AttachToComponent(SceneComponent, AttachmentRules, "WeaponSocket");
+}

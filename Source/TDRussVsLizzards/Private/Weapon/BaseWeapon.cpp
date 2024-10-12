@@ -8,13 +8,28 @@ ABaseWeapon::ABaseWeapon()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	WeaponMesh = CreateDefaultSubobject<UStaticMesh>("WeaponMesh");
-
+	WeaponStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("UStaticMeshComponent");
+    WeaponStaticMesh->SetupAttachment(GetRootComponent());
 
 }
 
 void ABaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
+	
+}
+
+void ABaseWeapon::SetWeaponMesh(TObjectPtr<UStaticMesh> WeaponMeshIn) 
+{
+    if (WeaponStaticMesh)
+	{
+        WeaponStaticMesh->SetStaticMesh(WeaponMeshIn);
+	}
+	else
+	{
+        UE_LOG(LogTemp, Error, TEXT("WeaponMesh nullptr"));
+        checkNoEntry();
+	}
+
 	
 }
