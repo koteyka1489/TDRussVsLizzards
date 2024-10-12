@@ -8,7 +8,6 @@
 
 class UHealthComponent;
 class USkeletalMeshComponent;
-class ATDGoal;
 class UActorMovementComponent;
 class USceneComponent;
 
@@ -36,12 +35,10 @@ protected:
     UActorMovementComponent* MovementComponent;
 
 private:
-    //TObjectPtr<ATDGoal> Goal;
-
     TObjectPtr<UAnimSequence> CreepIdleAnimation;
     TObjectPtr<UAnimSequence> CreepWalkAnimation;
     TObjectPtr<UAnimSequence> CreepRunAnimation;
 
-    void InitSkeletalMesh();
-    void InitAnimations();
+    virtual void InitSkeletalMesh();
+    virtual void InitAnimations();
 };

@@ -3,7 +3,6 @@
 #include "Creeps/BaseCreepActor.h"
 #include "Components/HealthComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "Goal/TDGoal.h"
 #include "Components/ActorMovementComponent.h"
 
 ABaseCreepActor::ABaseCreepActor()
@@ -44,9 +43,6 @@ ABaseCreepActor::ABaseCreepActor()
 void ABaseCreepActor::BeginPlay()
 {
     Super::BeginPlay();
-
-    // Goal = Cast<ATDGoal>(UGameplayStatics::GetActorOfClass(GetWorld(), ATDGoal::StaticClass()));
-
     SkeletalMeshComponent->PlayAnimation(CreepIdleAnimation, true);
 }
 
