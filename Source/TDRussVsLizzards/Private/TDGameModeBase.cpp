@@ -3,7 +3,6 @@
 #include "TDGameModeBase.h"
 #include "Camera/TDCameraController.h"
 #include "Camera/CameraPawn.h"
-#include "Creeps/BaseCreepPawn.h"
 #include "Creeps/BaseCreepActor.h"
 
 ATDGameModeBase::ATDGameModeBase()
