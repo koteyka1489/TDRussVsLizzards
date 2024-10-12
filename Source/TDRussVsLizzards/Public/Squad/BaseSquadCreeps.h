@@ -22,6 +22,9 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Squad")
     int32 CreepsNum = 50;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad")
+    TSubclassOf<ABaseCreepActor> CreepsType;
+
 private:
     TArray<TObjectPtr<ABaseCreepActor>> Creeps;
 
