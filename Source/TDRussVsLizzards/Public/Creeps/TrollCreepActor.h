@@ -7,19 +7,17 @@
 #include "TrollCreepActor.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class TDRUSSVSLIZZARDS_API ATrollCreepActor : public ABaseCreepActor
 {
-	GENERATED_BODY()
-	
-	public:
-	ATrollCreepActor();
+    GENERATED_BODY()
 
-	protected:
+public:
+    ATrollCreepActor();
+
+protected:
     virtual void InitSkeletalMesh() override;
     virtual void InitAnimations() override;
-
-
 };

@@ -34,15 +34,12 @@ protected:
     UPROPERTY()
     UActorMovementComponent* MovementComponent;
 
-    virtual void InitSkeletalMesh();
-    virtual void InitAnimations();
+    virtual  void InitSkeletalMesh();
+    virtual  void InitAnimations();
 
     TObjectPtr<UAnimSequence> CreepIdleAnimation;
     TObjectPtr<UAnimSequence> CreepWalkAnimation;
     TObjectPtr<UAnimSequence> CreepRunAnimation;
-
-private:
-
 
     
 };

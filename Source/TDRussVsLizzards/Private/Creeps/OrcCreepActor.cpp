@@ -4,10 +4,13 @@
 
 AOrcCreepActor::AOrcCreepActor()
 {
+
     InitSkeletalMesh();
 
     InitAnimations();
 }
+
+
 
 void AOrcCreepActor::InitSkeletalMesh()
 {
@@ -26,7 +29,8 @@ void AOrcCreepActor::InitSkeletalMesh()
 
 void AOrcCreepActor::InitAnimations()
 {
-    // IDLE
+
+     // IDLE
     static ConstructorHelpers::FObjectFinder<UAnimSequence> CreepIdleAnimationRef(
         TEXT("/Script/Engine.AnimSequence'/Game/Fantasy_Pack/Characters/Orc_Hummer/Animations/Anim_Orc_Hummer_Idle.Anim_Orc_Hummer_Idle'"));
     if (CreepIdleAnimationRef.Succeeded())
