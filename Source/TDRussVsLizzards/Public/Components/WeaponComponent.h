@@ -18,7 +18,7 @@ public:
     UWeaponComponent();
     virtual void BeginPlay() override;
 
-    TObjectPtr<ABaseWeapon> GetWepaonInstPtr() { return Weapon; }
+    TObjectPtr<ABaseWeapon> GetWeaponInstPtr() { return Weapon; }
 
     void SetWeaponMesh(TObjectPtr<UStaticMesh> WeaponMeshIn);
     

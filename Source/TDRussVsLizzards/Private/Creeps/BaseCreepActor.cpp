@@ -57,6 +57,18 @@ void ABaseCreepActor::InitWeapon() {}
 void ABaseCreepActor::AttachWeaponToSocket() 
 {
     FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
-    auto WeaponInst = WeaponComponent->GetWepaonInstPtr();
-    WeaponInst->AttachToComponent(SceneComponent, AttachmentRules, "WeaponSocket");
+    auto WeaponInst = WeaponComponent->GetWeaponInstPtr();
+    if (WeaponInst)
+    {
+        bool AttachResult = WeaponInst->AttachToComponent(SkeletalMeshComponent, AttachmentRules, "WeaponSocket");
+        FString Message   = FString::Printf(TEXT("Attachment result is - %s %s"), AttachResult ? TEXT("TRUE") : TEXT("FALSE"), *GetName());
+        
+        GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, Message);
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("WeaponInst nullptr"));
+        checkNoEntry();
+    }
+    
 }

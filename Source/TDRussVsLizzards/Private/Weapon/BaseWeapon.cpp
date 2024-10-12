@@ -9,7 +9,7 @@ ABaseWeapon::ABaseWeapon()
 	PrimaryActorTick.bCanEverTick = false;
 
 	WeaponStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("UStaticMeshComponent");
-    WeaponStaticMesh->SetupAttachment(GetRootComponent());
+    SetRootComponent(WeaponStaticMesh);
 
 }
 
