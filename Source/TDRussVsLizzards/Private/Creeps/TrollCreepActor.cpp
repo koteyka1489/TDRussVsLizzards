@@ -1,13 +1,20 @@
 // TD Russ Vs Lizzards Game
 
 #include "Creeps/TrollCreepActor.h"
+#include "Components/WeaponComponent.h"
+#include "Weapon/CudgelWeapon.h"
 
 ATrollCreepActor::ATrollCreepActor()
 {
+    WeaponComponent = CreateDefaultSubobject<UWeaponComponent>("WeaponComponent");
+    check(IsValid(WeaponComponent));
+    WeaponComponent->InitWeaponType(ACudgelWeapon::StaticClass());
+
     InitSkeletalMesh();
 
     InitAnimations();
 }
+
 
 void ATrollCreepActor::InitSkeletalMesh()
 {

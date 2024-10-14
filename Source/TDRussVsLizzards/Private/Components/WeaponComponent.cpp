@@ -8,7 +8,7 @@ UWeaponComponent::UWeaponComponent()
 {
     PrimaryComponentTick.bCanEverTick = false;
 
-    WeaponType = ABaseWeapon::StaticClass();
+    
 }
 
 void UWeaponComponent::BeginPlay()
@@ -17,6 +17,13 @@ void UWeaponComponent::BeginPlay()
 
     checkf(AttachWeaponToSocket(), TEXT("Attach Weapon to is failed"));
 }
+
+void UWeaponComponent::InitWeaponType(TSubclassOf<ABaseWeapon> WeaponTypeIn) 
+{
+    WeaponType = WeaponTypeIn;
+}
+
+
 
 bool UWeaponComponent::AttachWeaponToSocket()
 {
@@ -29,8 +36,8 @@ bool UWeaponComponent::AttachWeaponToSocket()
     checkf(SkeletalMeshComp->DoesSocketExist(FName("WeaponSocket")), TEXT("Weapon socket  does not exist on the SkeletalMeshComponent"));
 
     FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
-    Weapon = GetWorld()->SpawnActor<ABaseWeapon>(WeaponType);
-    checkf(IsValid(Weapon), TEXT("Spawn Actor is Failed"));
+    WeaponInst = GetWorld()->SpawnActor<ABaseWeapon>(WeaponType);
+    checkf(IsValid(WeaponInst), TEXT("Spawn Actor is Failed"));
 
-    return Weapon->AttachToComponent(SkeletalMeshComp, AttachmentRules, "WeaponSocket");
+    return WeaponInst->AttachToComponent(SkeletalMeshComp, AttachmentRules, "WeaponSocket");
 }

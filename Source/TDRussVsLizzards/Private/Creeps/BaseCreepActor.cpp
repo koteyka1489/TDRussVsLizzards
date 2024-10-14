@@ -19,7 +19,7 @@ ABaseCreepActor::ABaseCreepActor()
 
     HealthComponent   = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
     MovementComponent = CreateDefaultSubobject<UActorMovementComponent>("MovementComponent");
-    WeaponComponent   = CreateDefaultSubobject<UWeaponComponent>("WeaponComponent");
+    
 
 
     check(IsValid(SkeletalMeshComponent));
@@ -48,7 +48,7 @@ void ABaseCreepActor::BeginPlay()
     check(IsValid(SkeletalMeshComponent));
     check(IsValid(HealthComponent));
     check(IsValid(MovementComponent));
-    check(IsValid(WeaponComponent));
+    
 
     SkeletalMeshComponent->PlayAnimation(CreepIdleAnimation, true);
     

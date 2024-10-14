@@ -18,6 +18,9 @@ public:
     ATrollCreepActor();
 
 protected:
+    UPROPERTY()
+    UWeaponComponent* WeaponComponent;
+
     virtual void InitSkeletalMesh() override;
     virtual void InitAnimations() override;
 };

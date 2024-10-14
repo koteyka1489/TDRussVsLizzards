@@ -12,7 +12,6 @@ class UActorMovementComponent;
 class USceneComponent;
 class UWeaponComponent;
 
-
 UCLASS()
 class TDRUSSVSLIZZARDS_API ABaseCreepActor : public AActor
 {
@@ -36,15 +35,10 @@ protected:
     UPROPERTY()
     UActorMovementComponent* MovementComponent;
 
-    UPROPERTY()
-    UWeaponComponent* WeaponComponent;
-
-
     virtual void InitSkeletalMesh();
     virtual void InitAnimations();
 
     TObjectPtr<UAnimSequence> CreepIdleAnimation;
     TObjectPtr<UAnimSequence> CreepWalkAnimation;
     TObjectPtr<UAnimSequence> CreepRunAnimation;
-
 };

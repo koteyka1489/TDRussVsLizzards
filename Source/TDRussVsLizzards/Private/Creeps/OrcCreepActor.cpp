@@ -2,13 +2,19 @@
 
 #include "Creeps/OrcCreepActor.h"
 #include "Components/WeaponComponent.h"
+#include "Weapon/HummerWeapon.h"
 
 AOrcCreepActor::AOrcCreepActor()
 {
+    WeaponComponent = CreateDefaultSubobject<UWeaponComponent>("WeaponComponent");
+    check(IsValid(WeaponComponent));
+    WeaponComponent->InitWeaponType(AHummerWeapon::StaticClass());
+
     InitSkeletalMesh();
 
     InitAnimations();
 }
+
 
 void AOrcCreepActor::InitSkeletalMesh()
 {

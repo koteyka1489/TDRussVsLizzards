@@ -16,10 +16,11 @@ class TDRUSSVSLIZZARDS_API ABaseWeapon : public AActor
 public:
     ABaseWeapon();
     virtual void BeginPlay() override;
-    virtual void SetWeaponMesh();
+    
 
 protected:
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+    UPROPERTY()
     UStaticMeshComponent* WeaponStaticMesh;
 
+    virtual void SetWeaponMesh();
 };

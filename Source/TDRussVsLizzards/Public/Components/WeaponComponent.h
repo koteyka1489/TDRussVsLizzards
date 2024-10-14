@@ -8,6 +8,9 @@
 
 class ABaseWeapon;
 
+
+
+
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class TDRUSSVSLIZZARDS_API UWeaponComponent : public UActorComponent
 {
@@ -17,12 +20,14 @@ public:
     UWeaponComponent();
     virtual void BeginPlay() override;
 
+    void InitWeaponType(TSubclassOf<ABaseWeapon> WeaponTypeIn);
+
 protected:
     UPROPERTY()
     TSubclassOf<ABaseWeapon> WeaponType;
 
     UPROPERTY()
-    TObjectPtr<ABaseWeapon> Weapon;
+    TObjectPtr<ABaseWeapon> WeaponInst;
 
 private:
     bool AttachWeaponToSocket();
