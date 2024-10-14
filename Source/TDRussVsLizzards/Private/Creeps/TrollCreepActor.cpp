@@ -2,7 +2,7 @@
 
 #include "Creeps/TrollCreepActor.h"
 
-ATrollCreepActor::ATrollCreepActor() 
+ATrollCreepActor::ATrollCreepActor()
 {
     InitSkeletalMesh();
 
@@ -13,55 +13,35 @@ void ATrollCreepActor::InitSkeletalMesh()
 {
     static ConstructorHelpers::FObjectFinder<USkeletalMesh> CreepMesh(
         TEXT("/Script/Engine.SkeletalMesh'/Game/Fantasy_Pack/Characters/Troll/Mesh/SK_Troll.SK_Troll'"));
-    if (CreepMesh.Succeeded())
-    {
-        SkeletalMeshComponent->SetSkeletalMesh(CreepMesh.Object.Get());
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("Wrong Reference of Skeletal Mesh"));
-        checkNoEntry();
-    }
+
+    checkf(CreepMesh.Succeeded(), TEXT("Find Creep Mesh is not Succeeded "));
+
+    SkeletalMeshComponent->SetSkeletalMesh(CreepMesh.Object.Get());
 }
 
 void ATrollCreepActor::InitAnimations()
-{  
+{
     // IDLE
     static ConstructorHelpers::FObjectFinder<UAnimSequence> CreepIdleAnimationRef(
         TEXT("/Script/Engine.AnimSequence'/Game/Fantasy_Pack/Characters/Troll/Animations/Anim_Troll_Idle.Anim_Troll_Idle'"));
-    if (CreepIdleAnimationRef.Succeeded())
-    {
-        CreepIdleAnimation = CreepIdleAnimationRef.Object;
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("Wrong Reference of Animation"));
-        checkNoEntry();
-    }
+
+    checkf(CreepIdleAnimationRef.Succeeded(), TEXT("Find Creep Idle Animation is not Succeeded "));
+
+    CreepIdleAnimation = CreepIdleAnimationRef.Object;
 
     // WALK
     static ConstructorHelpers::FObjectFinder<UAnimSequence> CreepWalkAnimationRef(
         TEXT("/Script/Engine.AnimSequence'/Game/Fantasy_Pack/Characters/Troll/Animations/Anim_Troll_Walk.Anim_Troll_Walk'"));
-    if (CreepWalkAnimationRef.Succeeded())
-    {
-        CreepWalkAnimation = CreepWalkAnimationRef.Object;
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("Wrong Reference of Animation"));
-        checkNoEntry();
-    }
+
+    checkf(CreepWalkAnimationRef.Succeeded(), TEXT("Find Creep Walk Animation is not Succeeded "));
+
+    CreepWalkAnimation = CreepWalkAnimationRef.Object;
 
     // RUN
     static ConstructorHelpers::FObjectFinder<UAnimSequence> CreepRunAnimRef(
         TEXT("/Script/Engine.AnimSequence'/Game/Fantasy_Pack/Characters/Troll/Animations/Anim_Troll_Run.Anim_Troll_Run'"));
-    if (CreepRunAnimRef.Succeeded())
-    {
-        CreepRunAnimation = CreepRunAnimRef.Object;
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("Wrong Reference of Animation"));
-        checkNoEntry();
-    }
+
+    checkf(CreepRunAnimRef.Succeeded(), TEXT("Find Creep Walk Animation is not Succeeded "));
+
+    CreepRunAnimation = CreepRunAnimRef.Object;
 }

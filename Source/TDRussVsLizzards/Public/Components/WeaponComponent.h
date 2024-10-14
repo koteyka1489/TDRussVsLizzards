@@ -21,7 +21,7 @@ protected:
     UPROPERTY()
     TSubclassOf<ABaseWeapon> WeaponType;
 
-
+    UPROPERTY()
     TObjectPtr<ABaseWeapon> Weapon;
 
 private:

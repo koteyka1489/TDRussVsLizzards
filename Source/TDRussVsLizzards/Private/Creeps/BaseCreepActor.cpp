@@ -22,6 +22,7 @@ ABaseCreepActor::ABaseCreepActor()
     WeaponComponent   = CreateDefaultSubobject<UWeaponComponent>("WeaponComponent");
 
 
+    check(IsValid(SkeletalMeshComponent));
     SkeletalMeshComponent->SetRelativeLocation(FVector(0.0, 0.0, -90.0));
     SkeletalMeshComponent->SetRelativeRotation(FRotator(0.0, -90.0, 0.0));
     SkeletalMeshComponent->SetSimulatePhysics(false);
@@ -43,6 +44,12 @@ ABaseCreepActor::ABaseCreepActor()
 void ABaseCreepActor::BeginPlay()
 {
     Super::BeginPlay();
+    check(IsValid(SceneComponent));
+    check(IsValid(SkeletalMeshComponent));
+    check(IsValid(HealthComponent));
+    check(IsValid(MovementComponent));
+    check(IsValid(WeaponComponent));
+
     SkeletalMeshComponent->PlayAnimation(CreepIdleAnimation, true);
     
 }
