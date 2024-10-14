@@ -5,12 +5,10 @@
 
 AOrcCreepActor::AOrcCreepActor()
 {
-
     InitSkeletalMesh();
 
     InitAnimations();
 
-    InitWeapon();
 }
 
 
@@ -73,18 +71,4 @@ void AOrcCreepActor::InitAnimations()
     }
 }
 
-void AOrcCreepActor::InitWeapon() 
-{
-   
-    static ConstructorHelpers::FObjectFinder<UStaticMesh> WeaponMesh(
-        TEXT("/Script/Engine.StaticMesh'/Game/Fantasy_Pack/Characters/Orc_Hummer/Mesh/SM_Hummer.SM_Hummer'"));
-    if (WeaponMesh.Succeeded())
-    {
-        WeaponComponent->SetWeaponMesh(WeaponMesh.Object);
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("Wrong Reference of Skeletal Mesh"));
-        checkNoEntry();
-    }
-}
+

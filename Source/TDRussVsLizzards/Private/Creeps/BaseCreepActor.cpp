@@ -31,7 +31,7 @@ ABaseCreepActor::ABaseCreepActor()
     SkeletalMeshComponent->bIgnoreRadialForce                 = true;
     SkeletalMeshComponent->bIgnoreRadialImpulse               = true;
     SkeletalMeshComponent->bReplicatePhysicsToAutonomousProxy = false;
-    SkeletalMeshComponent->CastShadow                         = 0u;
+    SkeletalMeshComponent->CastShadow                         = 1u;
     SkeletalMeshComponent->IndirectLightingCacheQuality       = EIndirectLightingCacheQuality::ILCQ_Off;
     SkeletalMeshComponent->HLODBatchingPolicy                 = EHLODBatchingPolicy::Instancing;
     SkeletalMeshComponent->bVisibleInRayTracing               = false;
@@ -43,7 +43,6 @@ ABaseCreepActor::ABaseCreepActor()
 void ABaseCreepActor::BeginPlay()
 {
     Super::BeginPlay();
-    AttachWeaponToSocket();
     SkeletalMeshComponent->PlayAnimation(CreepIdleAnimation, true);
     
 }
@@ -52,23 +51,5 @@ void ABaseCreepActor::InitSkeletalMesh() {}
 
 void ABaseCreepActor::InitAnimations() {}
 
-void ABaseCreepActor::InitWeapon() {}
 
-void ABaseCreepActor::AttachWeaponToSocket() 
-{
-    FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
-    auto WeaponInst = WeaponComponent->GetWeaponInstPtr();
-    if (WeaponInst)
-    {
-        bool AttachResult = WeaponInst->AttachToComponent(SkeletalMeshComponent, AttachmentRules, "WeaponSocket");
-        FString Message   = FString::Printf(TEXT("Attachment result is - %s %s"), AttachResult ? TEXT("TRUE") : TEXT("FALSE"), *GetName());
-        
-        GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, Message);
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("WeaponInst nullptr"));
-        checkNoEntry();
-    }
-    
-}
+

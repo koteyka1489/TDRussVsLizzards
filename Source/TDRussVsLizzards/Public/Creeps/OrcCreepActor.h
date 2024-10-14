@@ -20,5 +20,5 @@ public:
 protected:
     virtual void InitSkeletalMesh() override;
     virtual void InitAnimations() override;
-    virtual void InitWeapon() override;
+    
 };

@@ -12,6 +12,7 @@ class UActorMovementComponent;
 class USceneComponent;
 class UWeaponComponent;
 
+
 UCLASS()
 class TDRUSSVSLIZZARDS_API ABaseCreepActor : public AActor
 {
@@ -20,6 +21,7 @@ class TDRUSSVSLIZZARDS_API ABaseCreepActor : public AActor
 public:
     ABaseCreepActor();
     virtual void BeginPlay() override;
+    TObjectPtr<USkeletalMeshComponent> GetSkeletalMeshComponent() { return SkeletalMeshComponent; }
 
 protected:
     UPROPERTY()
@@ -37,14 +39,12 @@ protected:
     UPROPERTY()
     UWeaponComponent* WeaponComponent;
 
+
     virtual void InitSkeletalMesh();
     virtual void InitAnimations();
-    virtual void InitWeapon();
 
     TObjectPtr<UAnimSequence> CreepIdleAnimation;
     TObjectPtr<UAnimSequence> CreepWalkAnimation;
     TObjectPtr<UAnimSequence> CreepRunAnimation;
 
-    private:
-    void AttachWeaponToSocket();
 };

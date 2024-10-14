@@ -8,7 +8,6 @@
 
 class ABaseWeapon;
 
-
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class TDRUSSVSLIZZARDS_API UWeaponComponent : public UActorComponent
 {
@@ -18,15 +17,13 @@ public:
     UWeaponComponent();
     virtual void BeginPlay() override;
 
-    TObjectPtr<ABaseWeapon> GetWeaponInstPtr() { return Weapon; }
-
-    void SetWeaponMesh(TObjectPtr<UStaticMesh> WeaponMeshIn);
-    
-
 protected:
+    UPROPERTY()
+    TSubclassOf<ABaseWeapon> WeaponType;
 
-   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
-   TObjectPtr<ABaseWeapon> Weapon;
-   
 
+    TObjectPtr<ABaseWeapon> Weapon;
+
+private:
+    bool AttachWeaponToSocket();
 };
