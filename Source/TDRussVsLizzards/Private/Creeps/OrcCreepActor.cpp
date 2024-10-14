@@ -8,67 +8,42 @@ AOrcCreepActor::AOrcCreepActor()
     InitSkeletalMesh();
 
     InitAnimations();
-
 }
-
-
 
 void AOrcCreepActor::InitSkeletalMesh()
 {
     static ConstructorHelpers::FObjectFinder<USkeletalMesh> CreepMesh(
         TEXT("/Script/Engine.SkeletalMesh'/Game/Fantasy_Pack/Characters/Orc_Hummer/Mesh/SK_Orc_Hummer.SK_Orc_Hummer'"));
-    if (CreepMesh.Succeeded())
-    {
-        SkeletalMeshComponent->SetSkeletalMesh(CreepMesh.Object.Get());
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("Wrong Reference of Skeletal Mesh"));
-        checkNoEntry();
-    }
+
+    checkf(CreepMesh.Succeeded(), TEXT("Find Creep Mesh is not Succeeded "));
+
+    SkeletalMeshComponent->SetSkeletalMesh(CreepMesh.Object.Get());
 }
 
 void AOrcCreepActor::InitAnimations()
 {
 
-     // IDLE
+    // IDLE
     static ConstructorHelpers::FObjectFinder<UAnimSequence> CreepIdleAnimationRef(
         TEXT("/Script/Engine.AnimSequence'/Game/Fantasy_Pack/Characters/Orc_Hummer/Animations/Anim_Orc_Hummer_Idle.Anim_Orc_Hummer_Idle'"));
-    if (CreepIdleAnimationRef.Succeeded())
-    {
-        CreepIdleAnimation = CreepIdleAnimationRef.Object;
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("Wrong Reference of Animation"));
-        checkNoEntry();
-    }
+
+    checkf(CreepIdleAnimationRef.Succeeded(), TEXT("Find Creep Idle Animation is not Succeeded "));
+
+    CreepIdleAnimation = CreepIdleAnimationRef.Object;
 
     // WALK
     static ConstructorHelpers::FObjectFinder<UAnimSequence> CreepWalkAnimationRef(
         TEXT("/Script/Engine.AnimSequence'/Game/Fantasy_Pack/Characters/Orc_Hummer/Animations/Anim_Orc_Hummer_Walk.Anim_Orc_Hummer_Walk'"));
-    if (CreepWalkAnimationRef.Succeeded())
-    {
-        CreepWalkAnimation = CreepWalkAnimationRef.Object;
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("Wrong Reference of Animation"));
-        checkNoEntry();
-    }
+
+    checkf(CreepWalkAnimationRef.Succeeded(), TEXT("Find Creep Walk Animation is not Succeeded "));
+
+    CreepWalkAnimation = CreepWalkAnimationRef.Object;
 
     // RUN
     static ConstructorHelpers::FObjectFinder<UAnimSequence> CreepRunAnimRef(
         TEXT("/Script/Engine.AnimSequence'/Game/Fantasy_Pack/Characters/Orc_Hummer/Animations/Anim_Orc_Hummer_Run.Anim_Orc_Hummer_Run'"));
-    if (CreepRunAnimRef.Succeeded())
-    {
-        CreepRunAnimation = CreepRunAnimRef.Object;
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("Wrong Reference of Animation"));
-        checkNoEntry();
-    }
+
+    checkf(CreepRunAnimRef.Succeeded(), TEXT("Find Creep Walk Animation is not Succeeded "));
+
+    CreepRunAnimation = CreepRunAnimRef.Object;
 }
-
-

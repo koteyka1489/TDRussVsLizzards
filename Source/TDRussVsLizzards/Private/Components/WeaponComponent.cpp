@@ -8,58 +8,29 @@ UWeaponComponent::UWeaponComponent()
 {
     PrimaryComponentTick.bCanEverTick = false;
 
-    WeaponType                        = ABaseWeapon::StaticClass();
+    WeaponType = ABaseWeapon::StaticClass();
 }
 
 void UWeaponComponent::BeginPlay()
 {
     Super::BeginPlay();
 
-    if (AttachWeaponToSocket())
-    {}
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("Attach Weapon is failed"));
-        checkNoEntry();
-    }
+    checkf(AttachWeaponToSocket(), TEXT("Attach Weapon to is failed"));
 }
 
 bool UWeaponComponent::AttachWeaponToSocket()
 {
     auto OwnerActor = Cast<ABaseCreepActor>(GetOwner());
-    if (!OwnerActor)
-    {
-        UE_LOG(LogTemp, Error, TEXT("Cast Actor failed"));
-        checkNoEntry();
-    }
+    checkf(IsValid(OwnerActor), TEXT("Cast Actor is failed"));
 
     auto SkeletalMeshComp = OwnerActor->GetSkeletalMeshComponent();
-    if (!SkeletalMeshComp)
-    {
-        UE_LOG(LogTemp, Error, TEXT(" get skeletal mesh is failed"));
-        checkNoEntry();
-    }
+    checkf(IsValid(SkeletalMeshComp), TEXT("get skeletal mesh is failed"));
 
-    if (!SkeletalMeshComp->DoesSocketExist(FName("WeaponSocket")))
-    {
-        UE_LOG(LogTemp, Error, TEXT("Weapon socket  does not exist on the SkeletalMeshComponent"));
-        checkNoEntry();
-    }
+    checkf(SkeletalMeshComp->DoesSocketExist(FName("WeaponSocket")), TEXT("Weapon socket  does not exist on the SkeletalMeshComponent"));
 
     FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
     Weapon = GetWorld()->SpawnActor<ABaseWeapon>(WeaponType);
-    if (Weapon)
-    {
-        bool AttachResult = Weapon->AttachToComponent(SkeletalMeshComp, AttachmentRules, "WeaponSocket");
-        FString Message   = FString::Printf(TEXT("Attachment result is - %s %s"), AttachResult ? TEXT("TRUE") : TEXT("FALSE"), *GetName());
-        GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, Message);
-        return AttachResult;
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("Spawn Actor is Failed"));
-        checkNoEntry();
-    }
+    checkf(IsValid(Weapon), TEXT("Spawn Actor is Failed"));
 
-    return false;
+    return Weapon->AttachToComponent(SkeletalMeshComp, AttachmentRules, "WeaponSocket");
 }
