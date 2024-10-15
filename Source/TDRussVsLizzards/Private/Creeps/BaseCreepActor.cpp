@@ -6,16 +6,17 @@
 #include "Components/ActorMovementComponent.h"
 #include "Components/WeaponComponent.h"
 #include "Weapon/BaseWeapon.h"
+#include "Components\CapsuleComponent.h"
 
 ABaseCreepActor::ABaseCreepActor()
 {
     PrimaryActorTick.bCanEverTick = false;
 
-    SceneComponent = CreateDefaultSubobject<USceneComponent>("SceneComponent");
-    SetRootComponent(SceneComponent);
+    CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>("CapsuleComponent");
+    SetRootComponent(CapsuleComponent);
 
     SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>("SkeletalMeshComponent");
-    SkeletalMeshComponent->SetupAttachment(SceneComponent);
+    SkeletalMeshComponent->SetupAttachment(CapsuleComponent);
 
     HealthComponent   = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
     MovementComponent = CreateDefaultSubobject<UActorMovementComponent>("MovementComponent");
@@ -44,7 +45,7 @@ ABaseCreepActor::ABaseCreepActor()
 void ABaseCreepActor::BeginPlay()
 {
     Super::BeginPlay();
-    check(IsValid(SceneComponent));
+    check(IsValid(CapsuleComponent));
     check(IsValid(SkeletalMeshComponent));
     check(IsValid(HealthComponent));
     check(IsValid(MovementComponent));

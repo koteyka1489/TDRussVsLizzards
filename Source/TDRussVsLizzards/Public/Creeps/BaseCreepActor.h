@@ -9,7 +9,7 @@
 class UHealthComponent;
 class USkeletalMeshComponent;
 class UActorMovementComponent;
-class USceneComponent;
+class UCapsuleComponent;
 class UWeaponComponent;
 
 UCLASS()
@@ -24,7 +24,7 @@ public:
 
 protected:
     UPROPERTY()
-    USceneComponent* SceneComponent;
+    UCapsuleComponent* CapsuleComponent;
 
     UPROPERTY()
     TObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
