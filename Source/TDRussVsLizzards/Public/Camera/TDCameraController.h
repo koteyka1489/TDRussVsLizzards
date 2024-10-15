@@ -14,7 +14,7 @@ DECLARE_DELEGATE_OneParam(FOnZoomChanged, float);
 DECLARE_DELEGATE_OneParam(FOnMoveCameraUpDown, float);
 DECLARE_DELEGATE_OneParam(FOnMoveCameraRightLeft, float);
 DECLARE_DELEGATE_OneParam(FOnRotateCamera, float);
-//DECLARE_DELEGATE_OneParam(FOnSetHeroDestination, FVector);
+DECLARE_DELEGATE_OneParam(FOnLeftMouseClickChois, FHitResult);
 
 
 UCLASS()
@@ -30,7 +30,7 @@ public:
     FOnMoveCameraUpDown OnMoveCameraUpDown;
     FOnMoveCameraRightLeft OnMoveCameraRightLeft;
     FOnRotateCamera OnRotateCamera;
-    //FOnSetHeroDestination OnSetHeroDestination;
+    FOnLeftMouseClickChois OnLeftMouseClickChois;
 
 protected:
     virtual void BeginPlay() override;
@@ -72,6 +72,6 @@ private:
     void MoveCameraRightLeft(const FInputActionValue& Value);
     void ZoomUpAction(const FInputActionValue& Value);
     void RotateCamera(const FInputActionValue& Value);
-    //void SetHeroDestinationTriggered();
-    //FVector GetHeroDestination();
+    void SetLeftClickChois();
+    FHitResult GetLeftClickHit();
 };

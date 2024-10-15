@@ -33,6 +33,7 @@ void ACameraPawn::BeginPlay()
         CameraController->OnMoveCameraUpDown.BindUObject(this, &ACameraPawn::OnMoveCameraUpDown);
         CameraController->OnMoveCameraRightLeft.BindUObject(this, &ACameraPawn::OnMoveCameraRightLeft);
         CameraController->OnRotateCamera.BindUObject(this, &ACameraPawn::OnRotateCamera);
+        CameraController->OnLeftMouseClickChois.BindUObject(this, &ACameraPawn::OnLeftMouseClickChois);
     }
 }
 
@@ -70,5 +71,11 @@ void ACameraPawn::OnRotateCamera(float Direction)
     float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
     FRotator NewRotate = GetActorRotation() + FRotator(0.0f, Direction * SpeedRotateCamera * DeltaTime, 0.0f);
     SetActorRotation(NewRotate);
+}
+
+void ACameraPawn::OnLeftMouseClickChois(FHitResult Hit)
+{
+    FString Message = FString::Printf(TEXT("Hited Actor - %s"), *Hit.GetActor()->GetName());
+    GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Red, Message);
 }
 

@@ -10,11 +10,14 @@ ABaseWeapon::ABaseWeapon()
     WeaponStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("UStaticMeshComponent");
     SetRootComponent(WeaponStaticMesh);
 
+
+    check(IsValid(WeaponStaticMesh));
+    WeaponStaticMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Ignore);
     WeaponStaticMesh->SetVisibility(true, true);
     WeaponStaticMesh->SetSimulatePhysics(false);
-    WeaponStaticMesh->CastShadow                   = 1u;
-    WeaponStaticMesh->bVisibleInRayTracing         = true;
-    WeaponStaticMesh->bVisibleInReflectionCaptures = true;
+    WeaponStaticMesh->CastShadow                   = 0u;
+    WeaponStaticMesh->bVisibleInRayTracing         = false;
+    WeaponStaticMesh->bVisibleInReflectionCaptures = false;
 }
 
 void ABaseWeapon::BeginPlay()

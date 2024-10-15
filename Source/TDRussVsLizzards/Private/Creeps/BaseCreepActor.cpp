@@ -22,6 +22,10 @@ ABaseCreepActor::ABaseCreepActor()
     MovementComponent = CreateDefaultSubobject<UActorMovementComponent>("MovementComponent");
     
 
+    check(IsValid(CapsuleComponent));
+    CapsuleComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
+    CapsuleComponent->SetCapsuleHalfHeight(120.0f);
+    CapsuleComponent->SetCapsuleRadius(80.0f);
 
     check(IsValid(SkeletalMeshComponent));
     SkeletalMeshComponent->SetRelativeLocation(FVector(0.0, 0.0, -90.0));

@@ -41,8 +41,7 @@ void ATDCameraController::SetupInputComponent()
         EnhancedInputComponent->BindAction(RotateRightCameraAction, ETriggerEvent::Triggered, this, &ATDCameraController::RotateCamera);
         EnhancedInputComponent->BindAction(RotateLeftCameraAction, ETriggerEvent::Triggered, this, &ATDCameraController::RotateCamera);
 
-        // EnhancedInputComponent->BindAction(
-        //  SetHeroDestinationAction, ETriggerEvent::Triggered, this, &ATDCameraController::SetHeroDestinationTriggered);
+        EnhancedInputComponent->BindAction(SetHeroDestinationAction, ETriggerEvent::Started, this, &ATDCameraController::SetLeftClickChois);
     }
     else
     {
@@ -73,46 +72,25 @@ void ATDCameraController::RotateCamera(const FInputActionValue& Value)
     checkf(OnRotateCamera.ExecuteIfBound(Value.Get<float>()), TEXT(" OnRotateCamera Delegate is not bound "));
 }
 
-// void ATDCameraController::SetHeroDestinationTriggered()
-//{
-//     if (OnSetHeroDestination.ExecuteIfBound(GetHeroDestination()))
-//     {
-//     }
-//     else
-//     {
-//         UE_LOG(LogCameraController, Error, TEXT(" OnSetHeroDestination Delegate is not bound "));
-//         checkNoEntry();
-//     }
-// }
-//
-// FVector ATDCameraController::GetHeroDestination()
-//{
-//     FHitResult Hit;
-//     bool bHitSuccessful = false;
-//     FVector MouseWorldLocation{};
-//     FVector MouseWorldDirection{};
-//
-//     bHitSuccessful = DeprojectMousePositionToWorld(MouseWorldLocation, MouseWorldDirection);
-//     if (bHitSuccessful)
-//     {
-//         FVector TraceEnd = MouseWorldLocation + MouseWorldDirection * 50000;
-//         bHitSuccessful   = GetWorld()->LineTraceSingleByChannel(Hit, MouseWorldLocation, TraceEnd, ECollisionChannel::ECC_Visibility);
-//         if (bHitSuccessful)
-//         {
-//             return Hit.Location;
-//         }
-//         else
-//         {
-//             UE_LOG(LogCameraController, Error, TEXT(" No HIT"));
-//             checkNoEntry();
-//         }
-//     }
-//     else
-//     {
-//         UE_LOG(LogCameraController, Error, TEXT(" Unable to determine value Mouse Click"));
-//         checkNoEntry();
-//     }
-//     Hit.Location;
-//
-//     return FVector::Zero();
-// }
+void ATDCameraController::SetLeftClickChois()
+{
+    checkf(OnLeftMouseClickChois.ExecuteIfBound(GetLeftClickHit()), TEXT(" OnSetHeroDestination Delegate is not bound "));
+}
+
+FHitResult ATDCameraController::GetLeftClickHit()
+{
+    FHitResult Hit;
+    bool bHitSuccessful = false;
+    FVector MouseWorldLocation{};
+    FVector MouseWorldDirection{};
+
+    bHitSuccessful = DeprojectMousePositionToWorld(MouseWorldLocation, MouseWorldDirection);
+    checkf(bHitSuccessful, TEXT(" Unable to determine value Mouse Click"));
+
+    FVector TraceEnd = MouseWorldLocation + MouseWorldDirection * 50000;
+
+    bHitSuccessful = GetWorld()->LineTraceSingleByChannel(Hit, MouseWorldLocation, TraceEnd, ECollisionChannel::ECC_Visibility);
+    checkf(bHitSuccessful, TEXT(" No HIT"));
+
+    return Hit;
+}

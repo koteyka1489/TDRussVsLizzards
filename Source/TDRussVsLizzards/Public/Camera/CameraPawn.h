@@ -55,4 +55,6 @@ private:
     void OnMoveCameraUpDown(float Direction);
     void OnMoveCameraRightLeft(float Direction);
     void OnRotateCamera(float Direction);
+    void OnLeftMouseClickChois(FHitResult Hit);
+
 };
