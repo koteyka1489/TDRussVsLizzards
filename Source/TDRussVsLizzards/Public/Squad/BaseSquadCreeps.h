@@ -6,6 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "BaseSquadCreeps.generated.h"
 
+DECLARE_DELEGATE_OneParam(FOnSquadIsChoisen, ABaseSquadCreeps*)
+
+
 class ABaseCreepActor;
 
 UCLASS()
@@ -17,6 +20,9 @@ public:
     ABaseSquadCreeps();
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaTime) override;
+    void SquadUnChoisen();
+
+    FOnSquadIsChoisen OnSquadIsChoisen;
 
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Squad")
@@ -27,6 +33,12 @@ protected:
 
 private:
     TArray<TObjectPtr<ABaseCreepActor>> Creeps;
+    bool bSquadIsChosen = false;
+
 
     void SpawnCreeps();
+    void BindOnCreepIsClickedtDelegate();
+
+    void OnCreepIsClicked();
+    
 };

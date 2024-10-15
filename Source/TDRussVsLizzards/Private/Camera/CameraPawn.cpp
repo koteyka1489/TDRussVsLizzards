@@ -5,6 +5,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/TDCameraController.h"
 #include "Kismet/GameplayStatics.h"
+#include "Creeps/BaseCreepActor.h"
+#include "Squad/BaseSquadCreeps.h"
+#include "Kismet/GameplayStatics.h"
 
 ACameraPawn::ACameraPawn()
 {
@@ -35,6 +38,9 @@ void ACameraPawn::BeginPlay()
         CameraController->OnRotateCamera.BindUObject(this, &ACameraPawn::OnRotateCamera);
         CameraController->OnLeftMouseClickChois.BindUObject(this, &ACameraPawn::OnLeftMouseClickChois);
     }
+
+    GetSquadsOnLevel();
+    BindOnSquadIsChoisenDelegate();
 }
 
 void ACameraPawn::Tick(float DeltaTime)
@@ -66,9 +72,9 @@ void ACameraPawn::OnMoveCameraRightLeft(float Direction)
     SetActorLocation(GetActorLocation() + GetActorRightVector() * Direction * SpeedCamera * DeltaTime);
 }
 
-void ACameraPawn::OnRotateCamera(float Direction) 
+void ACameraPawn::OnRotateCamera(float Direction)
 {
-    float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
+    float DeltaTime    = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
     FRotator NewRotate = GetActorRotation() + FRotator(0.0f, Direction * SpeedRotateCamera * DeltaTime, 0.0f);
     SetActorRotation(NewRotate);
 }
@@ -77,5 +83,63 @@ void ACameraPawn::OnLeftMouseClickChois(FHitResult Hit)
 {
     FString Message = FString::Printf(TEXT("Hited Actor - %s"), *Hit.GetActor()->GetName());
     GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Red, Message);
+
+    auto Creep = Cast<ABaseCreepActor>(Hit.GetActor());
+    if (IsValid(Creep))
+    {
+        Creep->SetCreepIsClicked();
+    }
+    else
+    {
+        if (ChoisenSquads.Num() == 0)
+        {
+            return;
+        }
+        else
+        {
+            for (auto& Squad : ChoisenSquads)
+            {
+                Squad->SquadUnChoisen();
+            }
+            ChoisenSquads.Empty();
+        }
+    }
 }
 
+void ACameraPawn::OnSquadIsChoisen(ABaseSquadCreeps* SquadIn)
+{
+    for (auto Squad : ChoisenSquads)
+    {
+        if (Squad.Get() == SquadIn) return;
+    }
+
+    ChoisenSquads.Add(SquadIn);
+}
+
+void ACameraPawn::GetSquadsOnLevel()
+{
+    TArray<AActor*> Actors;
+    UGameplayStatics::GetAllActorsOfClass(GetWorld(), ABaseSquadCreeps::StaticClass(), Actors);
+
+    checkf(!Actors.IsEmpty(), TEXT("Get All Squads on level is Failed"));
+
+    for (auto& Actor : Actors)
+    {
+        auto Squad = Cast<ABaseSquadCreeps>(Actor);
+        if (IsValid(Squad))
+        {
+            SquadsOnLevel.Add(Squad);
+        }
+    }
+}
+
+void ACameraPawn::BindOnSquadIsChoisenDelegate()
+{
+
+    checkf(!SquadsOnLevel.IsEmpty(), TEXT("SquadsOnLevel is Empty"));
+
+    for (auto& Squad : SquadsOnLevel)
+    {
+        Squad->OnSquadIsChoisen.BindUObject(this, &ACameraPawn::OnSquadIsChoisen);
+    }
+}

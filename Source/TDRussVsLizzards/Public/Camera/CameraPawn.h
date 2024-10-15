@@ -9,6 +9,7 @@
 class UCameraComponent;
 class USpringArmComponent;
 class USceneComponent;
+class ABaseSquadCreeps;
 
 UCLASS()
 class TDRUSSVSLIZZARDS_API ACameraPawn : public APawn
@@ -56,5 +57,13 @@ private:
     void OnMoveCameraRightLeft(float Direction);
     void OnRotateCamera(float Direction);
     void OnLeftMouseClickChois(FHitResult Hit);
+    void OnSquadIsChoisen(ABaseSquadCreeps* SquadIn);
+
+    void GetSquadsOnLevel();
+    void BindOnSquadIsChoisenDelegate();
+
+
+    TArray<TObjectPtr<ABaseSquadCreeps>> SquadsOnLevel;
+    TArray<TObjectPtr<ABaseSquadCreeps>> ChoisenSquads;
 
 };

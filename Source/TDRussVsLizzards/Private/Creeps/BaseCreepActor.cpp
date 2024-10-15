@@ -59,6 +59,13 @@ void ABaseCreepActor::BeginPlay()
     
 }
 
+void ABaseCreepActor::SetCreepIsClicked()
+{
+    checkf(OnCreepIsClicked.ExecuteIfBound(), TEXT("OnCreepIsClicked not bound"));
+}
+
+
+
 void ABaseCreepActor::InitSkeletalMesh() {}
 
 void ABaseCreepActor::InitAnimations() {}

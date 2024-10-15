@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "BaseCreepActor.generated.h"
 
+DECLARE_DELEGATE(FOnCreepIsClicked);
+
 class UHealthComponent;
 class USkeletalMeshComponent;
 class UActorMovementComponent;
@@ -20,7 +22,13 @@ class TDRUSSVSLIZZARDS_API ABaseCreepActor : public AActor
 public:
     ABaseCreepActor();
     virtual void BeginPlay() override;
+
     TObjectPtr<USkeletalMeshComponent> GetSkeletalMeshComponent() { return SkeletalMeshComponent; }
+
+    void SetCreepIsClicked();
+    void SetCreepIsNotClicked();
+
+    FOnCreepIsClicked OnCreepIsClicked;
 
 protected:
     UPROPERTY()
@@ -41,4 +49,7 @@ protected:
     TObjectPtr<UAnimSequence> CreepIdleAnimation;
     TObjectPtr<UAnimSequence> CreepWalkAnimation;
     TObjectPtr<UAnimSequence> CreepRunAnimation;
+
+private:
+    
 };
