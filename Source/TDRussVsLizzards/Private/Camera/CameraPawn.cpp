@@ -81,9 +81,6 @@ void ACameraPawn::OnRotateCamera(float Direction)
 
 void ACameraPawn::OnLeftMouseClickChois(FHitResult Hit)
 {
-    FString Message = FString::Printf(TEXT("Hited Actor - %s"), *Hit.GetActor()->GetName());
-    GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Red, Message);
-
     auto Creep = Cast<ABaseCreepActor>(Hit.GetActor());
     if (IsValid(Creep))
     {
@@ -135,7 +132,6 @@ void ACameraPawn::GetSquadsOnLevel()
 
 void ACameraPawn::BindOnSquadIsChoisenDelegate()
 {
-
     checkf(!SquadsOnLevel.IsEmpty(), TEXT("SquadsOnLevel is Empty"));
 
     for (auto& Squad : SquadsOnLevel)
