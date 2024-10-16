@@ -37,6 +37,7 @@ void ACameraPawn::BeginPlay()
         CameraController->OnMoveCameraRightLeft.BindUObject(this, &ACameraPawn::OnMoveCameraRightLeft);
         CameraController->OnRotateCamera.BindUObject(this, &ACameraPawn::OnRotateCamera);
         CameraController->OnLeftMouseClickChois.BindUObject(this, &ACameraPawn::OnLeftMouseClickChois);
+        CameraController->OnRightMouseClickChois.BindUObject(this, &ACameraPawn::OnRightMouseClickChois);
     }
 
     GetSquadsOnLevel();
@@ -100,6 +101,16 @@ void ACameraPawn::OnLeftMouseClickChois(FHitResult Hit)
             }
             ChoisenSquads.Empty();
         }
+    }
+}
+
+void ACameraPawn::OnRightMouseClickChois(FHitResult Hit)
+{
+    if (ChoisenSquads.Num() == 0) return;
+
+    for (auto& Squad : ChoisenSquads)
+    {
+        Squad->MoveToLocation(Hit.Location);
     }
 }
 

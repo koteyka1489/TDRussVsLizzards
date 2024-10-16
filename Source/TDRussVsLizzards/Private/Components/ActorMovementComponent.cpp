@@ -1,7 +1,8 @@
 // TD Russ Vs Lizzards Game
 
 #include "Components/ActorMovementComponent.h"
-#include "Creeps\BaseCreepActor.h"
+#include "Squad/BaseSquadCreeps.h"
+#include "Creeps/BaseCreepActor.h"
 
 UActorMovementComponent::UActorMovementComponent()
 {
@@ -17,11 +18,6 @@ void UActorMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-    if (!OwnerPawn)
-    {
-        OwnerPawn = Cast<ABaseCreepActor>(GetOwner());
-    }
-
     if (bDestinationToRotatingIsSet)
     {
         RotatingToLocation(DeltaTime);
@@ -30,12 +26,6 @@ void UActorMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType
     {
         MovingToLocation(DeltaTime);
     }
-}
-
-void UActorMovementComponent::InitializeComponent()
-{
-    Super::InitializeComponent();
-    
 }
 
 void UActorMovementComponent::MoveToLocation(FVector Location)
@@ -56,66 +46,85 @@ void UActorMovementComponent::RotateToLocation(FVector Location)
 
 void UActorMovementComponent::MovingToLocation(float DeltaTime)
 {
-    if (OwnerPawn)
+    auto OwnerSquad = Cast<ABaseSquadCreeps>(GetOwner());
+    checkf(IsValid(OwnerSquad), TEXT("Get Owner Squad is Failed"));
+    auto CreepsArray = OwnerSquad->GetCreeps();
+
+    FVector VecToDestination = DestinationToMoving - CreepsArray[0]->GetActorLocation();
+
+    FString Message = FString::Printf(TEXT("Destination - %s"), *DestinationToMoving.ToString());
+    GEngine->AddOnScreenDebugMessage(1, 0, FColor::Red, Message);
+
+    FString Message2 = FString::Printf(TEXT("VecToDestination - %s"), *VecToDestination.ToString());
+    GEngine->AddOnScreenDebugMessage(2, 0, FColor::Red, Message2);
+
+    FString Message3 = FString::Printf(TEXT("VecToDestination lenghth - %f"), VecToDestination.Length());
+    GEngine->AddOnScreenDebugMessage(3, 0, FColor::Red, Message3);
+
+    if (VecToDestination.Length() <= 10)
     {
-        FVector VecToDestination = DestinationToMoving - OwnerPawn->GetActorLocation();
-        if (VecToDestination.Length() <= 10)
-        {
-            bDestinationToMovingIsSet = false;
-            return;
-        }
-        else
-        {
-            FVector Direction   = VecToDestination.GetSafeNormal();
-            Direction.Z         = 0.0f;
-            FVector Offset      = Direction * SpeedMoving * DeltaTime;
-            FVector NewLocation = OwnerPawn->GetActorLocation() + Offset;
-            OwnerPawn->SetActorLocation(NewLocation);
-        }
+        bDestinationToMovingIsSet = false;
+        return;
     }
     else
     {
-        UE_LOG(LogTemp, Error, TEXT("Cast to owner is Failed"));
-        checkNoEntry();
+        FVector Direction = VecToDestination.GetSafeNormal();
+        Direction.Z       = 0.0f;
+        FVector Offset    = Direction * SpeedMoving * DeltaTime;
+
+        for (auto& Creep : CreepsArray)
+        {
+            FVector NewLocation = Creep->GetActorLocation() + Offset;
+            Creep->SetActorLocation(NewLocation);
+        }
+
+        FVector NewLocation = OwnerSquad->GetActorLocation() + Offset;
+        OwnerSquad->SetActorLocation(NewLocation);
     }
 }
 
 void UActorMovementComponent::RotatingToLocation(float DeltaTime)
 {
-    if (OwnerPawn)
+    auto OwnerSquad = Cast<ABaseSquadCreeps>(GetOwner());
+    checkf(IsValid(OwnerSquad), TEXT("Get Owner Squad is Failed"));
+    auto CreepsArray = OwnerSquad->GetCreeps();
+
+    FVector VecToDestinationNormalize = (DestinationToRotating - CreepsArray[0]->GetActorLocation()).GetSafeNormal();
+    FVector CreepForwardVec            = CreepsArray[0]->GetActorForwardVector();
+
+    float DotPawnForwardToDestination = FVector::DotProduct(VecToDestinationNormalize, CreepForwardVec);
+
+    if (DotPawnForwardToDestination >= 0.98)
     {
-        FVector VecToDestinationNormalize = (DestinationToRotating - OwnerPawn->GetActorLocation()).GetSafeNormal();
-        FVector PawnForwardVec            = OwnerPawn->GetActorForwardVector();
-
-        float DotPawnForwardToDestination = FVector::DotProduct(VecToDestinationNormalize, PawnForwardVec);
-
-        if (DotPawnForwardToDestination >= 0.98)
-        {
-            bDestinationToRotatingIsSet = false;
-            return;
-        }
-        else
-        {
-            FVector PawnRightVec            = OwnerPawn->GetActorRightVector();
-            float DotPawnRightToDestination = FVector::DotProduct(VecToDestinationNormalize, PawnRightVec);
-
-            FRotator OffsetRotation = FRotator{0.0f, SpeedRotating * DeltaTime, 0.0f};
-
-            if (DotPawnRightToDestination >= 0)
-            {
-                FRotator NewRotation = OwnerPawn->GetActorRotation() + OffsetRotation;
-                OwnerPawn->SetActorRotation(NewRotation);
-            }
-            else
-            {
-                FRotator NewRotation = OwnerPawn->GetActorRotation() - OffsetRotation;
-                OwnerPawn->SetActorRotation(NewRotation);
-            }
-        }
+        bDestinationToRotatingIsSet = false;
+        return;
     }
     else
     {
-        UE_LOG(LogTemp, Error, TEXT("Cast to owner is Failed"));
-        checkNoEntry();
+        FVector CreepRightVec            = CreepsArray[0]->GetActorRightVector();
+        float DotPawnRightToDestination = FVector::DotProduct(VecToDestinationNormalize, CreepRightVec);
+
+        FRotator OffsetRotation = FRotator{0.0f, SpeedRotating * DeltaTime, 0.0f};
+
+        if (DotPawnRightToDestination >= 0)
+        {
+            for (auto& Creep : CreepsArray)
+            {
+                FRotator NewRotation = Creep->GetActorRotation() + OffsetRotation;
+                Creep->SetActorRotation(NewRotation);
+            }
+            FRotator NewRotation = OwnerSquad->GetActorRotation() + OffsetRotation;
+            OwnerSquad->SetActorRotation(NewRotation);
+        }
+        else
+        {
+            for (auto& Creep : CreepsArray)
+            {
+                FRotator NewRotation = Creep->GetActorRotation() - OffsetRotation;
+                Creep->SetActorRotation(NewRotation);
+            }
+            FRotator NewRotation = OwnerSquad->GetActorRotation() - OffsetRotation;
+            OwnerSquad->SetActorRotation(NewRotation);
+        }
     }
 }

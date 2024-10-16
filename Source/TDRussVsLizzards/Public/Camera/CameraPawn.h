@@ -57,6 +57,7 @@ private:
     void OnMoveCameraRightLeft(float Direction);
     void OnRotateCamera(float Direction);
     void OnLeftMouseClickChois(FHitResult Hit);
+    void OnRightMouseClickChois(FHitResult Hit);
     void OnSquadIsChoisen(ABaseSquadCreeps* SquadIn);
 
     void GetSquadsOnLevel();

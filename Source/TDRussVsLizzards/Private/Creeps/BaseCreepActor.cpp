@@ -3,7 +3,6 @@
 #include "Creeps/BaseCreepActor.h"
 #include "Components/HealthComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "Components/ActorMovementComponent.h"
 #include "Components/WeaponComponent.h"
 #include "Weapon/BaseWeapon.h"
 #include "Components\CapsuleComponent.h"
@@ -19,9 +18,7 @@ ABaseCreepActor::ABaseCreepActor()
     SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>("SkeletalMeshComponent");
     SkeletalMeshComponent->SetupAttachment(CapsuleComponent);
 
-    HealthComponent   = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
-    MovementComponent = CreateDefaultSubobject<UActorMovementComponent>("MovementComponent");
-    
+    HealthComponent = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
 
     check(IsValid(CapsuleComponent));
     CapsuleComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
@@ -53,24 +50,15 @@ void ABaseCreepActor::BeginPlay()
     check(IsValid(CapsuleComponent));
     check(IsValid(SkeletalMeshComponent));
     check(IsValid(HealthComponent));
-    check(IsValid(MovementComponent));
-    
 
     SkeletalMeshComponent->PlayAnimation(CreepIdleAnimation, true);
-    
 }
-
 
 void ABaseCreepActor::SetCreepIsClicked()
 {
     checkf(OnCreepIsClicked.ExecuteIfBound(), TEXT("OnCreepIsClicked not bound"));
 }
 
-
-
 void ABaseCreepActor::InitSkeletalMesh() {}
 
 void ABaseCreepActor::InitAnimations() {}
-
-
-

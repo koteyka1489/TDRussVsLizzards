@@ -10,7 +10,6 @@ DECLARE_DELEGATE(FOnCreepIsClicked);
 
 class UHealthComponent;
 class USkeletalMeshComponent;
-class UActorMovementComponent;
 class UCapsuleComponent;
 class UWeaponComponent;
 
@@ -40,8 +39,6 @@ protected:
     UPROPERTY()
     UHealthComponent* HealthComponent;
 
-    UPROPERTY()
-    UActorMovementComponent* MovementComponent;
 
     virtual void InitSkeletalMesh();
     virtual void InitAnimations();

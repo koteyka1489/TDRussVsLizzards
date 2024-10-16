@@ -41,7 +41,8 @@ void ATDCameraController::SetupInputComponent()
         EnhancedInputComponent->BindAction(RotateRightCameraAction, ETriggerEvent::Triggered, this, &ATDCameraController::RotateCamera);
         EnhancedInputComponent->BindAction(RotateLeftCameraAction, ETriggerEvent::Triggered, this, &ATDCameraController::RotateCamera);
 
-        EnhancedInputComponent->BindAction(SetHeroDestinationAction, ETriggerEvent::Started, this, &ATDCameraController::SetLeftClickChois);
+        EnhancedInputComponent->BindAction(LeftClickMouse, ETriggerEvent::Started, this, &ATDCameraController::SetLeftClickChois);
+        EnhancedInputComponent->BindAction(RightClickMouse, ETriggerEvent::Started, this, &ATDCameraController::SetRightClickChois);
     }
     else
     {
@@ -74,10 +75,15 @@ void ATDCameraController::RotateCamera(const FInputActionValue& Value)
 
 void ATDCameraController::SetLeftClickChois()
 {
-    checkf(OnLeftMouseClickChois.ExecuteIfBound(GetLeftClickHit()), TEXT(" OnSetHeroDestination Delegate is not bound "));
+    checkf(OnLeftMouseClickChois.ExecuteIfBound(GetClickHit()), TEXT(" OnLeftMouseClickChois Delegate is not bound "));
 }
 
-FHitResult ATDCameraController::GetLeftClickHit()
+void ATDCameraController::SetRightClickChois()
+{
+    checkf(OnRightMouseClickChois.ExecuteIfBound(GetClickHit()), TEXT(" OnRightMouseClickChois Delegate is not bound "));
+}
+
+FHitResult ATDCameraController::GetClickHit()
 {
     FHitResult Hit;
     bool bHitSuccessful = false;

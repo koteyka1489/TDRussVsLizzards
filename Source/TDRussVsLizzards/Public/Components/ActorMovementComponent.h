@@ -17,23 +17,19 @@ public:
     UActorMovementComponent();
     virtual void BeginPlay() override;
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-    virtual void InitializeComponent() override;
 
     void MoveToLocation(FVector Location);
-    void RotateToLocation(FVector Location);
-
-    float SpeedMoving = 500.0f;
-    float SpeedRotating = 150.0f;
-    bool bAutoOrientToMovement = true;
 
 private:
     FVector DestinationToMoving{};
     FVector DestinationToRotating{};
     bool bDestinationToMovingIsSet   = false;
     bool bDestinationToRotatingIsSet = false;
+    float SpeedMoving                = 500.0f;
+    float SpeedRotating              = 150.0f;
+    bool bAutoOrientToMovement       = true;
 
-    TObjectPtr<ABaseCreepActor> OwnerPawn;
-
+    void RotateToLocation(FVector Location);
     void MovingToLocation(float DeltaTime);
     void RotatingToLocation(float DeltaTime);
 };

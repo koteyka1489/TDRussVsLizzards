@@ -11,6 +11,8 @@ DECLARE_DELEGATE_OneParam(FOnSquadIsChoisen, ABaseSquadCreeps*)
 
 class ABaseCreepActor;
 class UInstancedStaticMeshComponent;
+class UActorMovementComponent;
+class USceneComponent;
 
 UCLASS()
 class TDRUSSVSLIZZARDS_API ABaseSquadCreeps : public AActor
@@ -22,6 +24,9 @@ public:
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaTime) override;
     void SquadUnChoisen();
+    void MoveToLocation(FVector Destination);
+
+    TArray<TObjectPtr<ABaseCreepActor>>& GetCreeps() { return Creeps; }
 
     FOnSquadIsChoisen OnSquadIsChoisen;
 
@@ -32,8 +37,13 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad")
     TSubclassOf<ABaseCreepActor> CreepsType;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Squad")
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
     UInstancedStaticMeshComponent* SelectionInstancedMesh;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+    UActorMovementComponent* MovementComponent;
+
 
 private:
     TArray<TObjectPtr<ABaseCreepActor>> Creeps;

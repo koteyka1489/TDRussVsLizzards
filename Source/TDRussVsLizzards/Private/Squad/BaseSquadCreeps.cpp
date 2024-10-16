@@ -6,18 +6,19 @@
 #include "Creeps/TrollCreepActor.h"
 #include "Creeps/BarbarianCreepActor.h"
 #include "Components/InstancedStaticMeshComponent.h"
+#include "Components/ActorMovementComponent.h"
 
 ABaseSquadCreeps::ABaseSquadCreeps()
 {
     PrimaryActorTick.bCanEverTick = true;
 
     SelectionInstancedMesh = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("UInstancedStaticMeshComponent"));
+    MovementComponent      = CreateDefaultSubobject<UActorMovementComponent>("UActorMovementComponent");
 
     static ConstructorHelpers::FObjectFinder<UStaticMesh> SelectCircleMesh(
         TEXT("/Script/Engine.StaticMesh'/Game/Squads/SM_SelectCircle.SM_SelectCircle'"));
 
     checkf(SelectCircleMesh.Succeeded(), TEXT("Find SelectCircleMesh is not Succeeded "));
-
     SelectionInstancedMesh->SetStaticMesh(SelectCircleMesh.Object);
 
     SelectionInstancedMesh->InstancingRandomSeed = (int32)FMath::RandRange(1000.0, 5000.0);
@@ -113,4 +114,9 @@ void ABaseSquadCreeps::SquadUnChoisen()
         Creep->SetCreepIsChoisen(false);
     }
     SelectionInstancedMesh->SetVisibility(false);
+}
+
+void ABaseSquadCreeps::MoveToLocation(FVector Destination)
+{
+    MovementComponent->MoveToLocation(Destination);
 }

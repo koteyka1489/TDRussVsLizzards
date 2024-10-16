@@ -15,7 +15,7 @@ DECLARE_DELEGATE_OneParam(FOnMoveCameraUpDown, float);
 DECLARE_DELEGATE_OneParam(FOnMoveCameraRightLeft, float);
 DECLARE_DELEGATE_OneParam(FOnRotateCamera, float);
 DECLARE_DELEGATE_OneParam(FOnLeftMouseClickChois, FHitResult);
-
+DECLARE_DELEGATE_OneParam(FOnRightMouseClickChois, FHitResult);
 
 UCLASS()
 class TDRUSSVSLIZZARDS_API ATDCameraController : public APlayerController
@@ -31,6 +31,7 @@ public:
     FOnMoveCameraRightLeft OnMoveCameraRightLeft;
     FOnRotateCamera OnRotateCamera;
     FOnLeftMouseClickChois OnLeftMouseClickChois;
+    FOnRightMouseClickChois OnRightMouseClickChois;
 
 protected:
     virtual void BeginPlay() override;
@@ -64,14 +65,18 @@ protected:
     UInputAction* RotateLeftCameraAction;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
-    UInputAction* SetHeroDestinationAction;
+    UInputAction* LeftClickMouse;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+    UInputAction* RightClickMouse;
 
 private:
-
     void MoveCameraUpDown(const FInputActionValue& Value);
     void MoveCameraRightLeft(const FInputActionValue& Value);
     void ZoomUpAction(const FInputActionValue& Value);
     void RotateCamera(const FInputActionValue& Value);
     void SetLeftClickChois();
-    FHitResult GetLeftClickHit();
+    void SetRightClickChois();
+
+    FHitResult GetClickHit();
 };
