@@ -23,11 +23,11 @@ public:
     ABaseCreepActor();
     virtual void BeginPlay() override;
 
+
     TObjectPtr<USkeletalMeshComponent> GetSkeletalMeshComponent() { return SkeletalMeshComponent; }
 
     void SetCreepIsClicked();
-    void SetCreepIsNotClicked();
-
+    void SetCreepIsChoisen(bool ChoisenStatus) { bCreepIsChoisen = ChoisenStatus; }
     FOnCreepIsClicked OnCreepIsClicked;
 
 protected:
@@ -51,5 +51,6 @@ protected:
     TObjectPtr<UAnimSequence> CreepRunAnimation;
 
 private:
-    
+    bool bCreepIsChoisen = false;
+
 };

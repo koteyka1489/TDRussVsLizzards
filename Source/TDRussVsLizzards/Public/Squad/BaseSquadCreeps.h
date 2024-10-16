@@ -10,6 +10,7 @@ DECLARE_DELEGATE_OneParam(FOnSquadIsChoisen, ABaseSquadCreeps*)
 
 
 class ABaseCreepActor;
+class UInstancedStaticMeshComponent;
 
 UCLASS()
 class TDRUSSVSLIZZARDS_API ABaseSquadCreeps : public AActor
@@ -30,6 +31,9 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad")
     TSubclassOf<ABaseCreepActor> CreepsType;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Squad")
+    UInstancedStaticMeshComponent* SelectionInstancedMesh;
 
 private:
     TArray<TObjectPtr<ABaseCreepActor>> Creeps;

@@ -7,6 +7,7 @@
 #include "Components/WeaponComponent.h"
 #include "Weapon/BaseWeapon.h"
 #include "Components\CapsuleComponent.h"
+#include "DrawDebugHelpers.h"
 
 ABaseCreepActor::ABaseCreepActor()
 {
@@ -58,6 +59,7 @@ void ABaseCreepActor::BeginPlay()
     SkeletalMeshComponent->PlayAnimation(CreepIdleAnimation, true);
     
 }
+
 
 void ABaseCreepActor::SetCreepIsClicked()
 {
