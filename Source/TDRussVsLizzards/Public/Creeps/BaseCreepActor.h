@@ -24,9 +24,7 @@ public:
     ABaseCreepActor();
     virtual void BeginPlay() override;
 
-
     TObjectPtr<USkeletalMeshComponent> GetSkeletalMeshComponent() { return SkeletalMeshComponent; }
-
 
     void SetCreepIsClicked();
     void SetCreepIsChoisen(bool ChoisenStatus);
@@ -34,7 +32,6 @@ public:
     void PlayAnimationIdle();
     void PlayAnimationWalk();
     void PlayAnimationRun();
-
 
     FOnCreepIsClicked OnCreepIsClicked;
 
@@ -51,15 +48,18 @@ protected:
     UPROPERTY()
     UStaticMeshComponent* StaticMeshComponent;
 
+    UPROPERTY()
+    TObjectPtr<UAnimSequence> CreepIdleAnimation;
+
+    UPROPERTY()
+    TObjectPtr<UAnimSequence> CreepWalkAnimation;
+
+    UPROPERTY()
+    TObjectPtr<UAnimSequence> CreepRunAnimation;
 
     virtual void InitSkeletalMesh();
     virtual void InitAnimations();
 
-    TObjectPtr<UAnimMontage> CreepIdleAnimation;
-    TObjectPtr<UAnimMontage> CreepWalkAnimation;
-    TObjectPtr<UAnimMontage> CreepRunAnimation;
-
 private:
     bool bCreepIsChoisen = false;
-
 };
