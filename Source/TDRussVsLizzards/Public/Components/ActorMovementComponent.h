@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "ActorMovementComponent.generated.h"
 
+DECLARE_DELEGATE(FOnMovingComplete)
+
 class ABaseCreepActor;
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
@@ -20,13 +22,15 @@ public:
 
     void MoveToLocation(FVector Location);
 
+    FOnMovingComplete OnMovingComplete;
+
 private:
     FVector DestinationToMoving{};
     FVector DestinationToRotating{};
     bool bDestinationToMovingIsSet   = false;
     bool bDestinationToRotatingIsSet = false;
     float SpeedMoving                = 500.0f;
-    float SpeedRotating              = 150.0f;
+    float SpeedRotating              = 500.0f;
     bool bAutoOrientToMovement       = true;
 
     void RotateToLocation(FVector Location);

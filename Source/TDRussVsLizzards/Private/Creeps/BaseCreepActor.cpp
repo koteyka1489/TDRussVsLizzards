@@ -55,6 +55,7 @@ ABaseCreepActor::ABaseCreepActor()
     StaticMeshComponent->SetStaticMesh(SelectCircleMesh.Object);
     StaticMeshComponent->SetVisibility(false);
     StaticMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+    StaticMeshComponent->SetRelativeLocation(FVector(0.0, 0.0, -80.0));
 }
 
 void ABaseCreepActor::BeginPlay()
@@ -64,7 +65,7 @@ void ABaseCreepActor::BeginPlay()
     check(IsValid(SkeletalMeshComponent));
     check(IsValid(HealthComponent));
 
-    SkeletalMeshComponent->PlayAnimation(CreepIdleAnimation, true);
+    PlayAnimationIdle();
 }
 
 void ABaseCreepActor::SetCreepIsClicked()
@@ -77,6 +78,24 @@ void ABaseCreepActor::SetCreepIsChoisen(bool ChoisenStatus)
     bCreepIsChoisen = ChoisenStatus;
     StaticMeshComponent->SetVisibility(ChoisenStatus);
 }
+
+void ABaseCreepActor::PlayAnimationIdle()
+{
+    SkeletalMeshComponent->PlayAnimation(CreepIdleAnimation, true);
+}
+
+void ABaseCreepActor::PlayAnimationWalk()
+{
+    SkeletalMeshComponent->PlayAnimation(CreepWalkAnimation, true);
+}
+
+void ABaseCreepActor::PlayAnimationRun()
+{
+    SkeletalMeshComponent->PlayAnimation(CreepRunAnimation, true);
+}
+
+
+
 
 void ABaseCreepActor::InitSkeletalMesh() {}
 

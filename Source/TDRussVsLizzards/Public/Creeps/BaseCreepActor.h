@@ -26,8 +26,15 @@ public:
 
     TObjectPtr<USkeletalMeshComponent> GetSkeletalMeshComponent() { return SkeletalMeshComponent; }
 
+
     void SetCreepIsClicked();
     void SetCreepIsChoisen(bool ChoisenStatus);
+
+    void PlayAnimationIdle();
+    void PlayAnimationWalk();
+    void PlayAnimationRun();
+
+
     FOnCreepIsClicked OnCreepIsClicked;
 
 protected:

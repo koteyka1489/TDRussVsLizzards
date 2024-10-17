@@ -24,6 +24,7 @@ public:
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaTime) override;
     void SquadUnChoisen();
+
     void MoveToLocation(FVector Destination);
 
     TArray<TObjectPtr<ABaseCreepActor>>& GetCreeps() { return Creeps; }
@@ -51,5 +52,6 @@ private:
     void BindOnCreepIsClickedtDelegate();
 
     void OnCreepIsClicked();
+    void OnMovingComplete();
     
 };

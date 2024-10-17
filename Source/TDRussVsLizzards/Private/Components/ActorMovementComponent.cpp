@@ -31,6 +31,7 @@ void UActorMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType
 void UActorMovementComponent::MoveToLocation(FVector Location)
 {
     DestinationToMoving       = Location;
+    DestinationToMoving.Z     = 0.0;
     bDestinationToMovingIsSet = true;
     if (bAutoOrientToMovement)
     {
@@ -41,6 +42,7 @@ void UActorMovementComponent::MoveToLocation(FVector Location)
 void UActorMovementComponent::RotateToLocation(FVector Location)
 {
     DestinationToRotating       = Location;
+    DestinationToRotating.Z     = 0.0;
     bDestinationToRotatingIsSet = true;
 }
 
@@ -51,19 +53,14 @@ void UActorMovementComponent::MovingToLocation(float DeltaTime)
     auto CreepsArray = OwnerSquad->GetCreeps();
 
     FVector VecToDestination = DestinationToMoving - CreepsArray[0]->GetActorLocation();
+    VecToDestination.Z       = 0.0;
 
-    FString Message = FString::Printf(TEXT("Destination - %s"), *DestinationToMoving.ToString());
-    GEngine->AddOnScreenDebugMessage(1, 0, FColor::Red, Message);
-
-    FString Message2 = FString::Printf(TEXT("VecToDestination - %s"), *VecToDestination.ToString());
-    GEngine->AddOnScreenDebugMessage(2, 0, FColor::Red, Message2);
-
-    FString Message3 = FString::Printf(TEXT("VecToDestination lenghth - %f"), VecToDestination.Length());
-    GEngine->AddOnScreenDebugMessage(3, 0, FColor::Red, Message3);
 
     if (VecToDestination.Length() <= 10)
     {
         bDestinationToMovingIsSet = false;
+        checkf(OnMovingComplete.ExecuteIfBound(), TEXT("On moving Complete delegate not bound"));
+        GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Moving Complete"));
         return;
     }
     else
@@ -90,11 +87,12 @@ void UActorMovementComponent::RotatingToLocation(float DeltaTime)
     auto CreepsArray = OwnerSquad->GetCreeps();
 
     FVector VecToDestinationNormalize = (DestinationToRotating - CreepsArray[0]->GetActorLocation()).GetSafeNormal();
+    VecToDestinationNormalize.Z       = 0.0;
     FVector CreepForwardVec            = CreepsArray[0]->GetActorForwardVector();
 
     float DotPawnForwardToDestination = FVector::DotProduct(VecToDestinationNormalize, CreepForwardVec);
 
-    if (DotPawnForwardToDestination >= 0.98)
+    if (DotPawnForwardToDestination >= 0.95)
     {
         bDestinationToRotatingIsSet = false;
         return;
@@ -106,7 +104,7 @@ void UActorMovementComponent::RotatingToLocation(float DeltaTime)
 
         FRotator OffsetRotation = FRotator{0.0f, SpeedRotating * DeltaTime, 0.0f};
 
-        if (DotPawnRightToDestination >= 0)
+        if (DotPawnRightToDestination >= 0.0)
         {
             for (auto& Creep : CreepsArray)
             {

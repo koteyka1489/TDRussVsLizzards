@@ -23,7 +23,7 @@ void ABaseSquadCreeps::BeginPlay()
     Creeps.Reserve(CreepsNum);
     SpawnCreeps();
     BindOnCreepIsClickedtDelegate();
-
+    MovementComponent->OnMovingComplete.BindUObject(this, &ABaseSquadCreeps::OnMovingComplete);
 }
 
 void ABaseSquadCreeps::Tick(float DeltaTime)
@@ -91,6 +91,14 @@ void ABaseSquadCreeps::OnCreepIsClicked()
     
 }
 
+void ABaseSquadCreeps::OnMovingComplete() 
+{
+    for (auto& Creep : Creeps)
+    {
+        Creep->PlayAnimationIdle();
+    }
+}
+
 void ABaseSquadCreeps::SquadUnChoisen()
 {
     bSquadIsChosen = false;
@@ -104,4 +112,8 @@ void ABaseSquadCreeps::SquadUnChoisen()
 void ABaseSquadCreeps::MoveToLocation(FVector Destination)
 {
     MovementComponent->MoveToLocation(Destination);
+    for (auto& Creep : Creeps)
+    {
+        Creep->PlayAnimationRun();
+    }
 }
