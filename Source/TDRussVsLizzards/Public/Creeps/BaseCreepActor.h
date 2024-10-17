@@ -13,6 +13,7 @@ class USkeletalMeshComponent;
 class UCapsuleComponent;
 class UWeaponComponent;
 class UStaticMeshComponent;
+class UAnimMontage;
 
 UCLASS()
 class TDRUSSVSLIZZARDS_API ABaseCreepActor : public AActor
@@ -54,9 +55,9 @@ protected:
     virtual void InitSkeletalMesh();
     virtual void InitAnimations();
 
-    TObjectPtr<UAnimSequence> CreepIdleAnimation;
-    TObjectPtr<UAnimSequence> CreepWalkAnimation;
-    TObjectPtr<UAnimSequence> CreepRunAnimation;
+    TObjectPtr<UAnimMontage> CreepIdleAnimation;
+    TObjectPtr<UAnimMontage> CreepWalkAnimation;
+    TObjectPtr<UAnimMontage> CreepRunAnimation;
 
 private:
     bool bCreepIsChoisen = false;

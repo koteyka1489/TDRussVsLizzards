@@ -8,6 +8,7 @@
 #include "Components\CapsuleComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 
 ABaseCreepActor::ABaseCreepActor()
 {
@@ -82,11 +83,13 @@ void ABaseCreepActor::SetCreepIsChoisen(bool ChoisenStatus)
 void ABaseCreepActor::PlayAnimationIdle()
 {
     SkeletalMeshComponent->PlayAnimation(CreepIdleAnimation, true);
+    
 }
 
 void ABaseCreepActor::PlayAnimationWalk()
 {
     SkeletalMeshComponent->PlayAnimation(CreepWalkAnimation, true);
+    
 }
 
 void ABaseCreepActor::PlayAnimationRun()
