@@ -12,18 +12,8 @@ ABaseSquadCreeps::ABaseSquadCreeps()
 {
     PrimaryActorTick.bCanEverTick = true;
 
-    SelectionInstancedMesh = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("UInstancedStaticMeshComponent"));
     MovementComponent      = CreateDefaultSubobject<UActorMovementComponent>("UActorMovementComponent");
 
-    static ConstructorHelpers::FObjectFinder<UStaticMesh> SelectCircleMesh(
-        TEXT("/Script/Engine.StaticMesh'/Game/Squads/SM_SelectCircle.SM_SelectCircle'"));
-
-    checkf(SelectCircleMesh.Succeeded(), TEXT("Find SelectCircleMesh is not Succeeded "));
-    SelectionInstancedMesh->SetStaticMesh(SelectCircleMesh.Object);
-
-    SelectionInstancedMesh->InstancingRandomSeed = (int32)FMath::RandRange(1000.0, 5000.0);
-    SelectionInstancedMesh->bDisableCollision    = true;
-    SelectionInstancedMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 }
 
 void ABaseSquadCreeps::BeginPlay()
@@ -34,11 +24,6 @@ void ABaseSquadCreeps::BeginPlay()
     SpawnCreeps();
     BindOnCreepIsClickedtDelegate();
 
-    for (auto& Creep : Creeps)
-    {
-        SelectionInstancedMesh->AddInstance(Creep->GetActorTransform(), true);
-    }
-    SelectionInstancedMesh->SetVisibility(false);
 }
 
 void ABaseSquadCreeps::Tick(float DeltaTime)
@@ -103,7 +88,7 @@ void ABaseSquadCreeps::OnCreepIsClicked()
     {
         Creep->SetCreepIsChoisen(true);
     }
-    SelectionInstancedMesh->SetVisibility(true);
+    
 }
 
 void ABaseSquadCreeps::SquadUnChoisen()
@@ -113,7 +98,7 @@ void ABaseSquadCreeps::SquadUnChoisen()
     {
         Creep->SetCreepIsChoisen(false);
     }
-    SelectionInstancedMesh->SetVisibility(false);
+    
 }
 
 void ABaseSquadCreeps::MoveToLocation(FVector Destination)

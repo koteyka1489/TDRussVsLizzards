@@ -7,6 +7,7 @@
 #include "Weapon/BaseWeapon.h"
 #include "Components\CapsuleComponent.h"
 #include "DrawDebugHelpers.h"
+#include "Components/StaticMeshComponent.h"
 
 ABaseCreepActor::ABaseCreepActor()
 {
@@ -16,7 +17,10 @@ ABaseCreepActor::ABaseCreepActor()
     SetRootComponent(CapsuleComponent);
 
     SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>("SkeletalMeshComponent");
-    SkeletalMeshComponent->SetupAttachment(CapsuleComponent);
+    SkeletalMeshComponent->SetupAttachment(GetRootComponent());
+
+    StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponent");
+    StaticMeshComponent->SetupAttachment(GetRootComponent());
 
     HealthComponent = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
 
@@ -42,6 +46,15 @@ ABaseCreepActor::ABaseCreepActor()
     SkeletalMeshComponent->bVisibleInRealTimeSkyCaptures      = false;
     SkeletalMeshComponent->bVisibleInReflectionCaptures       = false;
     SkeletalMeshComponent->bEnablePhysicsOnDedicatedServer    = false;
+
+    check(IsValid(StaticMeshComponent));
+    static ConstructorHelpers::FObjectFinder<UStaticMesh> SelectCircleMesh(
+        TEXT("/Script/Engine.StaticMesh'/Game/Squads/SM_SelectCircle.SM_SelectCircle'"));
+
+    checkf(SelectCircleMesh.Succeeded(), TEXT("Find SelectCircleMesh is not Succeeded "));
+    StaticMeshComponent->SetStaticMesh(SelectCircleMesh.Object);
+    StaticMeshComponent->SetVisibility(false);
+    StaticMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 }
 
 void ABaseCreepActor::BeginPlay()
@@ -57,6 +70,12 @@ void ABaseCreepActor::BeginPlay()
 void ABaseCreepActor::SetCreepIsClicked()
 {
     checkf(OnCreepIsClicked.ExecuteIfBound(), TEXT("OnCreepIsClicked not bound"));
+}
+
+void ABaseCreepActor::SetCreepIsChoisen(bool ChoisenStatus)
+{
+    bCreepIsChoisen = ChoisenStatus;
+    StaticMeshComponent->SetVisibility(ChoisenStatus);
 }
 
 void ABaseCreepActor::InitSkeletalMesh() {}

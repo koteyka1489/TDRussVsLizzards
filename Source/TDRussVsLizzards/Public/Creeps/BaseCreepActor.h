@@ -12,6 +12,7 @@ class UHealthComponent;
 class USkeletalMeshComponent;
 class UCapsuleComponent;
 class UWeaponComponent;
+class UStaticMeshComponent;
 
 UCLASS()
 class TDRUSSVSLIZZARDS_API ABaseCreepActor : public AActor
@@ -26,7 +27,7 @@ public:
     TObjectPtr<USkeletalMeshComponent> GetSkeletalMeshComponent() { return SkeletalMeshComponent; }
 
     void SetCreepIsClicked();
-    void SetCreepIsChoisen(bool ChoisenStatus) { bCreepIsChoisen = ChoisenStatus; }
+    void SetCreepIsChoisen(bool ChoisenStatus);
     FOnCreepIsClicked OnCreepIsClicked;
 
 protected:
@@ -38,6 +39,9 @@ protected:
 
     UPROPERTY()
     UHealthComponent* HealthComponent;
+
+    UPROPERTY()
+    UStaticMeshComponent* StaticMeshComponent;
 
 
     virtual void InitSkeletalMesh();

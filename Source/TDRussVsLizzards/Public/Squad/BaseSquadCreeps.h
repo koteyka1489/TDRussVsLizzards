@@ -39,9 +39,6 @@ protected:
 
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
-    UInstancedStaticMeshComponent* SelectionInstancedMesh;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
     UActorMovementComponent* MovementComponent;
 
 
