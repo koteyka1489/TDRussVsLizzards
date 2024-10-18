@@ -92,7 +92,7 @@ void UActorMovementComponent::RotatingToLocation(float DeltaTime)
 
     float DotPawnForwardToDestination = FVector::DotProduct(VecToDestinationNormalize, CreepForwardVec);
 
-    if (DotPawnForwardToDestination >= 0.95)
+    if (DotPawnForwardToDestination >= 0.99)
     {
         bDestinationToRotatingIsSet = false;
         return;
