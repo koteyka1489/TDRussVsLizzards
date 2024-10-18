@@ -52,7 +52,6 @@ private:
     bool bSquadIsChosen = false;
     FSquadSizes CurrentSquadSizes;
 
-    void SpawnCreeps();
     void SpawnCreepsN();
     FSquadSizes CalculateCurrentSquadSizes();
 
