@@ -59,7 +59,9 @@ private:
     TArray<TObjectPtr<ABaseCreepActor>> Creeps;
     bool bSquadIsChosen = false;
     FSquadSizes CurrentSquadSizes;
-    ESquadMovingDirection CurrentSquadMovingDirection = ESquadMovingDirection::FrontMoving;
+    int32 FrontBackMovingMultiplier = 1;
+    ESquadMovingDirection CurrentMovingDirection = ESquadMovingDirection::FrontMoving;
+    
 
     void UpdateSquadLocationStart();
     void UpdateSquadLocationWhenChangeDirection(ESquadMovingDirection Direction);
