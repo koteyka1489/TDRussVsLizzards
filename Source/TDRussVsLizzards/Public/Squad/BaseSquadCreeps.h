@@ -57,6 +57,9 @@ protected:
     int32 CreepsNum = 50;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad")
+    double CreepPositionRandom = 10.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad")
     TSubclassOf<ABaseCreepActor> CreepsType;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")

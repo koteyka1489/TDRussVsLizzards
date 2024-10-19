@@ -97,13 +97,17 @@ void ABaseSquadCreeps::SpawnCreepsN()
     FActorSpawnParameters SpawnInfo;
     SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
+    
+
     for (int32 x = 0; x < CurrentSquadSizes.Heigth; x++)
     {
         for (int32 y = 0; y < CurrentSquadSizes.Width; y++)
         {
+            double XLocRand = FMath::FRandRange(-CreepPositionRandom, CreepPositionRandom);
+            double YLocRand = FMath::FRandRange(-CreepPositionRandom, CreepPositionRandom);
 
-            const FVector SpawnLocation =
-                FVector(Squadlocation.X - 200.0 * (double)x, Squadlocation.Y - 200.0 * (double)y, Squadlocation.Z + 90.0);
+            const FVector SpawnLocation = FVector(
+                Squadlocation.X + XLocRand - 200.0 * (double)x, Squadlocation.Y + YLocRand - 200.0 * (double)y, Squadlocation.Z + 90.0);
 
             ABaseCreepActor* SpawnedCreep = GetWorld()->SpawnActor<ABaseCreepActor>(CreepsType, SpawnLocation, SpawnRotation, SpawnInfo);
             Creeps.Add(SpawnedCreep);
@@ -112,12 +116,15 @@ void ABaseSquadCreeps::SpawnCreepsN()
 
     for (int32 x = CurrentSquadSizes.Heigth; x < CurrentSquadSizes.Heigth + 1; x++)
     {
+        
         int32 StartSpawnRemainderCreeps = CurrentSquadSizes.Width / 2 - CreepsShortage / 2;
         for (int32 y = StartSpawnRemainderCreeps; y < StartSpawnRemainderCreeps + CreepsShortage; y++)
         {
+            double XLocRand = FMath::FRandRange(-CreepPositionRandom, CreepPositionRandom);
+            double YLocRand = FMath::FRandRange(-CreepPositionRandom, CreepPositionRandom);
 
-            const FVector SpawnLocation =
-                FVector(Squadlocation.X - 200.0 * (double)x, Squadlocation.Y - 200.0 * (double)y, Squadlocation.Z + 90.0);
+            const FVector SpawnLocation = FVector(
+                Squadlocation.X + XLocRand - 200.0 * (double)x, Squadlocation.Y + YLocRand - 200.0 * (double)y, Squadlocation.Z + 90.0);
 
             ABaseCreepActor* SpawnedCreep = GetWorld()->SpawnActor<ABaseCreepActor>(CreepsType, SpawnLocation, SpawnRotation, SpawnInfo);
             Creeps.Add(SpawnedCreep);
