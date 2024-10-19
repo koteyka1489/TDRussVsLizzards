@@ -6,6 +6,8 @@
 
 AOrcCreepActor::AOrcCreepActor()
 {
+    PrimaryActorTick.bCanEverTick = false;
+
     WeaponComponent = CreateDefaultSubobject<UWeaponComponent>("WeaponComponent");
     check(IsValid(WeaponComponent));
     WeaponComponent->InitWeaponType(AHummerWeapon::StaticClass());

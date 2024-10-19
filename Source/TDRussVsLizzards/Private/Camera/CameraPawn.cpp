@@ -38,6 +38,7 @@ void ACameraPawn::BeginPlay()
         CameraController->OnRotateCamera.BindUObject(this, &ACameraPawn::OnRotateCamera);
         CameraController->OnLeftMouseClickChois.BindUObject(this, &ACameraPawn::OnLeftMouseClickChois);
         CameraController->OnRightMouseClickChois.BindUObject(this, &ACameraPawn::OnRightMouseClickChois);
+        CameraController->OnChangeAngleCamera.BindUObject(this, &ACameraPawn::OnChangeAngleCamera);
     }
 
     GetSquadsOnLevel();
@@ -47,6 +48,11 @@ void ACameraPawn::BeginPlay()
 void ACameraPawn::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
+
+    FRotator CameraRotation = GetActorRotation();
+
+    FString Message1 = FString::Printf(TEXT("Current Pitch  %s"), *CameraRotation.ToString());
+    GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Red, Message1);
 }
 
 void ACameraPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -76,7 +82,28 @@ void ACameraPawn::OnMoveCameraRightLeft(float Direction)
 void ACameraPawn::OnRotateCamera(float Direction)
 {
     float DeltaTime    = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
-    FRotator NewRotate = GetActorRotation() + FRotator(0.0f, Direction * SpeedRotateCamera * DeltaTime, 0.0f);
+    FRotator NewRotate = GetActorRotation() + FRotator(0.0, Direction * SpeedRotateCamera * DeltaTime, 0.0);
+    SetActorRotation(NewRotate);
+}
+
+void ACameraPawn::OnChangeAngleCamera(float Direction) 
+{
+    FString Message = FString::Printf(TEXT("Angle Direction  %f"), Direction);
+    GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Red, Message);
+
+
+
+    double DeltaTime    = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
+    FRotator CameraRotation = GetActorRotation();
+
+    FString Message1 = FString::Printf(TEXT("Current Pitch  %f"), CameraRotation.Pitch);
+    GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Red, Message1);
+
+
+    double TargetPitch =
+        FMath::Clamp(CameraRotation.Pitch + Direction * SpeedRotatePitchCamera * DeltaTime, MinPitchCamera, MaxPitchCamera);
+
+    FRotator NewRotate = FRotator(TargetPitch, CameraRotation.Yaw, CameraRotation.Roll);
     SetActorRotation(NewRotate);
 }
 

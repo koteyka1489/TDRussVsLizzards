@@ -6,6 +6,8 @@
 
 ABarbarianCreepActor::ABarbarianCreepActor()
 {
+    PrimaryActorTick.bCanEverTick = false;
+
     WeaponComponent = CreateDefaultSubobject<UWeaponComponent>("WeaponComponent");
     check(IsValid(WeaponComponent));
     WeaponComponent->InitWeaponType(AAxelWeapon::StaticClass());

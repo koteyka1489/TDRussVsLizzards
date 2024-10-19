@@ -43,6 +43,9 @@ void ATDCameraController::SetupInputComponent()
 
         EnhancedInputComponent->BindAction(LeftClickMouse, ETriggerEvent::Started, this, &ATDCameraController::SetLeftClickChois);
         EnhancedInputComponent->BindAction(RightClickMouse, ETriggerEvent::Started, this, &ATDCameraController::SetRightClickChois);
+
+        EnhancedInputComponent->BindAction(CameraAngleUpAction, ETriggerEvent::Triggered, this, &ATDCameraController::ChangeAngleCamera);
+        EnhancedInputComponent->BindAction(CameraAngleDownAction, ETriggerEvent::Triggered, this, &ATDCameraController::ChangeAngleCamera);
     }
     else
     {
@@ -72,6 +75,13 @@ void ATDCameraController::RotateCamera(const FInputActionValue& Value)
 {
     checkf(OnRotateCamera.ExecuteIfBound(Value.Get<float>()), TEXT(" OnRotateCamera Delegate is not bound "));
 }
+
+void ATDCameraController::ChangeAngleCamera(const FInputActionValue& Value) 
+{
+    checkf(OnChangeAngleCamera.ExecuteIfBound(Value.Get<float>()), TEXT(" OnChangeAngleCamera Delegate is not bound "));
+}
+
+
 
 void ATDCameraController::SetLeftClickChois()
 {

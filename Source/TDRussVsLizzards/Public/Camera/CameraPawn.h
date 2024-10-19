@@ -34,28 +34,39 @@ protected:
     UCameraComponent* CameraComponent;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-    float ZoomStart = 3000.0f;
+    double ZoomStart = 3000.0;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-    float ZoomMin = 200.0f;
+    double ZoomMin = 200.0;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-    float ZoomMax = 5000.0f;
+    double ZoomMax = 5000.0;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-    float SpeedZoom = 3000.0f;
+    double SpeedZoom = 3000.0;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Camera")
-    float SpeedCamera = 3000.0f;
+    double SpeedCamera = 3000.0;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Camera")
-    float SpeedRotateCamera = 100.0f;
+    double SpeedRotateCamera = 100.0;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Camera")
+    double MaxPitchCamera = 40.0;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Camera")
+    double MinPitchCamera = -25.0;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Camera")
+    double SpeedRotatePitchCamera = 20.0;
+
 
 private:
     void OnZoomChanged(float Direction);
     void OnMoveCameraUpDown(float Direction);
     void OnMoveCameraRightLeft(float Direction);
     void OnRotateCamera(float Direction);
+    void OnChangeAngleCamera(float Direction);
     void OnLeftMouseClickChois(FHitResult Hit);
     void OnRightMouseClickChois(FHitResult Hit);
     void OnSquadIsChoisen(ABaseSquadCreeps* SquadIn);

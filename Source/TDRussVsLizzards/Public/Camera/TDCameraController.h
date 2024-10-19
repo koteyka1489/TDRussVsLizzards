@@ -16,6 +16,7 @@ DECLARE_DELEGATE_OneParam(FOnMoveCameraRightLeft, float);
 DECLARE_DELEGATE_OneParam(FOnRotateCamera, float);
 DECLARE_DELEGATE_OneParam(FOnLeftMouseClickChois, FHitResult);
 DECLARE_DELEGATE_OneParam(FOnRightMouseClickChois, FHitResult);
+DECLARE_DELEGATE_OneParam(FOnChangeAngleCamera, float);
 
 UCLASS()
 class TDRUSSVSLIZZARDS_API ATDCameraController : public APlayerController
@@ -32,6 +33,7 @@ public:
     FOnRotateCamera OnRotateCamera;
     FOnLeftMouseClickChois OnLeftMouseClickChois;
     FOnRightMouseClickChois OnRightMouseClickChois;
+    FOnChangeAngleCamera OnChangeAngleCamera;
 
 protected:
     virtual void BeginPlay() override;
@@ -70,11 +72,18 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
     UInputAction* RightClickMouse;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+    UInputAction* CameraAngleUpAction;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+    UInputAction* CameraAngleDownAction;
+
 private:
     void MoveCameraUpDown(const FInputActionValue& Value);
     void MoveCameraRightLeft(const FInputActionValue& Value);
     void ZoomUpAction(const FInputActionValue& Value);
     void RotateCamera(const FInputActionValue& Value);
+    void ChangeAngleCamera(const FInputActionValue& Value);
     void SetLeftClickChois();
     void SetRightClickChois();
 
