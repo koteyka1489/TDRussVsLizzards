@@ -51,7 +51,10 @@ private:
     TArray<TObjectPtr<ABaseCreepActor>> Creeps;
     bool bSquadIsChosen = false;
     FSquadSizes CurrentSquadSizes;
+    
 
+
+    void UpdateSquadLocation();
     void SpawnCreepsN();
     FSquadSizes CalculateCurrentSquadSizes();
 

@@ -22,8 +22,9 @@ void ABaseSquadCreeps::BeginPlay()
 
     Creeps.Reserve(CreepsNum);
 
-    // SpawnCreeps();
     SpawnCreepsN();
+
+    UpdateSquadLocation();
 
     BindOnCreepIsClickedtDelegate();
 
@@ -38,6 +39,14 @@ void ABaseSquadCreeps::Tick(float DeltaTime)
 }
 
 
+
+void ABaseSquadCreeps::UpdateSquadLocation() 
+{
+    FVector SquadRightCorner = Creeps[0]->GetActorLocation();
+    FVector SquadLeftCorner  = Creeps[CurrentSquadSizes.Width - 1]->GetActorLocation();
+    FVector SquadRightToLeftCornerVec = SquadLeftCorner - SquadRightCorner;
+    SetActorLocation(GetActorLocation() + SquadRightToLeftCornerVec / 2);
+}
 
 void ABaseSquadCreeps::SpawnCreepsN()
 {

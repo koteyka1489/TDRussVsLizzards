@@ -52,7 +52,7 @@ void UActorMovementComponent::MovingToLocation(float DeltaTime)
     checkf(IsValid(OwnerSquad), TEXT("Get Owner Squad is Failed"));
     auto CreepsArray = OwnerSquad->GetCreeps();
 
-    FVector VecToDestination = DestinationToMoving - CreepsArray[0]->GetActorLocation();
+    FVector VecToDestination = DestinationToMoving - OwnerSquad->GetActorLocation();
     VecToDestination.Z       = 0.0;
 
 
@@ -60,7 +60,6 @@ void UActorMovementComponent::MovingToLocation(float DeltaTime)
     {
         bDestinationToMovingIsSet = false;
         checkf(OnMovingComplete.ExecuteIfBound(), TEXT("On moving Complete delegate not bound"));
-        GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Moving Complete"));
         return;
     }
     else
@@ -86,9 +85,9 @@ void UActorMovementComponent::RotatingToLocation(float DeltaTime)
     checkf(IsValid(OwnerSquad), TEXT("Get Owner Squad is Failed"));
     auto CreepsArray = OwnerSquad->GetCreeps();
 
-    FVector VecToDestinationNormalize = (DestinationToRotating - CreepsArray[0]->GetActorLocation()).GetSafeNormal();
+    FVector VecToDestinationNormalize  = (DestinationToRotating - OwnerSquad->GetActorLocation()).GetSafeNormal();
     VecToDestinationNormalize.Z       = 0.0;
-    FVector CreepForwardVec            = CreepsArray[0]->GetActorForwardVector();
+    FVector CreepForwardVec            = OwnerSquad->GetActorForwardVector();
 
     float DotPawnForwardToDestination = FVector::DotProduct(VecToDestinationNormalize, CreepForwardVec);
 
@@ -99,7 +98,7 @@ void UActorMovementComponent::RotatingToLocation(float DeltaTime)
     }
     else
     {
-        FVector CreepRightVec            = CreepsArray[0]->GetActorRightVector();
+        FVector CreepRightVec           = OwnerSquad->GetActorRightVector();
         float DotPawnRightToDestination = FVector::DotProduct(VecToDestinationNormalize, CreepRightVec);
 
         FRotator OffsetRotation = FRotator{0.0f, SpeedRotating * DeltaTime, 0.0f};
