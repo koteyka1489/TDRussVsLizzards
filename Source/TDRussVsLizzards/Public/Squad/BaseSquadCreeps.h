@@ -20,6 +20,14 @@ struct FSquadSizes
     int32 Heigth;
 };
 
+enum class ESquadMovingDirection
+{
+    FrontMoving,
+    BackMoving,
+    LeftMoving,
+    RightMoving
+};
+
 UCLASS()
 class TDRUSSVSLIZZARDS_API ABaseSquadCreeps : public AActor
 {
@@ -51,10 +59,12 @@ private:
     TArray<TObjectPtr<ABaseCreepActor>> Creeps;
     bool bSquadIsChosen = false;
     FSquadSizes CurrentSquadSizes;
-    
+    ESquadMovingDirection CurrentSquadMovingDirection = ESquadMovingDirection::FrontMoving;
 
 
-    void UpdateSquadLocation();
+    void UpdateSquadLocation(ESquadMovingDirection Direction);
+    ESquadMovingDirection CalculateSquadMovingDirection(FVector Destination);
+
     void SpawnCreepsN();
     FSquadSizes CalculateCurrentSquadSizes();
 
