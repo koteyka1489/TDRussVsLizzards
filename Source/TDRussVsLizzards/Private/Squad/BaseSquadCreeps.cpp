@@ -24,7 +24,7 @@ void ABaseSquadCreeps::BeginPlay()
 
     SpawnCreepsN();
 
-    UpdateSquadLocation(CurrentSquadMovingDirection);
+    UpdateSquadLocationStart();
 
     BindOnCreepIsClickedtDelegate();
 
@@ -38,33 +38,51 @@ void ABaseSquadCreeps::Tick(float DeltaTime)
     DrawDebugLine(GetWorld(), GetActorLocation(), GetActorLocation() + GetActorForwardVector() * 1000, FColor::Red, false, -1.f, 0u, 5.0f);
 }
 
-void ABaseSquadCreeps::UpdateSquadLocation(ESquadMovingDirection Direction)
+void ABaseSquadCreeps::UpdateSquadLocationStart()
 {
+    FVector SquadRightCorner          = Creeps[0]->GetActorLocation();
+    FVector SquadLeftCorner           = Creeps[CurrentSquadSizes.Width - 1]->GetActorLocation();
+    FVector SquadRightToLeftCornerVec = SquadLeftCorner - SquadRightCorner;
+    SetActorLocation(GetActorLocation() + SquadRightToLeftCornerVec / 2);
+}
+
+void ABaseSquadCreeps::UpdateSquadLocationWhenChangeDirection(ESquadMovingDirection Direction)
+{
+    if (Creeps.Num() == 0) return;
+
+    FVector RightFrontCorner        = Creeps[0]->GetActorLocation();
+    int32 IndexCreepBackRightCorner = (CurrentSquadSizes.Heigth - 1) * CurrentSquadSizes.Width;
+
+    if (!Creeps.IsValidIndex(IndexCreepBackRightCorner)) return;
+
+    FVector RightBackCorner = Creeps[IndexCreepBackRightCorner]->GetActorLocation();
+
     switch (Direction)
     {
         case ESquadMovingDirection::FrontMoving:
         {
-            FVector SquadRightCorner          = Creeps[0]->GetActorLocation();
-            FVector SquadLeftCorner           = Creeps[CurrentSquadSizes.Width - 1]->GetActorLocation();
-            FVector SquadRightToLeftCornerVec = SquadLeftCorner - SquadRightCorner;
-            SetActorLocation(GetActorLocation() + SquadRightToLeftCornerVec / 2);
+
+            FVector MoveForwardVec = RightFrontCorner - RightBackCorner;
+            SetActorLocation(GetActorLocation() + MoveForwardVec);
             break;
         }
         case ESquadMovingDirection::BackMoving:
         {
-            int32 IndexCreepBackRightCorner       = (CurrentSquadSizes.Heigth - 1) * CurrentSquadSizes.Width;
-            FVector SquadBackRightCorner          = Creeps[IndexCreepBackRightCorner]->GetActorLocation();
-            int32 IndexCreepBackLeftCorner        = CurrentSquadSizes.Heigth * CurrentSquadSizes.Width;
-            FVector SquadBackLeftCorner           = Creeps[IndexCreepBackLeftCorner]->GetActorLocation();
-            FVector SquadBackRightToLeftCornerVec = SquadBackLeftCorner - SquadBackRightCorner;
 
-            FVector SquadFrontToBackVec = SquadBackRightCorner - Creeps[0]->GetActorLocation();
-
-            SetActorLocation(GetActorLocation() + SquadFrontToBackVec + SquadBackRightToLeftCornerVec / 2);
+            FVector MoveBackVec = RightBackCorner - RightFrontCorner;
+            SetActorLocation(GetActorLocation() + MoveBackVec);
             break;
         }
-        case ESquadMovingDirection::LeftMoving: break;
-        case ESquadMovingDirection::RightMoving: break;
+        case ESquadMovingDirection::LeftMoving:
+        {
+
+            break;
+        }
+        case ESquadMovingDirection::RightMoving:
+        {
+
+            break;
+        }
         default: break;
     }
 }
@@ -174,7 +192,7 @@ void ABaseSquadCreeps::MoveToLocation(FVector Destination)
     ESquadMovingDirection CalcMovingDirection = CalculateSquadMovingDirection(Destination);
     if (CalcMovingDirection != CurrentSquadMovingDirection)
     {
-        UpdateSquadLocation(CalcMovingDirection);
+        UpdateSquadLocationWhenChangeDirection(CalcMovingDirection);
     }
 
     MovementComponent->MoveToLocation(Destination);

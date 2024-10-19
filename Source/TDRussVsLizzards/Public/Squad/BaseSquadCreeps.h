@@ -61,8 +61,8 @@ private:
     FSquadSizes CurrentSquadSizes;
     ESquadMovingDirection CurrentSquadMovingDirection = ESquadMovingDirection::FrontMoving;
 
-
-    void UpdateSquadLocation(ESquadMovingDirection Direction);
+    void UpdateSquadLocationStart();
+    void UpdateSquadLocationWhenChangeDirection(ESquadMovingDirection Direction);
     ESquadMovingDirection CalculateSquadMovingDirection(FVector Destination);
 
     void SpawnCreepsN();
