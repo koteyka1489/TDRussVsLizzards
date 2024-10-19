@@ -30,7 +30,7 @@ private:
     bool bDestinationToMovingIsSet   = false;
     bool bDestinationToRotatingIsSet = false;
     float SpeedMoving                = 500.0f;
-    float SpeedRotating              = 300.0f;
+    float SpeedRotating              = 500.0f;
     bool bAutoOrientToMovement       = true;
 
     void RotateToLocation(FVector Location);

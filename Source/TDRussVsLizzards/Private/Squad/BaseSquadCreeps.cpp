@@ -156,6 +156,7 @@ void ABaseSquadCreeps::OnCreepIsClicked()
 
 void ABaseSquadCreeps::OnMovingComplete()
 {
+    CurrentAnimation = ESquadCurrentAnimation::Idle;
     for (auto& Creep : Creeps)
     {
         Creep->PlayAnimationIdle();
@@ -178,11 +179,16 @@ void ABaseSquadCreeps::MoveToLocation(FVector Destination)
     {
         UpdateSquadLocationWhenChangeDirection(CalcMovingDirection);
     }
-    
 
     MovementComponent->MoveToLocation(Destination);
-    for (auto& Creep : Creeps)
+
+    if (CurrentAnimation != ESquadCurrentAnimation::Run)
     {
-        Creep->PlayAnimationRun();
+        for (auto& Creep : Creeps)
+        {
+            Creep->PlayAnimationRun();
+        }
+        CurrentAnimation = ESquadCurrentAnimation::Run;
     }
+   
 }

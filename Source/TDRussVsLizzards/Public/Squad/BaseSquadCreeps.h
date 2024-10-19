@@ -28,6 +28,13 @@ enum class ESquadMovingDirection
     RightMoving
 };
 
+enum class ESquadCurrentAnimation
+{
+    Idle,
+    Walk,
+    Run
+};
+
 UCLASS()
 class TDRUSSVSLIZZARDS_API ABaseSquadCreeps : public AActor
 {
@@ -60,8 +67,9 @@ private:
     bool bSquadIsChosen = false;
     FSquadSizes CurrentSquadSizes;
     int32 FrontBackMovingMultiplier = 1;
+
     ESquadMovingDirection CurrentMovingDirection = ESquadMovingDirection::FrontMoving;
-    
+    ESquadCurrentAnimation CurrentAnimation      = ESquadCurrentAnimation::Idle;
 
     void UpdateSquadLocationStart();
     void UpdateSquadLocationWhenChangeDirection(ESquadMovingDirection Direction);
