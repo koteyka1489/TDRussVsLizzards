@@ -34,13 +34,13 @@ protected:
     UCameraComponent* CameraComponent;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-    double ZoomStart = 3000.0;
+    double ZoomStart = 4000.0;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
     double ZoomMin = 200.0;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-    double ZoomMax = 5000.0;
+    double ZoomMax = 6000.0;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
     double SpeedZoom = 3000.0;

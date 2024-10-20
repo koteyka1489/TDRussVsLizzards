@@ -22,11 +22,12 @@ void ATDCameraController::SetupInputComponent()
 {
     Super::SetupInputComponent();
 
-    // Add Input Mapping Context
+     //Add Input Mapping Context
     if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
     {
-        Subsystem->AddMappingContext(DefaultMappingContext, 0);
+        Subsystem->AddMappingContext(DefaultMappingContext, 1);
     }
+  
 
     // Set up action bindings
     if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent))
