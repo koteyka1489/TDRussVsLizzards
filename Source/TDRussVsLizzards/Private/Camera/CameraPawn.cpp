@@ -50,6 +50,8 @@ void ACameraPawn::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
+    MoveCameraByMouse();
+
     FRotator CameraRotation = GetActorRotation();
     FString Message1        = FString::Printf(TEXT("Camera Rotation  %s"), *CameraRotation.ToString());
     GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Red, Message1);
@@ -193,5 +195,38 @@ void ACameraPawn::UnchoiseCurrentSquad()
             Squad->SquadUnChoisen();
         }
         ChoisenSquads.Empty(20);
+    }
+}
+
+void ACameraPawn::MoveCameraByMouse()
+{
+    auto CameraController = Cast<ATDCameraController>(GetController());
+    if (CameraController)
+    {
+        int32 XScreenSize;
+        int32 YScreenSize;
+        CameraController->GetViewportSize(XScreenSize, YScreenSize);
+
+        double XMousePos;
+        double YMousePos;
+        CameraController->GetMousePosition(XMousePos, YMousePos);
+
+        if ((int32)XMousePos <= MoveMouseTreshold && (int32)XMousePos > 0)
+        {
+            OnMoveCameraRightLeft(-1.0f);
+        }
+        else if ((int32)XMousePos <= XScreenSize && (int32)XMousePos >= (XScreenSize - MoveMouseTreshold))
+        {
+            OnMoveCameraRightLeft(1.0f);
+        }
+
+        if ((int32)YMousePos <= MoveMouseTreshold && (int32)YMousePos > 0)
+        {
+            OnMoveCameraUpDown(1.0f);
+        }
+        else if ((int32)YMousePos <= YScreenSize && (int32)YMousePos >= (YScreenSize - MoveMouseTreshold))
+        {
+            OnMoveCameraUpDown(-1.0f);
+        }
     }
 }

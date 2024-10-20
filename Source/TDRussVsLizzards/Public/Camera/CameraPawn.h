@@ -60,6 +60,8 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Camera")
     double SpeedRotatePitchCamera = 20.0;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Camera")
+    int32 MoveMouseTreshold = 50;
 
 private:
     void OnZoomChanged(float Direction);
@@ -75,6 +77,7 @@ private:
     void GetSquadsOnLevel();
     void BindOnSquadIsChoisenDelegate();
     void UnchoiseCurrentSquad();
+    void MoveCameraByMouse();
 
 
     TArray<TObjectPtr<ABaseSquadCreeps>> SquadsOnLevel;
