@@ -70,6 +70,7 @@ private:
     void OnLeftMouseClickChois(FHitResult Hit);
     void OnRightMouseClickChois(FHitResult Hit);
     void OnSquadIsChoisen(ABaseSquadCreeps* SquadIn);
+    void OnMultiplySelectSquad(bool Value);
 
     void GetSquadsOnLevel();
     void BindOnSquadIsChoisenDelegate();
@@ -78,5 +79,5 @@ private:
 
     TArray<TObjectPtr<ABaseSquadCreeps>> SquadsOnLevel;
     TArray<TObjectPtr<ABaseSquadCreeps>> ChoisenSquads;
-
+    bool bMultiplySelectSquad = false;
 };

@@ -46,6 +46,12 @@ void ATDCameraController::SetupInputComponent()
 
         EnhancedInputComponent->BindAction(CameraAngleUpAction, ETriggerEvent::Triggered, this, &ATDCameraController::ChangeAngleCamera);
         EnhancedInputComponent->BindAction(CameraAngleDownAction, ETriggerEvent::Triggered, this, &ATDCameraController::ChangeAngleCamera);
+
+        EnhancedInputComponent->BindAction(
+            MultiplySelectSquadsAction, ETriggerEvent::Started, this, &ATDCameraController::MultiplySelectSquadsOn);
+        EnhancedInputComponent->BindAction(
+            MultiplySelectSquadsAction, ETriggerEvent::Completed, this, &ATDCameraController::MultiplySelectSquadsOff);
+        
     }
     else
     {
@@ -91,6 +97,16 @@ void ATDCameraController::SetLeftClickChois()
 void ATDCameraController::SetRightClickChois()
 {
     checkf(OnRightMouseClickChois.ExecuteIfBound(GetClickHit()), TEXT(" OnRightMouseClickChois Delegate is not bound "));
+}
+
+void ATDCameraController::MultiplySelectSquadsOn()
+{
+     checkf(OnMultiplySelectSquad.ExecuteIfBound(true), TEXT(" OnMultiplySelectSquad Delegate is not bound "));
+}
+
+void ATDCameraController::MultiplySelectSquadsOff()
+{
+    checkf(OnMultiplySelectSquad.ExecuteIfBound(false), TEXT(" OnMultiplySelectSquad Delegate is not bound "));
 }
 
 FHitResult ATDCameraController::GetClickHit()

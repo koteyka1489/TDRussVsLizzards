@@ -39,6 +39,7 @@ void ACameraPawn::BeginPlay()
         CameraController->OnLeftMouseClickChois.BindUObject(this, &ACameraPawn::OnLeftMouseClickChois);
         CameraController->OnRightMouseClickChois.BindUObject(this, &ACameraPawn::OnRightMouseClickChois);
         CameraController->OnChangeAngleCamera.BindUObject(this, &ACameraPawn::OnChangeAngleCamera);
+        CameraController->OnMultiplySelectSquad.BindUObject(this, &ACameraPawn::OnMultiplySelectSquad);
     }
 
     GetSquadsOnLevel();
@@ -132,14 +133,24 @@ void ACameraPawn::OnRightMouseClickChois(FHitResult Hit)
 
 void ACameraPawn::OnSquadIsChoisen(ABaseSquadCreeps* SquadIn)
 {
-  /*  for (auto Squad : ChoisenSquads)
+    if (bMultiplySelectSquad)
     {
-        if (Squad.Get() == SquadIn) return;
-    }*/
+        for (auto Squad : ChoisenSquads)
+        {
+            if (Squad.Get() == SquadIn) return;
+        }
+        ChoisenSquads.Add(SquadIn);
+    }
+    else
+    {
+        UnchoiseCurrentSquad();
+        ChoisenSquads.Add(SquadIn);
+    }
+}
 
-
-    UnchoiseCurrentSquad();
-    ChoisenSquads.Add(SquadIn);
+void ACameraPawn::OnMultiplySelectSquad(bool Value)
+{
+    bMultiplySelectSquad = Value;
 }
 
 void ACameraPawn::GetSquadsOnLevel()
