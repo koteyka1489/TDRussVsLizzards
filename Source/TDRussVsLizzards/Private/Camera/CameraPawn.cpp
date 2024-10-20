@@ -51,14 +51,6 @@ void ACameraPawn::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 
     MoveCameraByMouse();
-
-    FRotator CameraRotation = GetActorRotation();
-    FString Message1        = FString::Printf(TEXT("Camera Rotation  %s"), *CameraRotation.ToString());
-    GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Red, Message1);
-
-    FVector CameraLocation = GetActorLocation();
-    FString Message2       = FString::Printf(TEXT("Camera Location  %s"), *CameraLocation.ToString());
-    GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Red, Message2);
 }
 
 void ACameraPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
