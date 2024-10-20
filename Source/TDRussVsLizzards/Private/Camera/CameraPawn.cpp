@@ -116,18 +116,7 @@ void ACameraPawn::OnLeftMouseClickChois(FHitResult Hit)
     }
     else
     {
-        if (ChoisenSquads.Num() == 0)
-        {
-            return;
-        }
-        else
-        {
-            for (auto& Squad : ChoisenSquads)
-            {
-                Squad->SquadUnChoisen();
-            }
-            ChoisenSquads.Empty();
-        }
+        UnchoiseCurrentSquad();
     }
 }
 
@@ -143,11 +132,13 @@ void ACameraPawn::OnRightMouseClickChois(FHitResult Hit)
 
 void ACameraPawn::OnSquadIsChoisen(ABaseSquadCreeps* SquadIn)
 {
-    for (auto Squad : ChoisenSquads)
+  /*  for (auto Squad : ChoisenSquads)
     {
         if (Squad.Get() == SquadIn) return;
-    }
+    }*/
 
+
+    UnchoiseCurrentSquad();
     ChoisenSquads.Add(SquadIn);
 }
 
@@ -175,5 +166,21 @@ void ACameraPawn::BindOnSquadIsChoisenDelegate()
     for (auto& Squad : SquadsOnLevel)
     {
         Squad->OnSquadIsChoisen.BindUObject(this, &ACameraPawn::OnSquadIsChoisen);
+    }
+}
+
+void ACameraPawn::UnchoiseCurrentSquad()
+{
+    if (ChoisenSquads.Num() == 0)
+    {
+        return;
+    }
+    else
+    {
+        for (auto& Squad : ChoisenSquads)
+        {
+            Squad->SquadUnChoisen();
+        }
+        ChoisenSquads.Empty(20);
     }
 }

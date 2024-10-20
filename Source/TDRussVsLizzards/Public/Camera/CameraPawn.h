@@ -73,6 +73,7 @@ private:
 
     void GetSquadsOnLevel();
     void BindOnSquadIsChoisenDelegate();
+    void UnchoiseCurrentSquad();
 
 
     TArray<TObjectPtr<ABaseSquadCreeps>> SquadsOnLevel;
