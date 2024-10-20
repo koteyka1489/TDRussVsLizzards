@@ -50,9 +50,8 @@ void ACameraPawn::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 
     FRotator CameraRotation = GetActorRotation();
-    FString Message1 = FString::Printf(TEXT("Camera Rotation  %s"), *CameraRotation.ToString());
+    FString Message1        = FString::Printf(TEXT("Camera Rotation  %s"), *CameraRotation.ToString());
     GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Red, Message1);
-
 
     FVector CameraLocation = GetActorLocation();
     FString Message2       = FString::Printf(TEXT("Camera Location  %s"), *CameraLocation.ToString());
@@ -74,7 +73,12 @@ void ACameraPawn::OnZoomChanged(float Direction)
 void ACameraPawn::OnMoveCameraUpDown(float Direction)
 {
     float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
-    SetActorLocation(GetActorLocation() + GetActorForwardVector() * Direction * SpeedCamera * DeltaTime);
+    double Pitch    = GetActorRotation().Pitch;
+
+    FQuat QRot                    = FQuat(GetActorRightVector(), FMath::DegreesToRadians(Pitch));
+    FVector AdjustedForwardVector = QRot.RotateVector(GetActorForwardVector());
+
+    SetActorLocation(GetActorLocation() + AdjustedForwardVector * Direction * SpeedCamera * DeltaTime);
 }
 
 void ACameraPawn::OnMoveCameraRightLeft(float Direction)
@@ -90,19 +94,11 @@ void ACameraPawn::OnRotateCamera(float Direction)
     SetActorRotation(NewRotate);
 }
 
-void ACameraPawn::OnChangeAngleCamera(float Direction) 
+void ACameraPawn::OnChangeAngleCamera(float Direction)
 {
-    FString Message = FString::Printf(TEXT("Angle Direction  %f"), Direction);
-    GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Red, Message);
 
-
-
-    double DeltaTime    = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
+    double DeltaTime        = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
     FRotator CameraRotation = GetActorRotation();
-
-    FString Message1 = FString::Printf(TEXT("Current Pitch  %f"), CameraRotation.Pitch);
-    GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Red, Message1);
-
 
     double TargetPitch =
         FMath::Clamp(CameraRotation.Pitch + Direction * SpeedRotatePitchCamera * DeltaTime, MinPitchCamera, MaxPitchCamera);
