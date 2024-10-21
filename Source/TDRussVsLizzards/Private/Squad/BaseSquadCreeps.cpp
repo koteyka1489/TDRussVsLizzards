@@ -45,21 +45,19 @@ void ABaseSquadCreeps::Tick(float DeltaTime)
 
 void ABaseSquadCreeps::UpdateSquadLocationStart()
 {
-    FVector SquadRightCorner          = Creeps[0]->GetActorLocation();
-    FVector SquadLeftCorner           = Creeps[CurrentSquadSizes.Width - 1]->GetActorLocation();
+    FVector SquadRightCorner              = Creeps[0]->GetActorLocation();
+    FVector SquadLeftCorner               = Creeps[CurrentSquadSizes.Width - 1]->GetActorLocation();
     FVector SquadRightToLeftCornerHalfVec = (SquadLeftCorner - SquadRightCorner) / 2;
 
     int32 IndexCreepBackRightCorner = (CurrentSquadSizes.Heigth - 1) * CurrentSquadSizes.Width;
     checkf(Creeps.IsValidIndex(IndexCreepBackRightCorner), TEXT("Invalid Index"));
-    
-    FVector BackCorner     = Creeps[IndexCreepBackRightCorner]->GetActorLocation();
+
+    FVector BackCorner         = Creeps[IndexCreepBackRightCorner]->GetActorLocation();
     FVector FrontToBackHalfVec = (BackCorner - SquadRightCorner) / 2;
 
     // Set Center squad on center Spawned creeps
     SetActorLocation(GetActorLocation() + SquadRightToLeftCornerHalfVec + FrontToBackHalfVec);
 }
-
-
 
 ESquadMovingDirection ABaseSquadCreeps::CalculateSquadMovingDirection(FVector Destination)
 {
@@ -87,8 +85,6 @@ void ABaseSquadCreeps::SpawnCreepsN()
     FActorSpawnParameters SpawnInfo;
     SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-    
-
     for (int32 x = 0; x < CurrentSquadSizes.Heigth; x++)
     {
         for (int32 y = 0; y < CurrentSquadSizes.Width; y++)
@@ -106,7 +102,7 @@ void ABaseSquadCreeps::SpawnCreepsN()
 
     for (int32 x = CurrentSquadSizes.Heigth; x < CurrentSquadSizes.Heigth + 1; x++)
     {
-        
+
         int32 StartSpawnRemainderCreeps = CurrentSquadSizes.Width / 2 - CreepsShortage / 2;
         for (int32 y = StartSpawnRemainderCreeps; y < StartSpawnRemainderCreeps + CreepsShortage; y++)
         {
@@ -131,19 +127,31 @@ FSquadSizes ABaseSquadCreeps::CalculateCurrentSquadSizes()
 
 void ABaseSquadCreeps::BindOnCreepIsClickedtDelegate()
 {
-    checkf(!Creeps.IsEmpty(), TEXT("Creeps array is empty"));
 
-    for (auto& Creep : Creeps)
+    if (!Creeps.IsEmpty())
     {
-        Creep->OnCreepIsClicked.BindUObject(this, &ABaseSquadCreeps::OnCreepIsClicked);
+        for (auto& Creep : Creeps)
+        {
+            Creep->OnCreepIsClicked.BindUObject(this, &ABaseSquadCreeps::OnCreepIsClicked);
+        }
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("Creeps array is empty"));
+        checkNoEntry();
     }
 }
 
 void ABaseSquadCreeps::OnCreepIsClicked()
 {
     bSquadIsChosen = true;
-
-    checkf(OnSquadIsChoisen.ExecuteIfBound(this), TEXT("OnSquadIsChoisen Is not bound"));
+    if (OnSquadIsChoisen.ExecuteIfBound(this))
+    {}
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("OnSquadIsChoisen Is not bound"));
+        checkNoEntry();
+    }
 
     for (auto& Creep : Creeps)
     {
@@ -171,7 +179,6 @@ void ABaseSquadCreeps::SquadUnChoisen()
 
 void ABaseSquadCreeps::MoveToLocation(FVector Destination)
 {
-
     MovementComponent->MoveToLocation(Destination);
 
     if (CurrentAnimation != ESquadCurrentAnimation::Run)
@@ -182,5 +189,4 @@ void ABaseSquadCreeps::MoveToLocation(FVector Destination)
         }
         CurrentAnimation = ESquadCurrentAnimation::Run;
     }
-   
 }

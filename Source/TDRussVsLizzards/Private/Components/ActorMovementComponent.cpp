@@ -52,16 +52,15 @@ void UActorMovementComponent::RotateToLocation(FVector Location)
 
 void UActorMovementComponent::MovingToLocation(float DeltaTime)
 {
-    
 
     FVector VecToDestination = DestinationToMoving - OwnerSquad->GetActorLocation();
     VecToDestination.Z       = 0.0;
 
-
     if (VecToDestination.Length() <= 10)
     {
         bDestinationToMovingIsSet = false;
-        checkf(OnMovingComplete.ExecuteIfBound(), TEXT("On moving Complete delegate not bound"));
+        OnMovingComplete.ExecuteIfBound();
+        //checkf(OnMovingComplete.ExecuteIfBound(), TEXT("On moving Complete delegate not bound"));
         return;
     }
     else
@@ -84,9 +83,9 @@ void UActorMovementComponent::MovingToLocation(float DeltaTime)
 void UActorMovementComponent::RotatingToLocation(float DeltaTime)
 {
 
-    FVector VecToDestinationNormalize  = (DestinationToRotating - OwnerSquad->GetActorLocation()).GetSafeNormal();
+    FVector VecToDestinationNormalize = (DestinationToRotating - OwnerSquad->GetActorLocation()).GetSafeNormal();
     VecToDestinationNormalize.Z       = 0.0;
-    FVector CreepForwardVec            = OwnerSquad->GetActorForwardVector();
+    FVector CreepForwardVec           = OwnerSquad->GetActorForwardVector();
 
     float DotPawnForwardToDestination = FVector::DotProduct(VecToDestinationNormalize, CreepForwardVec);
 

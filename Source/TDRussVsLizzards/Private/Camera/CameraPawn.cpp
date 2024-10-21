@@ -152,7 +152,7 @@ void ACameraPawn::GetSquadsOnLevel()
     TArray<AActor*> Actors;
     UGameplayStatics::GetAllActorsOfClass(GetWorld(), ABaseSquadCreeps::StaticClass(), Actors);
 
-    checkf(!Actors.IsEmpty(), TEXT("Get All Squads on level is Failed"));
+    if (Actors.IsEmpty()) return;
 
     for (auto& Actor : Actors)
     {
@@ -166,7 +166,7 @@ void ACameraPawn::GetSquadsOnLevel()
 
 void ACameraPawn::BindOnSquadIsChoisenDelegate()
 {
-    checkf(!SquadsOnLevel.IsEmpty(), TEXT("SquadsOnLevel is Empty"));
+    if (SquadsOnLevel.IsEmpty()) return;
 
     for (auto& Squad : SquadsOnLevel)
     {

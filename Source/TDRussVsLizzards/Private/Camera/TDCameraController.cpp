@@ -22,12 +22,13 @@ void ATDCameraController::SetupInputComponent()
 {
     Super::SetupInputComponent();
     UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-    checkf(IsValid(Subsystem), TEXT("Subsystem ptr not valid"));
+    if (!IsValid(Subsystem)) return;
 
     Subsystem->AddMappingContext(DefaultMappingContext, 1);
 
     UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent);
-    checkf(IsValid(EnhancedInputComponent), TEXT("Failed to find an Enhanced Input Component!"));
+
+    if (!IsValid(EnhancedInputComponent)) return;
 
     EnhancedInputComponent->BindAction(MoveCameraUpAction, ETriggerEvent::Triggered, this, &ATDCameraController::MoveCameraUpDown);
     EnhancedInputComponent->BindAction(MoveCameraDownAction, ETriggerEvent::Triggered, this, &ATDCameraController::MoveCameraUpDown);
@@ -52,47 +53,102 @@ void ATDCameraController::SetupInputComponent()
 
 void ATDCameraController::MoveCameraUpDown(const FInputActionValue& Value)
 {
-    checkf(OnMoveCameraUpDown.ExecuteIfBound(Value.Get<float>()), TEXT(" OnMoveCameraUpDown Delegate is not bound "));
+    if (OnMoveCameraUpDown.ExecuteIfBound(Value.Get<float>())){}
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("OnMoveCameraUpDown Delegate is not bound"));
+        checkNoEntry();
+    }
+    //checkf(OnMoveCameraUpDown.ExecuteIfBound(Value.Get<float>()), TEXT(" OnMoveCameraUpDown Delegate is not bound "));
 }
 
 void ATDCameraController::MoveCameraRightLeft(const FInputActionValue& Value)
 {
-    checkf(OnMoveCameraRightLeft.ExecuteIfBound(Value.Get<float>()), TEXT(" OnMoveCameraRightLeft Delegate is not bound "));
+    if (OnMoveCameraRightLeft.ExecuteIfBound(Value.Get<float>())){}
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("OnMoveCameraRightLeft Delegate is not bound"));
+        checkNoEntry();
+    }
+
+    //checkf(OnMoveCameraRightLeft.ExecuteIfBound(Value.Get<float>()), TEXT(" OnMoveCameraRightLeft Delegate is not bound "));
 }
 
 void ATDCameraController::ZoomUpAction(const FInputActionValue& Value)
 {
-    checkf(OnZoomChanged.ExecuteIfBound(Value.Get<float>()), TEXT(" OnZoomChanged Delegate is not bound "));
+    if(OnZoomChanged.ExecuteIfBound(Value.Get<float>())){}
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("OnZoomChanged Delegate is not bound"));
+        checkNoEntry();
+    }
+    //checkf(OnZoomChanged.ExecuteIfBound(Value.Get<float>()), TEXT(" OnZoomChanged Delegate is not bound "));
 }
 
 void ATDCameraController::RotateCamera(const FInputActionValue& Value)
 {
-    checkf(OnRotateCamera.ExecuteIfBound(Value.Get<float>()), TEXT(" OnRotateCamera Delegate is not bound "));
+    if(OnRotateCamera.ExecuteIfBound(Value.Get<float>())){}
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("OnRotateCamera Delegate is not bound"));
+        checkNoEntry();
+    }
+    //checkf(OnRotateCamera.ExecuteIfBound(Value.Get<float>()), TEXT(" OnRotateCamera Delegate is not bound "));
 }
 
 void ATDCameraController::ChangeAngleCamera(const FInputActionValue& Value)
 {
-    checkf(OnChangeAngleCamera.ExecuteIfBound(Value.Get<float>()), TEXT(" OnChangeAngleCamera Delegate is not bound "));
+    if(OnChangeAngleCamera.ExecuteIfBound(Value.Get<float>())){}
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("OnChangeAngleCamera Delegate is not bound"));
+        checkNoEntry();
+    }
+    //checkf(OnChangeAngleCamera.ExecuteIfBound(Value.Get<float>()), TEXT(" OnChangeAngleCamera Delegate is not bound "));
 }
 
 void ATDCameraController::SetLeftClickChois()
 {
-    checkf(OnLeftMouseClickChois.ExecuteIfBound(GetClickHit()), TEXT(" OnLeftMouseClickChois Delegate is not bound "));
+    if(OnLeftMouseClickChois.ExecuteIfBound(GetClickHit())){}
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("OnLeftMouseClickChois Delegate is not bound"));
+        checkNoEntry();
+    }
+    //checkf(OnLeftMouseClickChois.ExecuteIfBound(GetClickHit()), TEXT(" OnLeftMouseClickChois Delegate is not bound "));
 }
 
 void ATDCameraController::SetRightClickChois()
 {
-    checkf(OnRightMouseClickChois.ExecuteIfBound(GetClickHit()), TEXT(" OnRightMouseClickChois Delegate is not bound "));
+    if(OnRightMouseClickChois.ExecuteIfBound(GetClickHit())){}
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("OnRightMouseClickChois Delegate is not bound"));
+        checkNoEntry();
+    }
+    //checkf(OnRightMouseClickChois.ExecuteIfBound(GetClickHit()), TEXT(" OnRightMouseClickChois Delegate is not bound "));
 }
 
 void ATDCameraController::MultiplySelectSquadsOn()
 {
-    checkf(OnMultiplySelectSquad.ExecuteIfBound(true), TEXT(" OnMultiplySelectSquad Delegate is not bound "));
+    if(OnMultiplySelectSquad.ExecuteIfBound(true)){}
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("OnMultiplySelectSquad Delegate is not bound"));
+        checkNoEntry();
+    }
+    //checkf(OnMultiplySelectSquad.ExecuteIfBound(true), TEXT(" OnMultiplySelectSquad Delegate is not bound "));
 }
 
 void ATDCameraController::MultiplySelectSquadsOff()
 {
-    checkf(OnMultiplySelectSquad.ExecuteIfBound(false), TEXT(" OnMultiplySelectSquad Delegate is not bound "));
+    if(OnMultiplySelectSquad.ExecuteIfBound(false)){}
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("OnMultiplySelectSquad Delegate is not bound"));
+        checkNoEntry();
+    }
+    //checkf(OnMultiplySelectSquad.ExecuteIfBound(false), TEXT(" OnMultiplySelectSquad Delegate is not bound "));
 }
 
 FHitResult ATDCameraController::GetClickHit()
@@ -103,12 +159,15 @@ FHitResult ATDCameraController::GetClickHit()
     FVector MouseWorldDirection{};
 
     bHitSuccessful = DeprojectMousePositionToWorld(MouseWorldLocation, MouseWorldDirection);
-    checkf(bHitSuccessful, TEXT(" Unable to determine value Mouse Click"));
+    if (bHitSuccessful){}
+    else {
+        UE_LOG(LogTemp, Error, TEXT("Unable to determine value Mouse Click"));
+        checkNoEntry();
+    }
 
     FVector TraceEnd = MouseWorldLocation + MouseWorldDirection * 50000;
 
     bHitSuccessful = GetWorld()->LineTraceSingleByChannel(Hit, MouseWorldLocation, TraceEnd, ECollisionChannel::ECC_Visibility);
-    checkf(bHitSuccessful, TEXT(" No HIT"));
 
     return Hit;
 }

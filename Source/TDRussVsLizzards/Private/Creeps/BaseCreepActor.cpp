@@ -71,7 +71,14 @@ void ABaseCreepActor::BeginPlay()
 
 void ABaseCreepActor::SetCreepIsClicked()
 {
-    checkf(OnCreepIsClicked.ExecuteIfBound(), TEXT("OnCreepIsClicked not bound"));
+    if (OnCreepIsClicked.ExecuteIfBound())
+    {
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("OnCreepIsClicked not bound"));
+        checkNoEntry();
+    }
 }
 
 void ABaseCreepActor::SetCreepIsChoisen(bool ChoisenStatus)
