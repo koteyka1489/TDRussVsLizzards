@@ -5,13 +5,18 @@
 #include "Creeps/OrcCreepActor.h"
 #include "Creeps/TrollCreepActor.h"
 #include "Creeps/BarbarianCreepActor.h"
-#include "Components/InstancedStaticMeshComponent.h"
 #include "Components/ActorMovementComponent.h"
 #include "DrawDebugHelpers.h"
+#include "Components/SceneComponent.h"
 
 ABaseSquadCreeps::ABaseSquadCreeps()
 {
     PrimaryActorTick.bCanEverTick = true;
+    SceneComponent                = CreateDefaultSubobject<USceneComponent>("SceneComponent");
+    SetRootComponent(SceneComponent);
+
+    StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponent");
+    StaticMeshComponent->SetupAttachment(GetRootComponent());
 
     MovementComponent = CreateDefaultSubobject<UActorMovementComponent>("UActorMovementComponent");
 }

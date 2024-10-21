@@ -9,9 +9,10 @@
 DECLARE_DELEGATE_OneParam(FOnSquadIsChoisen, ABaseSquadCreeps*)
 
 class ABaseCreepActor;
-class UInstancedStaticMeshComponent;
+class UStaticMeshComponent;
 class UActorMovementComponent;
 class USceneComponent;
+
 
 
 struct FSquadSizes
@@ -53,6 +54,17 @@ public:
     FOnSquadIsChoisen OnSquadIsChoisen;
 
 protected:
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+    USceneComponent* SceneComponent;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+    UActorMovementComponent* MovementComponent;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+    UStaticMeshComponent* StaticMeshComponent;
+
+
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad")
     int32 CreepsNum = 50;
 
@@ -62,8 +74,8 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad")
     TSubclassOf<ABaseCreepActor> CreepsType;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
-    UActorMovementComponent* MovementComponent;
+   
+
 
 private:
     TArray<TObjectPtr<ABaseCreepActor>> Creeps;
