@@ -12,6 +12,10 @@ UActorMovementComponent::UActorMovementComponent()
 void UActorMovementComponent::BeginPlay()
 {
     Super::BeginPlay();
+
+    OwnerSquad = Cast<ABaseSquadCreeps>(GetOwner());
+    checkf(IsValid(OwnerSquad), TEXT("Get Owner Squad is Failed"));
+    CreepsArray = OwnerSquad->GetCreeps();
 }
 
 void UActorMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -48,9 +52,7 @@ void UActorMovementComponent::RotateToLocation(FVector Location)
 
 void UActorMovementComponent::MovingToLocation(float DeltaTime)
 {
-    auto OwnerSquad = Cast<ABaseSquadCreeps>(GetOwner());
-    checkf(IsValid(OwnerSquad), TEXT("Get Owner Squad is Failed"));
-    auto CreepsArray = OwnerSquad->GetCreeps();
+    
 
     FVector VecToDestination = DestinationToMoving - OwnerSquad->GetActorLocation();
     VecToDestination.Z       = 0.0;
@@ -68,7 +70,7 @@ void UActorMovementComponent::MovingToLocation(float DeltaTime)
         Direction.Z       = 0.0f;
         FVector Offset    = Direction * SpeedMoving * DeltaTime;
 
-        for (auto& Creep : CreepsArray)
+        for (auto& Creep : *CreepsArray)
         {
             FVector NewLocation = Creep->GetActorLocation() + Offset;
             Creep->SetActorLocation(NewLocation);
@@ -81,9 +83,6 @@ void UActorMovementComponent::MovingToLocation(float DeltaTime)
 
 void UActorMovementComponent::RotatingToLocation(float DeltaTime)
 {
-    auto OwnerSquad = Cast<ABaseSquadCreeps>(GetOwner());
-    checkf(IsValid(OwnerSquad), TEXT("Get Owner Squad is Failed"));
-    auto CreepsArray = OwnerSquad->GetCreeps();
 
     FVector VecToDestinationNormalize  = (DestinationToRotating - OwnerSquad->GetActorLocation()).GetSafeNormal();
     VecToDestinationNormalize.Z       = 0.0;
@@ -105,7 +104,7 @@ void UActorMovementComponent::RotatingToLocation(float DeltaTime)
 
         if (DotPawnRightToDestination >= 0.0)
         {
-            for (auto& Creep : CreepsArray)
+            for (auto& Creep : *CreepsArray)
             {
                 FRotator NewRotation = Creep->GetActorRotation() + OffsetRotation;
                 Creep->SetActorRotation(NewRotation);
@@ -115,7 +114,7 @@ void UActorMovementComponent::RotatingToLocation(float DeltaTime)
         }
         else
         {
-            for (auto& Creep : CreepsArray)
+            for (auto& Creep : *CreepsArray)
             {
                 FRotator NewRotation = Creep->GetActorRotation() - OffsetRotation;
                 Creep->SetActorRotation(NewRotation);

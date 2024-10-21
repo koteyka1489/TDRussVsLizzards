@@ -49,7 +49,7 @@ public:
 
     void MoveToLocation(FVector Destination);
 
-    TArray<TObjectPtr<ABaseCreepActor>>& GetCreeps() { return Creeps; }
+    TArray<TObjectPtr<ABaseCreepActor>>* GetCreeps() { return &Creeps; }
 
     FOnSquadIsChoisen OnSquadIsChoisen;
 
@@ -87,7 +87,7 @@ private:
     ESquadCurrentAnimation CurrentAnimation      = ESquadCurrentAnimation::Idle;
 
     void UpdateSquadLocationStart();
-    void UpdateSquadLocationWhenChangeDirection(ESquadMovingDirection Direction);
+    
     ESquadMovingDirection CalculateSquadMovingDirection(FVector Destination);
 
     void SpawnCreepsN();

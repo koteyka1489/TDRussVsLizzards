@@ -9,6 +9,7 @@
 DECLARE_DELEGATE(FOnMovingComplete)
 
 class ABaseCreepActor;
+class ABaseSquadCreeps;
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class TDRUSSVSLIZZARDS_API UActorMovementComponent : public UActorComponent
@@ -25,6 +26,10 @@ public:
     FOnMovingComplete OnMovingComplete;
 
 private:
+    TObjectPtr<ABaseSquadCreeps> OwnerSquad;
+
+    TArray<TObjectPtr<ABaseCreepActor>>* CreepsArray;
+
     FVector DestinationToMoving{};
     FVector DestinationToRotating{};
     bool bDestinationToMovingIsSet   = false;
