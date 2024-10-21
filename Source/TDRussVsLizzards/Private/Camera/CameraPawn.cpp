@@ -203,7 +203,7 @@ void ACameraPawn::MoveCameraByMouse()
         double YMousePos;
         CameraController->GetMousePosition(XMousePos, YMousePos);
 
-        if ((int32)XMousePos <= MoveMouseTreshold && (int32)XMousePos >= 0)
+        if ((int32)XMousePos <= MoveMouseTreshold && (int32)XMousePos > 0)
         {
             OnMoveCameraRightLeft(-1.0f);
         }
@@ -212,7 +212,7 @@ void ACameraPawn::MoveCameraByMouse()
             OnMoveCameraRightLeft(1.0f);
         }
 
-        if ((int32)YMousePos <= MoveMouseTreshold && (int32)YMousePos >= 0)
+        if ((int32)YMousePos <= MoveMouseTreshold && (int32)YMousePos > 0)
         {
             OnMoveCameraUpDown(1.0f);
         }

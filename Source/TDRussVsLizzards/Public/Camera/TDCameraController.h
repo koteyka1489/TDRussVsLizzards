@@ -83,8 +83,6 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
     UInputAction* MultiplySelectSquadsAction;
 
-    
-
 private:
     void MoveCameraUpDown(const FInputActionValue& Value);
     void MoveCameraRightLeft(const FInputActionValue& Value);
