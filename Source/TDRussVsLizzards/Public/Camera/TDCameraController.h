@@ -18,6 +18,7 @@ DECLARE_DELEGATE_OneParam(FOnLeftMouseClickChois, FHitResult);
 DECLARE_DELEGATE_OneParam(FOnRightMouseClickChois, FHitResult);
 DECLARE_DELEGATE_OneParam(FOnChangeAngleCamera, float);
 DECLARE_DELEGATE_OneParam(FOnMultiplySelectSquad, bool);
+DECLARE_DELEGATE(FOnLeftMouseHold);
 
 UCLASS()
 class TDRUSSVSLIZZARDS_API ATDCameraController : public APlayerController
@@ -26,6 +27,7 @@ class TDRUSSVSLIZZARDS_API ATDCameraController : public APlayerController
 
 public:
     ATDCameraController();
+    FVector GetMouseLocationOnTerrain();
 
     // Delegates
     FOnZoomChanged OnZoomChanged;
@@ -36,6 +38,7 @@ public:
     FOnRightMouseClickChois OnRightMouseClickChois;
     FOnChangeAngleCamera OnChangeAngleCamera;
     FOnMultiplySelectSquad OnMultiplySelectSquad;
+    FOnLeftMouseHold OnLeftMouseHold;
 
 protected:
     virtual void BeginPlay() override;
@@ -83,6 +86,9 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
     UInputAction* MultiplySelectSquadsAction;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Mouse")
+    float MouseHoldTreshold = 0.15;
+
 private:
     void MoveCameraUpDown(const FInputActionValue& Value);
     void MoveCameraRightLeft(const FInputActionValue& Value);
@@ -93,6 +99,8 @@ private:
     void SetRightClickChois();
     void MultiplySelectSquadsOn();
     void MultiplySelectSquadsOff();
+    void LeftClickTriggered();
 
     FHitResult GetClickHit();
+    
 };
