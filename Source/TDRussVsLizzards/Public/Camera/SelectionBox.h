@@ -6,21 +6,29 @@
 #include "GameFramework/Actor.h"
 #include "SelectionBox.generated.h"
 
+class UBoxComponent;
+class UDecalComponent;
+
 UCLASS()
 class TDRUSSVSLIZZARDS_API ASelectionBox : public AActor
 {
-	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	ASelectionBox();
+    GENERATED_BODY()
+
+public:
+    ASelectionBox();
+    virtual void BeginPlay() override;
+    virtual void Tick(float DeltaTime) override;
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+    UBoxComponent* BoxCollider;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+    UDecalComponent* DecalComponent;
 
+    UFUNCTION()
+    void OnBoxColliderBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+        int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+private:
 };

@@ -10,6 +10,8 @@ class UCameraComponent;
 class USpringArmComponent;
 class USceneComponent;
 class ABaseSquadCreeps;
+class ASelectionBox;
+class ATDCameraController;
 
 UCLASS()
 class TDRUSSVSLIZZARDS_API ACameraPawn : public APawn
@@ -63,7 +65,12 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Camera")
     int32 MoveMouseTreshold = 50;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SelectionBox")
+    TSubclassOf<ASelectionBox> SelectionBoxDefaultClass;
+
 private:
+    TObjectPtr<ATDCameraController> CameraController;
+
     void OnZoomChanged(float Direction);
     void OnMoveCameraUpDown(float Direction);
     void OnMoveCameraRightLeft(float Direction);
@@ -73,14 +80,19 @@ private:
     void OnRightMouseClickChois(FHitResult Hit);
     void OnSquadIsChoisen(ABaseSquadCreeps* SquadIn);
     void OnMultiplySelectSquad(bool Value);
+    void OnLeftMouseHold();
 
     void GetSquadsOnLevel();
     void BindOnSquadIsChoisenDelegate();
     void UnchoiseCurrentSquad();
     void MoveCameraByMouse();
-
+    void CreateSelectionBox();
 
     TArray<TObjectPtr<ABaseSquadCreeps>> SquadsOnLevel;
     TArray<TObjectPtr<ABaseSquadCreeps>> ChoisenSquads;
     bool bMultiplySelectSquad = false;
+
+    TObjectPtr<ASelectionBox> SelectionBox;
+    FVector SelectionBoxStartLocation;
+    bool bBoxIsSpawned = false;
 };

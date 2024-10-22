@@ -8,6 +8,7 @@
 #include "Creeps/BaseCreepActor.h"
 #include "Squad/BaseSquadCreeps.h"
 #include "Kismet/GameplayStatics.h"
+#include "Camera/SelectionBox.h"
 
 ACameraPawn::ACameraPawn()
 {
@@ -29,7 +30,7 @@ void ACameraPawn::BeginPlay()
 {
     Super::BeginPlay();
 
-    auto CameraController = Cast<ATDCameraController>(GetController());
+    CameraController = Cast<ATDCameraController>(GetController());
     if (CameraController)
     {
         CameraController->OnZoomChanged.BindUObject(this, &ACameraPawn::OnZoomChanged);
@@ -40,6 +41,7 @@ void ACameraPawn::BeginPlay()
         CameraController->OnRightMouseClickChois.BindUObject(this, &ACameraPawn::OnRightMouseClickChois);
         CameraController->OnChangeAngleCamera.BindUObject(this, &ACameraPawn::OnChangeAngleCamera);
         CameraController->OnMultiplySelectSquad.BindUObject(this, &ACameraPawn::OnMultiplySelectSquad);
+        CameraController->OnLeftMouseHold.BindUObject(this, &ACameraPawn::OnLeftMouseHold);
     }
 
     GetSquadsOnLevel();
@@ -147,6 +149,15 @@ void ACameraPawn::OnMultiplySelectSquad(bool Value)
     bMultiplySelectSquad = Value;
 }
 
+void ACameraPawn::OnLeftMouseHold()
+{
+    if (!bBoxIsSpawned)
+    {
+        CreateSelectionBox();
+        bBoxIsSpawned = true;
+    }
+}
+
 void ACameraPawn::GetSquadsOnLevel()
 {
     TArray<AActor*> Actors;
@@ -192,7 +203,7 @@ void ACameraPawn::UnchoiseCurrentSquad()
 
 void ACameraPawn::MoveCameraByMouse()
 {
-    auto CameraController = Cast<ATDCameraController>(GetController());
+
     if (CameraController)
     {
         int32 XScreenSize;
@@ -221,4 +232,18 @@ void ACameraPawn::MoveCameraByMouse()
             OnMoveCameraUpDown(-1.0f);
         }
     }
+}
+
+void ACameraPawn::CreateSelectionBox()
+{
+    if (!GetWorld()) return;
+
+    FActorSpawnParameters SpawnInfo;
+    SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+    SpawnInfo.Owner                          = this;
+    SpawnInfo.Instigator                     = this;
+    SelectionBoxStartLocation                = CameraController->GetMouseLocationOnTerrain();
+
+    SelectionBox =
+        GetWorld()->SpawnActor<ASelectionBox>(SelectionBoxDefaultClass, SelectionBoxStartLocation, FRotator::ZeroRotator, SpawnInfo);
 }

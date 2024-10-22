@@ -87,7 +87,7 @@ protected:
     UInputAction* MultiplySelectSquadsAction;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Mouse")
-    float MouseHoldTreshold = 0.15;
+    float LeftMouseButtonHoldTreshold = 0.15;
 
 private:
     void MoveCameraUpDown(const FInputActionValue& Value);

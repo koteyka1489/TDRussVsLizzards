@@ -160,12 +160,21 @@ void ATDCameraController::MultiplySelectSquadsOff()
     }
 }
 
-void ATDCameraController::LeftClickTriggered() 
+void ATDCameraController::LeftClickTriggered()
 {
-    float KeyDownTime = GetInputKeyTimeDown(EKeys::LeftMouseButton);
+    float LefMouseDownTime = GetInputKeyTimeDown(EKeys::LeftMouseButton);
 
-    FString Message = FString::Printf(TEXT("LEFT MOUSE KEY DOWN - %f"), KeyDownTime);
-    GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Red, Message);
+    if (LefMouseDownTime > LeftMouseButtonHoldTreshold)
+    {
+        if (OnLeftMouseHold.ExecuteIfBound())
+        {
+        }
+        else
+        {
+            UE_LOG(LogTemp, Error, TEXT("OnLeftMouseHold Delegate is not bound"));
+            checkNoEntry();
+        }
+    }
 }
 
 FHitResult ATDCameraController::GetClickHit()
@@ -198,7 +207,7 @@ FVector ATDCameraController::GetMouseLocationOnTerrain()
     bool bHitSuccessful = false;
     FVector MouseWorldLocation{};
     FVector MouseWorldDirection{};
-    
+
     bHitSuccessful = DeprojectMousePositionToWorld(MouseWorldLocation, MouseWorldDirection);
     if (bHitSuccessful)
     {

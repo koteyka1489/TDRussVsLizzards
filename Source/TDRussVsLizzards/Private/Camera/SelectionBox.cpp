@@ -1,27 +1,36 @@
 // TD Russ Vs Lizzards Game
 
-
 #include "Camera/SelectionBox.h"
+#include "Components/BoxComponent.h"
+#include "Components/DecalComponent.h"
 
-// Sets default values
 ASelectionBox::ASelectionBox()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bCanEverTick = true;
 
+    BoxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
+    SetRootComponent(BoxCollider);
+    BoxCollider->SetBoxExtent(FVector(1.0, 1.0, 1.0));
+    BoxCollider->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+    BoxCollider->SetCollisionResponseToAllChannels(ECR_Overlap);
+
+    DecalComponent = CreateDefaultSubobject<UDecalComponent>(TEXT("DecalComponent"));
+    DecalComponent->SetupAttachment(GetRootComponent());
 }
 
-// Called when the game starts or when spawned
 void ASelectionBox::BeginPlay()
 {
-	Super::BeginPlay();
-	
+    Super::BeginPlay();
+
+    BoxCollider->OnComponentBeginOverlap.AddDynamic(this, &ASelectionBox::OnBoxColliderBeginOverlap);
 }
 
-// Called every frame
 void ASelectionBox::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
-
+    Super::Tick(DeltaTime);
 }
 
+void ASelectionBox::OnBoxColliderBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+    int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+}
