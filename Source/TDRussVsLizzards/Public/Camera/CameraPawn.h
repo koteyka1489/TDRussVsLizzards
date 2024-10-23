@@ -81,6 +81,7 @@ private:
     void OnSquadIsChoisen(ABaseSquadCreeps* SquadIn);
     void OnMultiplySelectSquad(bool Value);
     void OnLeftMouseHold();
+    void OnLeftMouseHoldCompleted();
 
     void GetSquadsOnLevel();
     void BindOnSquadIsChoisenDelegate();

@@ -42,6 +42,7 @@ void ACameraPawn::BeginPlay()
         CameraController->OnChangeAngleCamera.BindUObject(this, &ACameraPawn::OnChangeAngleCamera);
         CameraController->OnMultiplySelectSquad.BindUObject(this, &ACameraPawn::OnMultiplySelectSquad);
         CameraController->OnLeftMouseHold.BindUObject(this, &ACameraPawn::OnLeftMouseHold);
+        CameraController->OnLeftMouseHoldCompleted.BindUObject(this, &ACameraPawn::OnLeftMouseHoldCompleted);
     }
 
     GetSquadsOnLevel();
@@ -53,6 +54,11 @@ void ACameraPawn::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 
     MoveCameraByMouse();
+
+    if (bBoxIsSpawned)
+    {
+        SelectionBox->Update(CameraController->GetMouseLocationOnTerrain());
+    }
 }
 
 void ACameraPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -155,6 +161,16 @@ void ACameraPawn::OnLeftMouseHold()
     {
         CreateSelectionBox();
         bBoxIsSpawned = true;
+    }
+}
+
+void ACameraPawn::OnLeftMouseHoldCompleted()
+{
+    if (bBoxIsSpawned)
+    {
+        SelectionBox->SelectionComplete();
+        SelectionBox  = nullptr;
+        bBoxIsSpawned = false;
     }
 }
 

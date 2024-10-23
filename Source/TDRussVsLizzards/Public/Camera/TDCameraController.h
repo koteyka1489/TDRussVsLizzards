@@ -19,6 +19,7 @@ DECLARE_DELEGATE_OneParam(FOnRightMouseClickChois, FHitResult);
 DECLARE_DELEGATE_OneParam(FOnChangeAngleCamera, float);
 DECLARE_DELEGATE_OneParam(FOnMultiplySelectSquad, bool);
 DECLARE_DELEGATE(FOnLeftMouseHold);
+DECLARE_DELEGATE(FOnLeftMouseHoldCompleted);
 
 UCLASS()
 class TDRUSSVSLIZZARDS_API ATDCameraController : public APlayerController
@@ -39,6 +40,7 @@ public:
     FOnChangeAngleCamera OnChangeAngleCamera;
     FOnMultiplySelectSquad OnMultiplySelectSquad;
     FOnLeftMouseHold OnLeftMouseHold;
+    FOnLeftMouseHoldCompleted OnLeftMouseHoldCompleted;
 
 protected:
     virtual void BeginPlay() override;
@@ -100,7 +102,10 @@ private:
     void MultiplySelectSquadsOn();
     void MultiplySelectSquadsOff();
     void LeftClickTriggered();
+    void LeftClickCompleted();
 
     FHitResult GetClickHit();
     
+
+    float LefMouseDownTime = 0.0f;
 };

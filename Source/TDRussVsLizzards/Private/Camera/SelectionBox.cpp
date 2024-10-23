@@ -6,16 +6,20 @@
 
 ASelectionBox::ASelectionBox()
 {
-    PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bCanEverTick = false;
 
     BoxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
     SetRootComponent(BoxCollider);
-    BoxCollider->SetBoxExtent(FVector(1.0, 1.0, 1.0));
+    BoxCollider->SetBoxExtent(FVector(10.0, 10.0, 10.0));
     BoxCollider->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
     BoxCollider->SetCollisionResponseToAllChannels(ECR_Overlap);
+    BoxCollider->SetVisibility(true);
+
 
     DecalComponent = CreateDefaultSubobject<UDecalComponent>(TEXT("DecalComponent"));
     DecalComponent->SetupAttachment(GetRootComponent());
+
+    StartPosition = GetActorLocation();
 }
 
 void ASelectionBox::BeginPlay()
@@ -25,10 +29,16 @@ void ASelectionBox::BeginPlay()
     BoxCollider->OnComponentBeginOverlap.AddDynamic(this, &ASelectionBox::OnBoxColliderBeginOverlap);
 }
 
-void ASelectionBox::Tick(float DeltaTime)
+void ASelectionBox::Update(FVector MouseLocation) 
 {
-    Super::Tick(DeltaTime);
+
 }
+
+void ASelectionBox::SelectionComplete() 
+{
+    this->Destroy();
+}
+
 
 void ASelectionBox::OnBoxColliderBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
     int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

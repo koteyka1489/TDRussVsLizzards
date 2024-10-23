@@ -41,6 +41,7 @@ void ATDCameraController::SetupInputComponent()
 
     EnhancedInputComponent->BindAction(LeftClickMouse, ETriggerEvent::Started, this, &ATDCameraController::SetLeftClickChois);
     EnhancedInputComponent->BindAction(LeftClickMouse, ETriggerEvent::Triggered, this, &ATDCameraController::LeftClickTriggered);
+    EnhancedInputComponent->BindAction(LeftClickMouse, ETriggerEvent::Completed, this, &ATDCameraController::LeftClickCompleted);
     EnhancedInputComponent->BindAction(RightClickMouse, ETriggerEvent::Started, this, &ATDCameraController::SetRightClickChois);
 
     EnhancedInputComponent->BindAction(CameraAngleUpAction, ETriggerEvent::Triggered, this, &ATDCameraController::ChangeAngleCamera);
@@ -162,12 +163,28 @@ void ATDCameraController::MultiplySelectSquadsOff()
 
 void ATDCameraController::LeftClickTriggered()
 {
-    float LefMouseDownTime = GetInputKeyTimeDown(EKeys::LeftMouseButton);
+    LefMouseDownTime = GetInputKeyTimeDown(EKeys::LeftMouseButton);
 
     if (LefMouseDownTime > LeftMouseButtonHoldTreshold)
     {
         if (OnLeftMouseHold.ExecuteIfBound())
         {
+        }
+        else
+        {
+            UE_LOG(LogTemp, Error, TEXT("OnLeftMouseHold Delegate is not bound"));
+            checkNoEntry();
+        }
+    }
+}
+
+void ATDCameraController::LeftClickCompleted()
+{
+    if (LefMouseDownTime > LeftMouseButtonHoldTreshold)
+    {
+        if (OnLeftMouseHoldCompleted.ExecuteIfBound())
+        {
+            LefMouseDownTime = 0.0f;
         }
         else
         {
@@ -211,16 +228,14 @@ FVector ATDCameraController::GetMouseLocationOnTerrain()
     bHitSuccessful = DeprojectMousePositionToWorld(MouseWorldLocation, MouseWorldDirection);
     if (bHitSuccessful)
     {
+        FVector TraceEnd = MouseWorldLocation + MouseWorldDirection * 100000;
+
+        bHitSuccessful = GetWorld()->LineTraceSingleByChannel(Hit, MouseWorldLocation, TraceEnd, ECollisionChannel::ECC_GameTraceChannel1);
+
+        return Hit.Location;
     }
     else
     {
-        UE_LOG(LogTemp, Error, TEXT("Unable to determine value Mouse Click"));
-        checkNoEntry();
+        return FVector::Zero();
     }
-
-    FVector TraceEnd = MouseWorldLocation + MouseWorldDirection * 100000;
-
-    bHitSuccessful = GetWorld()->LineTraceSingleByChannel(Hit, MouseWorldLocation, TraceEnd, ECollisionChannel::ECC_GameTraceChannel1);
-
-    return Hit.Location;
 }

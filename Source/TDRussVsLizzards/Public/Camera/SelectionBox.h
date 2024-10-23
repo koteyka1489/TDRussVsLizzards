@@ -17,7 +17,10 @@ class TDRUSSVSLIZZARDS_API ASelectionBox : public AActor
 public:
     ASelectionBox();
     virtual void BeginPlay() override;
-    virtual void Tick(float DeltaTime) override;
+
+
+    void Update(FVector MouseLocation);
+    void SelectionComplete();
 
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
@@ -31,4 +34,5 @@ protected:
         int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 private:
+    FVector StartPosition = FVector::Zero();
 };
