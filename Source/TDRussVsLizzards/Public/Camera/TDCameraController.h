@@ -106,6 +106,6 @@ private:
 
     FHitResult GetClickHit();
     
-
+    bool bSelectionBoxIsSpawned = false;
     float LefMouseDownTime = 0.0f;
 };

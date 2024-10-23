@@ -3,6 +3,7 @@
 #include "Camera/SelectionBox.h"
 #include "Components/BoxComponent.h"
 #include "Components/DecalComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 ASelectionBox::ASelectionBox()
 {
@@ -10,27 +11,43 @@ ASelectionBox::ASelectionBox()
 
     BoxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
     SetRootComponent(BoxCollider);
-    BoxCollider->SetBoxExtent(FVector(10.0, 10.0, 10.0));
+    BoxCollider->SetBoxExtent(FVector(1.0, 1.0, 1.0));
     BoxCollider->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
     BoxCollider->SetCollisionResponseToAllChannels(ECR_Overlap);
     BoxCollider->SetVisibility(true);
-
+    BoxCollider->bHiddenInGame = false;
 
     DecalComponent = CreateDefaultSubobject<UDecalComponent>(TEXT("DecalComponent"));
     DecalComponent->SetupAttachment(GetRootComponent());
-
-    StartPosition = GetActorLocation();
+    DecalComponent->SetVisibility(false);
+    DecalComponent->DecalSize = FVector::Zero();
 }
 
 void ASelectionBox::BeginPlay()
 {
     Super::BeginPlay();
 
+    StartLocation   = GetActorLocation();
+    StartLocation.Z = 0.0;
+
     BoxCollider->OnComponentBeginOverlap.AddDynamic(this, &ASelectionBox::OnBoxColliderBeginOverlap);
 }
 
 void ASelectionBox::Update(FVector MouseLocation) 
 {
+    FVector EndPoint(MouseLocation.X, MouseLocation.Y, 0.0);
+    SetActorLocation(UKismetMathLibrary::VLerp(StartLocation, EndPoint, 0.5f));
+
+
+    FVector NewBoxExtend = GetActorLocation() - EndPoint;
+    NewBoxExtend         = NewBoxExtend.GetAbs();
+    NewBoxExtend.Z       = 1000.0;
+
+    BoxCollider->SetBoxExtent(NewBoxExtend);
+
+    FVector DecalSize(NewBoxExtend.Z, NewBoxExtend.Y, NewBoxExtend.X);
+    DecalComponent->DecalSize = DecalSize;
+    DecalComponent->SetVisibility(true);
 
 }
 

@@ -34,5 +34,5 @@ protected:
         int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 private:
-    FVector StartPosition = FVector::Zero();
+    FVector StartLocation = FVector::Zero();
 };

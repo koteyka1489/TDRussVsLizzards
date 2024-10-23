@@ -165,10 +165,11 @@ void ATDCameraController::LeftClickTriggered()
 {
     LefMouseDownTime = GetInputKeyTimeDown(EKeys::LeftMouseButton);
 
-    if (LefMouseDownTime > LeftMouseButtonHoldTreshold)
+    if (LefMouseDownTime > LeftMouseButtonHoldTreshold && !bSelectionBoxIsSpawned)
     {
         if (OnLeftMouseHold.ExecuteIfBound())
         {
+            bSelectionBoxIsSpawned = true;
         }
         else
         {
@@ -180,11 +181,12 @@ void ATDCameraController::LeftClickTriggered()
 
 void ATDCameraController::LeftClickCompleted()
 {
-    if (LefMouseDownTime > LeftMouseButtonHoldTreshold)
+    if (LefMouseDownTime > LeftMouseButtonHoldTreshold )
     {
         if (OnLeftMouseHoldCompleted.ExecuteIfBound())
         {
             LefMouseDownTime = 0.0f;
+            bSelectionBoxIsSpawned = false;
         }
         else
         {
