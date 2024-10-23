@@ -14,13 +14,13 @@ ASelectionBox::ASelectionBox()
     BoxCollider->SetBoxExtent(FVector(1.0, 1.0, 1.0));
     BoxCollider->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
     BoxCollider->SetCollisionResponseToAllChannels(ECR_Overlap);
-    BoxCollider->SetVisibility(true);
-    BoxCollider->bHiddenInGame = false;
+    BoxCollider->SetVisibility(false);
+    BoxCollider->bHiddenInGame = true;
 
     DecalComponent = CreateDefaultSubobject<UDecalComponent>(TEXT("DecalComponent"));
     DecalComponent->SetupAttachment(GetRootComponent());
     DecalComponent->SetVisibility(false);
-    DecalComponent->DecalSize = FVector::Zero();
+    DecalComponent->DecalSize = FVector(1.0, 1.0, 1.0);
 }
 
 void ASelectionBox::BeginPlay()
