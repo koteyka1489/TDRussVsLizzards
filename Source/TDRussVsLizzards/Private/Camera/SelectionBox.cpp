@@ -33,6 +33,8 @@ void ASelectionBox::BeginPlay()
     StartLocation.Z = 0.0;
 
     BoxCollider->OnComponentBeginOverlap.AddDynamic(this, &ASelectionBox::OnBoxColliderBeginOverlap);
+   // BoxCollider->OnComponentEndOverlap.AddDynamic(this, &ASelectionBox::OnBoxColliderEndOverlap);
+    
 }
 
 void ASelectionBox::Update(FVector MouseLocation)
@@ -72,6 +74,21 @@ void ASelectionBox::OnBoxColliderBeginOverlap(UPrimitiveComponent* OverlappedCom
         SelectedSquads.Add(OverlapSquad);
     }
 }
+
+//void ASelectionBox::OnBoxColliderEndOverlap(
+//    UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+//{
+//    auto OverlapCreep = Cast<ABaseCreepActor>(OtherActor);
+//    if (!IsValid(OverlapCreep)) return;
+//
+//    auto OverlapSquad = Cast<ABaseSquadCreeps>(OverlapCreep->GetOwner());
+//    if (!IsValid(OverlapSquad)) return;
+//
+//    if (SelectedSquads.Num() == 0) return;
+//
+//    OverlapSquad->SquadUnChoisenBySelectBox();
+//
+//}
 
 void ASelectionBox::UpdateBoxSizesAndLocation(FVector MouseLocation)
 {

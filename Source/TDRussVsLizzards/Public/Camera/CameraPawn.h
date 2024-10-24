@@ -79,6 +79,7 @@ private:
     void OnLeftMouseClickChois(FHitResult Hit);
     void OnRightMouseClickChois(FHitResult Hit);
     void OnSquadIsChoisen(ABaseSquadCreeps* SquadIn);
+    void OnSquadIsUnChoisen(ABaseSquadCreeps* SquadIn);
     void OnMultiplySelectSquad(bool Value);
     void OnLeftMouseHold();
     void OnLeftMouseHoldCompleted();
@@ -91,7 +92,9 @@ private:
 
     TArray<TObjectPtr<ABaseSquadCreeps>> SquadsOnLevel;
     TArray<TObjectPtr<ABaseSquadCreeps>> ChoisenSquads;
-    bool bMultiplySelectSquad = false;
+    bool bMultiplySelectSquadByClick = false;
+    bool bMultiplySelectSquadBySelectedBox = false;
+
 
     TObjectPtr<ASelectionBox> SelectionBox;
     FVector SelectionBoxStartLocation;

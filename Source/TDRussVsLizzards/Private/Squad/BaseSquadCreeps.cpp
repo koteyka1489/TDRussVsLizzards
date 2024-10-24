@@ -85,7 +85,6 @@ void ABaseSquadCreeps::SpawnCreepsN()
     FActorSpawnParameters SpawnInfo;
     SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
     SpawnInfo.Owner                          = this;
-    
 
     for (int32 x = 0; x < CurrentSquadSizes.Heigth; x++)
     {
@@ -150,7 +149,8 @@ void ABaseSquadCreeps::OnCreepIsClicked()
 
     bSquadIsChosen = true;
     if (OnSquadIsChoisen.ExecuteIfBound(this))
-    {}
+    {
+    }
     else
     {
         UE_LOG(LogTemp, Error, TEXT("OnSquadIsChoisen Is not bound"));
@@ -174,10 +174,34 @@ void ABaseSquadCreeps::OnMovingComplete()
 
 void ABaseSquadCreeps::SquadUnChoisen()
 {
+    if (!bSquadIsChosen) return;
+
     bSquadIsChosen = false;
+
+
     for (auto& Creep : Creeps)
     {
         Creep->SetCreepIsChoisen(false);
+    }
+}
+
+void ABaseSquadCreeps::SquadUnChoisenBySelectBox()
+{
+    if (!bSquadIsChosen) return;
+
+    bSquadIsChosen = false;
+
+    if (OnSquadIsUnChoisen.ExecuteIfBound(this))
+    {
+        for (auto& Creep : Creeps)
+        {
+            Creep->SetCreepIsChoisen(false);
+        }
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("OnSquadIsUnChoisen Is not bound"));
+        checkNoEntry();
     }
 }
 

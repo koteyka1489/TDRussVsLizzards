@@ -6,7 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "BaseSquadCreeps.generated.h"
 
-DECLARE_DELEGATE_OneParam(FOnSquadIsChoisen, ABaseSquadCreeps*)
+DECLARE_DELEGATE_OneParam(FOnSquadIsChoisen, ABaseSquadCreeps*);
+DECLARE_DELEGATE_OneParam(FOnSquadIsUnChoisen, ABaseSquadCreeps*);
 
 class ABaseCreepActor;
 class UStaticMeshComponent;
@@ -45,7 +46,9 @@ public:
     ABaseSquadCreeps();
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaTime) override;
+
     void SquadUnChoisen();
+    void SquadUnChoisenBySelectBox();
 
     void MoveToLocation(FVector Destination);
     void OnCreepIsClicked();
@@ -53,6 +56,7 @@ public:
     TArray<TObjectPtr<ABaseCreepActor>>* GetCreeps() { return &Creeps; }
 
     FOnSquadIsChoisen OnSquadIsChoisen;
+    FOnSquadIsUnChoisen OnSquadIsUnChoisen;
 
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
