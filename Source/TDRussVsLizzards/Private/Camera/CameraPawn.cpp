@@ -161,6 +161,7 @@ void ACameraPawn::OnLeftMouseHold()
     {
         CreateSelectionBox();
         bBoxIsSpawned = true;
+        bMultiplySelectSquad = true;
     }
 }
 
@@ -171,6 +172,7 @@ void ACameraPawn::OnLeftMouseHoldCompleted()
         SelectionBox->SelectionComplete();
         SelectionBox  = nullptr;
         bBoxIsSpawned = false;
+        bMultiplySelectSquad = false;
     }
 }
 

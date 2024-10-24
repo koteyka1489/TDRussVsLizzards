@@ -73,6 +73,9 @@ void ABaseCreepActor::SetCreepIsClicked()
 {
     if (OnCreepIsClicked.ExecuteIfBound())
     {
+        auto OwnerSquad = GetOwner();
+        FString Message = FString::Printf(TEXT("Owne Squad - %s"), *OwnerSquad->GetName());
+        GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, Message);
     }
     else
     {

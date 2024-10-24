@@ -48,6 +48,7 @@ public:
     void SquadUnChoisen();
 
     void MoveToLocation(FVector Destination);
+    void OnCreepIsClicked();
 
     TArray<TObjectPtr<ABaseCreepActor>>* GetCreeps() { return &Creeps; }
 
@@ -95,6 +96,6 @@ private:
 
     void BindOnCreepIsClickedtDelegate();
 
-    void OnCreepIsClicked();
+    
     void OnMovingComplete();
 };

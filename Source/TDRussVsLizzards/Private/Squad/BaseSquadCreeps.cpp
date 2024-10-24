@@ -84,6 +84,8 @@ void ABaseSquadCreeps::SpawnCreepsN()
     FRotator SpawnRotation{0.0, 0.0, 0.0};
     FActorSpawnParameters SpawnInfo;
     SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+    SpawnInfo.Owner                          = this;
+    
 
     for (int32 x = 0; x < CurrentSquadSizes.Heigth; x++)
     {
@@ -144,6 +146,8 @@ void ABaseSquadCreeps::BindOnCreepIsClickedtDelegate()
 
 void ABaseSquadCreeps::OnCreepIsClicked()
 {
+    if (bSquadIsChosen) return;
+
     bSquadIsChosen = true;
     if (OnSquadIsChoisen.ExecuteIfBound(this))
     {}

@@ -8,6 +8,8 @@
 
 class UBoxComponent;
 class UDecalComponent;
+class ABaseCreepActor;
+class ABaseSquadCreeps;
 
 UCLASS()
 class TDRUSSVSLIZZARDS_API ASelectionBox : public AActor
@@ -18,8 +20,8 @@ public:
     ASelectionBox();
     virtual void BeginPlay() override;
 
-
     void Update(FVector MouseLocation);
+
     void SelectionComplete();
 
 protected:
@@ -35,4 +37,9 @@ protected:
 
 private:
     FVector StartLocation = FVector::Zero();
+
+    TArray<TObjectPtr<ABaseSquadCreeps>> SelectedSquads;
+
+    void UpdateBoxSizesAndLocation(FVector MouseLocation);
+    void UpdateSelectingChoisedSquad();
 };
