@@ -10,7 +10,7 @@ DECLARE_DELEGATE_OneParam(FOnSquadIsChoisen, ABaseSquadCreeps*);
 DECLARE_DELEGATE_OneParam(FOnSquadIsUnChoisen, ABaseSquadCreeps*);
 
 class ABaseCreepActor;
-class UStaticMeshComponent;
+class UBoxComponent;
 class UActorMovementComponent;
 class USceneComponent;
 
@@ -59,14 +59,12 @@ public:
     FOnSquadIsUnChoisen OnSquadIsUnChoisen;
 
 protected:
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
-    USceneComponent* SceneComponent;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
     UActorMovementComponent* MovementComponent;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
-    UStaticMeshComponent* StaticMeshComponent;
+    UBoxComponent* SquadSizesBox;
 
 
 
@@ -92,6 +90,7 @@ private:
     ESquadCurrentAnimation CurrentAnimation      = ESquadCurrentAnimation::Idle;
 
     void UpdateSquadLocationStart();
+    void SetBoxExtendBySquadSize();
     
     ESquadMovingDirection CalculateSquadMovingDirection(FVector Destination);
 
@@ -100,6 +99,5 @@ private:
 
     void BindOnCreepIsClickedtDelegate();
 
-    
     void OnMovingComplete();
 };

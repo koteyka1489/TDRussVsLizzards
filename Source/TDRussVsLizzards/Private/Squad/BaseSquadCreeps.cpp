@@ -8,15 +8,20 @@
 #include "Components/ActorMovementComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Components/SceneComponent.h"
+#include "Components/BoxComponent.h"
 
 ABaseSquadCreeps::ABaseSquadCreeps()
 {
     PrimaryActorTick.bCanEverTick = true;
-    SceneComponent                = CreateDefaultSubobject<USceneComponent>("SceneComponent");
-    SetRootComponent(SceneComponent);
 
-    StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponent");
-    StaticMeshComponent->SetupAttachment(GetRootComponent());
+    SquadSizesBox = CreateDefaultSubobject<UBoxComponent>("BoxComponent");
+    SetRootComponent(SquadSizesBox);
+    SquadSizesBox->SetBoxExtent(FVector(1.0, 1.0, 1.0));
+    SquadSizesBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+    SquadSizesBox->SetCollisionResponseToAllChannels(ECR_Overlap);
+    SquadSizesBox->SetVisibility(true);
+    SquadSizesBox->bHiddenInGame = false;
+    
 
     MovementComponent = CreateDefaultSubobject<UActorMovementComponent>("UActorMovementComponent");
 }
@@ -30,6 +35,7 @@ void ABaseSquadCreeps::BeginPlay()
     SpawnCreepsN();
 
     UpdateSquadLocationStart();
+    SetBoxExtendBySquadSize();
 
     BindOnCreepIsClickedtDelegate();
 
@@ -57,6 +63,18 @@ void ABaseSquadCreeps::UpdateSquadLocationStart()
 
     // Set Center squad on center Spawned creeps
     SetActorLocation(GetActorLocation() + SquadRightToLeftCornerHalfVec + FrontToBackHalfVec);
+}
+
+void ABaseSquadCreeps::SetBoxExtendBySquadSize() 
+{
+    FVector SquadRightCorner              = Creeps[0]->GetActorLocation();
+ 
+    FVector NewBoxExtend = GetActorLocation() - SquadRightCorner;
+    NewBoxExtend         = NewBoxExtend.GetAbs();
+    NewBoxExtend.Z       = 100.0;
+
+    SquadSizesBox->SetBoxExtent(NewBoxExtend);
+
 }
 
 ESquadMovingDirection ABaseSquadCreeps::CalculateSquadMovingDirection(FVector Destination)
@@ -177,7 +195,6 @@ void ABaseSquadCreeps::SquadUnChoisen()
     if (!bSquadIsChosen) return;
 
     bSquadIsChosen = false;
-
 
     for (auto& Creep : Creeps)
     {
