@@ -51,6 +51,7 @@ public:
     void SquadUnChoisenBySelectBox();
 
     void MoveToLocation(FVector Destination);
+    void RotateFrontSquadToLocation(FVector Destination);
     void OnCreepIsClicked();
 
     TArray<TObjectPtr<ABaseCreepActor>>* GetCreeps() { return &Creeps; }
@@ -85,14 +86,16 @@ protected:
 
 private:
     TArray<TObjectPtr<ABaseCreepActor>> Creeps;
+    TArray<FVector> CreepsLocationFromCenterSquad;
+
     bool bSquadIsChosen = false;
     FSquadSizes CurrentSquadSizes;
-    int32 FrontBackMovingMultiplier = 1;
 
     ESquadMovingDirection CurrentMovingDirection = ESquadMovingDirection::FrontMoving;
     ESquadCurrentAnimation CurrentAnimation      = ESquadCurrentAnimation::Idle;
 
     void UpdateSquadLocationStart();
+    void UpdateCreepsLocationFromCenterSquad();
     void SetBoxExtendBySquadSize();
     
     ESquadMovingDirection CalculateSquadMovingDirection(FVector Destination);

@@ -22,23 +22,34 @@ public:
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
     void MoveToLocation(FVector Location);
+    void RotateToLocation(FVector Location);
+    void RotateFrontSquadToLocation(FVector Location, const TArray<FVector>& CreepsLocationFromCenterSquadIn);
 
     FOnMovingComplete OnMovingComplete;
 
 private:
     TObjectPtr<ABaseSquadCreeps> OwnerSquad;
-
     TArray<TObjectPtr<ABaseCreepActor>>* CreepsArray;
+    TArray<FVector> CreepsLocationFromCenterSquad;
+    TArray<FVector> DestinationCreepsToRotateFrontSquad;
 
     FVector DestinationToMoving{};
     FVector DestinationToRotating{};
+    FVector DestinationToSquadFronRotation{};
+
     bool bDestinationToMovingIsSet   = false;
     bool bDestinationToRotatingIsSet = false;
+    bool bDestinationToSquadFrontRotationIsSet = false;
+    bool bAutoOrientToMovement                 = true;
+
     float SpeedMoving                = 500.0f;
     float SpeedRotating              = 300.0f;
-    bool bAutoOrientToMovement       = true;
+    
+    int32 CreepEndRotatFrontSquadCounter = 0;
 
-    void RotateToLocation(FVector Location);
+    
     void MovingToLocation(float DeltaTime);
     void RotatingToLocation(float DeltaTime);
+    void RotatingFrontSquadToLocation(float DeltaTime);
+    void CalculateDestinationCreepsToRotateFrontSquad();
 };

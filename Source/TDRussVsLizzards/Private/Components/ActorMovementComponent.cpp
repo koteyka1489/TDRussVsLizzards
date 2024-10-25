@@ -22,14 +22,18 @@ void UActorMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-    if (bDestinationToRotatingIsSet)
+    if (bDestinationToSquadFrontRotationIsSet)
     {
-        RotatingToLocation(DeltaTime);
+        RotatingFrontSquadToLocation(DeltaTime);
     }
-    if (bDestinationToMovingIsSet)
-    {
-        MovingToLocation(DeltaTime);
-    }
+    // if (bDestinationToRotatingIsSet)
+    //{
+    //     RotatingToLocation(DeltaTime);
+    // }
+    // if (bDestinationToMovingIsSet)
+    //{
+    //     MovingToLocation(DeltaTime);
+    // }
 }
 
 void UActorMovementComponent::MoveToLocation(FVector Location)
@@ -41,6 +45,14 @@ void UActorMovementComponent::MoveToLocation(FVector Location)
     {
         RotateToLocation(Location);
     }
+}
+
+void UActorMovementComponent::RotateFrontSquadToLocation(FVector Location, const TArray<FVector>& CreepsLocationFromCenterSquadIn)
+{
+    CreepsLocationFromCenterSquad         = CreepsLocationFromCenterSquadIn;
+    DestinationToSquadFronRotation        = Location;
+    bDestinationToSquadFrontRotationIsSet = true;
+    CalculateDestinationCreepsToRotateFrontSquad();
 }
 
 void UActorMovementComponent::RotateToLocation(FVector Location)
@@ -60,7 +72,6 @@ void UActorMovementComponent::MovingToLocation(float DeltaTime)
     {
         bDestinationToMovingIsSet = false;
         OnMovingComplete.ExecuteIfBound();
-        //checkf(OnMovingComplete.ExecuteIfBound(), TEXT("On moving Complete delegate not bound"));
         return;
     }
     else
@@ -121,5 +132,63 @@ void UActorMovementComponent::RotatingToLocation(float DeltaTime)
             FRotator NewRotation = OwnerSquad->GetActorRotation() - OffsetRotation;
             OwnerSquad->SetActorRotation(NewRotation);
         }
+    }
+}
+
+void UActorMovementComponent::RotatingFrontSquadToLocation(float DeltaTime)
+{
+    if (CreepEndRotatFrontSquadCounter == CreepsArray->Num())
+    {
+        CreepEndRotatFrontSquadCounter = 0;
+        DestinationCreepsToRotateFrontSquad.Empty();
+        bDestinationToSquadFrontRotationIsSet = false;
+    }
+
+    float FrameSpeed = SpeedMoving * DeltaTime;
+    int32 CreepIndex = 0;
+
+    for (auto& Creep : *CreepsArray)
+    {
+        FVector VecToDestination = DestinationCreepsToRotateFrontSquad[CreepIndex] - Creep->GetActorLocation();
+        CreepIndex++;
+
+        if (VecToDestination.Length() <= 10.0)
+        {
+            CreepEndRotatFrontSquadCounter++;
+        }
+        else
+        {
+            FVector Direction   = VecToDestination.GetSafeNormal();
+            FVector Offset      = FrameSpeed * Direction;
+            FVector NewLocation = Creep->GetActorLocation() + Offset;
+        }
+    }
+}
+
+void UActorMovementComponent::CalculateDestinationCreepsToRotateFrontSquad()
+{
+
+    if (!CreepsArray) return;
+
+    if (CreepsLocationFromCenterSquad.Num() == 0) return;
+
+    if (!DestinationCreepsToRotateFrontSquad.IsEmpty())
+    {
+        DestinationCreepsToRotateFrontSquad.Empty();
+    }
+
+    int32 CreepIndex = 0;
+
+    FVector VecSquadToRotationDestinationNormalize = (DestinationToSquadFronRotation - OwnerSquad->GetActorLocation()).GetSafeNormal();
+    VecSquadToRotationDestinationNormalize.Z       = 0.0;
+    FVector SquadForwardVector                     = OwnerSquad->GetActorForwardVector();
+
+    FQuat BetweenQuat = FQuat::FindBetweenNormals(SquadForwardVector, VecSquadToRotationDestinationNormalize);
+
+    for (auto& Creep : *CreepsArray)
+    {
+        FVector DestVec = BetweenQuat.RotateVector(CreepsLocationFromCenterSquad[CreepIndex]);
+        DestinationCreepsToRotateFrontSquad.Add(DestVec);
+        CreepIndex++;
     }
 }
