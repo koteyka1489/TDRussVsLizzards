@@ -14,14 +14,16 @@ ABaseSquadCreeps::ABaseSquadCreeps()
 {
     PrimaryActorTick.bCanEverTick = true;
 
+    SceneComponent = CreateDefaultSubobject<USceneComponent>("SceneComponent");
+    SetRootComponent(SceneComponent);
+
     SquadSizesBox = CreateDefaultSubobject<UBoxComponent>("BoxComponent");
-    SetRootComponent(SquadSizesBox);
     SquadSizesBox->SetBoxExtent(FVector(1.0, 1.0, 1.0));
     SquadSizesBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
     SquadSizesBox->SetCollisionResponseToAllChannels(ECR_Overlap);
     SquadSizesBox->SetVisibility(true);
     SquadSizesBox->bHiddenInGame = false;
-    
+    SquadSizesBox->SetupAttachment(GetRootComponent());
 
     MovementComponent = CreateDefaultSubobject<UActorMovementComponent>("UActorMovementComponent");
 }
@@ -38,7 +40,6 @@ void ABaseSquadCreeps::BeginPlay()
     SetBoxExtendBySquadSize();
 
     BindOnCreepIsClickedtDelegate();
-
     MovementComponent->OnMovingComplete.BindUObject(this, &ABaseSquadCreeps::OnMovingComplete);
 }
 
@@ -71,7 +72,7 @@ void ABaseSquadCreeps::SetBoxExtendBySquadSize()
  
     FVector NewBoxExtend = GetActorLocation() - SquadRightCorner;
     NewBoxExtend         = NewBoxExtend.GetAbs();
-    NewBoxExtend.Z       = 100.0;
+    NewBoxExtend.Z       = 200.0;
 
     SquadSizesBox->SetBoxExtent(NewBoxExtend);
 

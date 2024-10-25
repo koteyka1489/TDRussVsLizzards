@@ -61,6 +61,9 @@ public:
 protected:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+    USceneComponent* SceneComponent;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
     UActorMovementComponent* MovementComponent;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
