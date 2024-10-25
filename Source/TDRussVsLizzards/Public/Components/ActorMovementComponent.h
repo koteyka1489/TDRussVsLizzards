@@ -35,7 +35,7 @@ private:
 
     FVector DestinationToMoving{};
     FVector DestinationToRotating{};
-    FVector DestinationToSquadFronRotation{};
+    FVector DestinationToSquadFrontRotation{};
 
     bool bDestinationToMovingIsSet   = false;
     bool bDestinationToRotatingIsSet = false;
