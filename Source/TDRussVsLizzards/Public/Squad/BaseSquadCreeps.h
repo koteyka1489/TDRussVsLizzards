@@ -86,7 +86,6 @@ protected:
 
 private:
     TArray<TObjectPtr<ABaseCreepActor>> Creeps;
-    TArray<FVector> CreepsLocationFromCenterSquad;
 
     bool bSquadIsChosen = false;
     FSquadSizes CurrentSquadSizes;
@@ -95,7 +94,6 @@ private:
     ESquadCurrentAnimation CurrentAnimation      = ESquadCurrentAnimation::Idle;
 
     void UpdateSquadLocationStart();
-    void UpdateCreepsLocationFromCenterSquad();
     void SetBoxExtendBySquadSize();
     
     ESquadMovingDirection CalculateSquadMovingDirection(FVector Destination);

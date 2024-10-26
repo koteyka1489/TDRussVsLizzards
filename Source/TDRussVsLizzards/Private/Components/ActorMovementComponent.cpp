@@ -17,6 +17,7 @@ void UActorMovementComponent::BeginPlay()
     OwnerSquad = Cast<ABaseSquadCreeps>(GetOwner());
     checkf(IsValid(OwnerSquad), TEXT("Get Owner Squad is Failed"));
     CreepsArray = OwnerSquad->GetCreeps();
+
 }
 
 void UActorMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -31,10 +32,10 @@ void UActorMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType
     {
         RotatingToLocation(DeltaTime);
     }
-    //if (bDestinationToMovingIsSet)
+    // if (bDestinationToMovingIsSet)
     //{
-    //    MovingToLocation(DeltaTime);
-    //}
+    //     MovingToLocation(DeltaTime);
+    // }
 }
 
 void UActorMovementComponent::MoveToLocation(FVector Location)
@@ -48,10 +49,10 @@ void UActorMovementComponent::MoveToLocation(FVector Location)
     }
 }
 
-void UActorMovementComponent::RotateFrontSquadToLocation(FVector Location, const TArray<FVector>& CreepsLocationFromCenterSquadIn)
+void UActorMovementComponent::RotateFrontSquadToLocation(FVector Location)
 {
-    CreepsLocationFromCenterSquad         = CreepsLocationFromCenterSquadIn;
     DestinationToSquadFrontRotation       = Location;
+    UpdateCreepsLocationFromCenterSquad();
     bDestinationToSquadFrontRotationIsSet = true;
     CalculateDestinationCreepsToRotateFrontSquad();
 }
@@ -101,7 +102,7 @@ void UActorMovementComponent::RotatingToLocation(float DeltaTime)
 
     float DotPawnForwardToDestination = FVector::DotProduct(VecToDestinationNormalize, CreepForwardVec);
 
-    if (DotPawnForwardToDestination >= 0.995)
+    if (DotPawnForwardToDestination >= 0.999)
     {
         bDestinationToRotatingIsSet = false;
         return;
@@ -139,8 +140,8 @@ void UActorMovementComponent::RotatingToLocation(float DeltaTime)
 void UActorMovementComponent::RotatingFrontSquadToLocation(float DeltaTime)
 {
 
-    float FrameSpeed = SpeedMoving * DeltaTime;
-    int32 CreepIndex = 0;
+    float FrameSpeed               = SpeedMoving * DeltaTime;
+    int32 CreepIndex               = 0;
     CreepEndRotatFrontSquadCounter = 0;
 
     for (auto& Creep : *CreepsArray)
@@ -167,8 +168,8 @@ void UActorMovementComponent::RotatingFrontSquadToLocation(float DeltaTime)
         bDestinationToSquadFrontRotationIsSet = false;
         DestinationCreepsToRotateFrontSquad.Empty();
         CreepEndRotatFrontSquadCounter = 0;
+        UpdateCreepsLocationFromCenterSquad();
     }
-
 }
 
 void UActorMovementComponent::CalculateDestinationCreepsToRotateFrontSquad()
@@ -189,14 +190,30 @@ void UActorMovementComponent::CalculateDestinationCreepsToRotateFrontSquad()
     VecSquadToRotationDestinationNormalize.Z       = 0.0;
     FVector SquadForwardVector                     = OwnerSquad->GetActorForwardVector();
 
-    FQuat BetweenQuat = FQuat::FindBetweenVectors(SquadForwardVector, VecSquadToRotationDestinationNormalize);
-
+    FQuat BetweenQuat          = FQuat::FindBetweenNormals(SquadForwardVector, VecSquadToRotationDestinationNormalize);
+    FQuat BetweenQuatNormalize = BetweenQuat.GetNormalized();
     for (auto& Creep : *CreepsArray)
     {
-        FVector DestVec = BetweenQuat.RotateVector(CreepsLocationFromCenterSquad[CreepIndex]);
+        FVector DestVec = BetweenQuatNormalize.RotateVector(CreepsLocationFromCenterSquad[CreepIndex]);
 
         DestinationCreepsToRotateFrontSquad.Add(OwnerSquad->GetActorLocation() + DestVec);
 
         CreepIndex++;
+    }
+}
+
+void UActorMovementComponent::UpdateCreepsLocationFromCenterSquad()
+{
+    if (CreepsArray->Num() == 0) return;
+    FVector SquadLocation = OwnerSquad->GetActorLocation();
+
+    if (!CreepsLocationFromCenterSquad.IsEmpty())
+    {
+        CreepsLocationFromCenterSquad.Empty();
+    }
+
+    for (auto& Creep : *CreepsArray)
+    {
+        CreepsLocationFromCenterSquad.Add(Creep->GetActorLocation() - SquadLocation);
     }
 }

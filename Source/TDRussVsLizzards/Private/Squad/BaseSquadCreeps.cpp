@@ -37,7 +37,6 @@ void ABaseSquadCreeps::BeginPlay()
     SpawnCreepsN();
 
     UpdateSquadLocationStart();
-    UpdateCreepsLocationFromCenterSquad();
     SetBoxExtendBySquadSize();
 
     BindOnCreepIsClickedtDelegate();
@@ -67,16 +66,7 @@ void ABaseSquadCreeps::UpdateSquadLocationStart()
     SetActorLocation(GetActorLocation() + SquadRightToLeftCornerHalfVec + FrontToBackHalfVec);
 }
 
-void ABaseSquadCreeps::UpdateCreepsLocationFromCenterSquad()
-{
-    if (Creeps.Num() == 0) return;
-    FVector SquadLocation = GetActorLocation();
 
-    for (auto& Creep : Creeps)
-    {
-        CreepsLocationFromCenterSquad.Add(Creep->GetActorLocation() - SquadLocation);
-    }
-}
 
 void ABaseSquadCreeps::SetBoxExtendBySquadSize() 
 {
@@ -251,7 +241,7 @@ void ABaseSquadCreeps::MoveToLocation(FVector Destination)
 
 void ABaseSquadCreeps::RotateFrontSquadToLocation(FVector Destination)
 {
-    MovementComponent->RotateFrontSquadToLocation(Destination, CreepsLocationFromCenterSquad);
+    MovementComponent->RotateFrontSquadToLocation(Destination);
 
     if (CurrentAnimation != ESquadCurrentAnimation::Run)
     {

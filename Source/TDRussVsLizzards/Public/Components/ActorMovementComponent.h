@@ -23,7 +23,7 @@ public:
 
     void MoveToLocation(FVector Location);
     void RotateToLocation(FVector Location);
-    void RotateFrontSquadToLocation(FVector Location, const TArray<FVector>& CreepsLocationFromCenterSquadIn);
+    void RotateFrontSquadToLocation(FVector Location);
 
     FOnMovingComplete OnMovingComplete;
 
@@ -52,4 +52,5 @@ private:
     void RotatingToLocation(float DeltaTime);
     void RotatingFrontSquadToLocation(float DeltaTime);
     void CalculateDestinationCreepsToRotateFrontSquad();
+    void UpdateCreepsLocationFromCenterSquad();
 };
