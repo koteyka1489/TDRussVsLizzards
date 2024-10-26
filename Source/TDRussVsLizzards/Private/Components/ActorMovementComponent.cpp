@@ -17,7 +17,6 @@ void UActorMovementComponent::BeginPlay()
     OwnerSquad = Cast<ABaseSquadCreeps>(GetOwner());
     checkf(IsValid(OwnerSquad), TEXT("Get Owner Squad is Failed"));
     CreepsArray = OwnerSquad->GetCreeps();
-
 }
 
 void UActorMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -32,10 +31,10 @@ void UActorMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType
     {
         RotatingToLocation(DeltaTime);
     }
-    // if (bDestinationToMovingIsSet)
-    //{
-    //     MovingToLocation(DeltaTime);
-    // }
+    if (bDestinationToMovingIsSet && !bDestinationToSquadFrontRotationIsSet)
+    {
+        MovingToLocation(DeltaTime);
+    }
 }
 
 void UActorMovementComponent::MoveToLocation(FVector Location)
@@ -51,7 +50,7 @@ void UActorMovementComponent::MoveToLocation(FVector Location)
 
 void UActorMovementComponent::RotateFrontSquadToLocation(FVector Location)
 {
-    DestinationToSquadFrontRotation       = Location;
+    DestinationToSquadFrontRotation = Location;
     UpdateCreepsLocationFromCenterSquad();
     bDestinationToSquadFrontRotationIsSet = true;
     CalculateDestinationCreepsToRotateFrontSquad();
