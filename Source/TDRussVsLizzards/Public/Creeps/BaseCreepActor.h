@@ -15,7 +15,7 @@ class UWeaponComponent;
 class UStaticMeshComponent;
 class UAnimMontage;
 
-UCLASS()
+UCLASS(Abstract)
 class TDRUSSVSLIZZARDS_API ABaseCreepActor : public AActor
 {
     GENERATED_BODY()

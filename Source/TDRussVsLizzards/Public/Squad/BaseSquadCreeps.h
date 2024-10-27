@@ -14,14 +14,11 @@ class UBoxComponent;
 class UActorMovementComponent;
 class USceneComponent;
 
-
-
 struct FSquadSizes
 {
     int32 Width;
     int32 Heigth;
 };
-
 
 enum class ESquadCurrentAnimation
 {
@@ -45,8 +42,9 @@ public:
 
     void MoveAndRotatingSquadToLocation(FVector Destination);
 
-    
     void OnCreepIsClicked();
+
+    UActorMovementComponent* GetSquadMovementComponent() { return MovementComponent; }
 
     TArray<TObjectPtr<ABaseCreepActor>>* GetCreeps() { return &Creeps; }
 
@@ -54,7 +52,6 @@ public:
     FOnSquadIsUnChoisen OnSquadIsUnChoisen;
 
 protected:
-
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
     USceneComponent* SceneComponent;
 
@@ -63,8 +60,6 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
     UBoxComponent* SquadSizesBox;
-
-
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad")
     int32 CreepsNum = 50;
@@ -75,23 +70,17 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad")
     TSubclassOf<ABaseCreepActor> CreepsType;
 
-   
-
-
 private:
     TArray<TObjectPtr<ABaseCreepActor>> Creeps;
 
     bool bSquadIsChosen = false;
     FSquadSizes CurrentSquadSizes;
-
-
-    ESquadCurrentAnimation CurrentAnimation      = ESquadCurrentAnimation::Idle;
+    ESquadCurrentAnimation CurrentAnimation = ESquadCurrentAnimation::Idle;
 
     void UpdateSquadLocationStart();
     void SetBoxExtendBySquadSize();
     void MoveToLocation(FVector Destination);
     void RotateFrontSquadToLocation(FVector Destination);
-
 
     void SpawnCreepsN();
     FSquadSizes CalculateCurrentSquadSizes();
