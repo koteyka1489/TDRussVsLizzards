@@ -9,6 +9,10 @@
 #include "DrawDebugHelpers.h"
 #include "Components/SceneComponent.h"
 #include "Components/BoxComponent.h"
+#include "Squad/Task/MoveSquadTask.h"
+#include "Squad/Task/RotateCreepsTask.h"
+#include "Squad/Task/RotateFrontSquadTask.h"
+#include "Squad/Task/SquadBaseTask.h"
 
 ABaseSquadCreeps::ABaseSquadCreeps()
 {
@@ -40,6 +44,8 @@ void ABaseSquadCreeps::BeginPlay()
 
     BindOnCreepIsClickedtDelegate();
     MovementComponent->OnMovingComplete.BindUObject(this, &ABaseSquadCreeps::OnMovingComplete);
+    MovementComponent->OnRotatingCreepsComplete.BindUObject(this, &ABaseSquadCreeps::OnRotatingCreepsComplete);
+    MovementComponent->OnRotatingFrontSquadComplete.BindUObject(this, &ABaseSquadCreeps::OnRotatingFrontSquadComplete);
 }
 
 void ABaseSquadCreeps::Tick(float DeltaTime)
@@ -47,6 +53,8 @@ void ABaseSquadCreeps::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 
     DrawDebugLine(GetWorld(), GetActorLocation(), GetActorLocation() + GetActorForwardVector() * 5000, FColor::Red, false, -1.f, 0u, 20.0f);
+
+    ExecuteCurrentTaskQueue();
 }
 
 void ABaseSquadCreeps::UpdateSquadLocationStart()
@@ -170,11 +178,24 @@ void ABaseSquadCreeps::OnCreepIsClicked()
 
 void ABaseSquadCreeps::OnMovingComplete()
 {
+    bCurrentSquadTaskIsExecute = false;
     CurrentAnimation = ESquadCurrentAnimation::Idle;
     for (auto& Creep : Creeps)
     {
         Creep->PlayAnimationIdle();
     }
+}
+
+void ABaseSquadCreeps::OnRotatingCreepsComplete()
+{
+    bCurrentSquadTaskIsExecute = false;
+
+}
+
+void ABaseSquadCreeps::OnRotatingFrontSquadComplete()
+{
+    bCurrentSquadTaskIsExecute = false;
+
 }
 
 void ABaseSquadCreeps::SquadUnChoisen()
@@ -211,6 +232,37 @@ void ABaseSquadCreeps::SquadUnChoisenBySelectBox()
 
 void ABaseSquadCreeps::MoveAndRotatingSquadToLocation(FVector Destination) 
 {
+    SquadTasksQueue.Empty();
+    bCurrentSquadTaskIsExecute   = false;
+
+    double DotSquadToDestination = CalculateDotFrontSquadToLocation(Destination);
+
+    if (DotSquadToDestination >= 0.0)
+    {
+        auto RotateFrontTask = NewObject<URotateFrontSquadTask>();
+        RotateFrontTask->InitDestinationTask(Destination, this);
+        SquadTasksQueue.Enqueue(RotateFrontTask);
+
+        auto MoveToLocationTask = NewObject<UMoveSquadTask>();
+        MoveToLocationTask->InitDestinationTask(Destination, this);
+        SquadTasksQueue.Enqueue(MoveToLocationTask);
+
+    }
+    else
+    {
+        auto RotateCreepsTask = NewObject<URotateCreepsTask>();
+        RotateCreepsTask->InitDestinationTask(Destination, this);
+        SquadTasksQueue.Enqueue(RotateCreepsTask);
+
+        auto RotateFrontTask = NewObject<URotateFrontSquadTask>();
+        RotateFrontTask->InitDestinationTask(Destination, this);
+        SquadTasksQueue.Enqueue(RotateFrontTask);
+
+        auto MoveToLocationTask = NewObject<UMoveSquadTask>();
+        MoveToLocationTask->InitDestinationTask(Destination, this);
+        SquadTasksQueue.Enqueue(MoveToLocationTask);
+    }
+
 
 }
 
@@ -235,5 +287,36 @@ void ABaseSquadCreeps::PlayRunAnimation()
             Creep->PlayAnimationRun();
         }
         CurrentAnimation = ESquadCurrentAnimation::Run;
+    }
+}
+
+double ABaseSquadCreeps::CalculateDotFrontSquadToLocation(FVector Location)
+{
+    FVector SquadForwardVector = GetActorForwardVector();
+    FVector SquadToLocationNormalizeVector = (Location - GetActorLocation()).GetSafeNormal2D();
+    return SquadForwardVector.Dot(SquadToLocationNormalizeVector);
+}
+
+void ABaseSquadCreeps::ExecuteCurrentTaskQueue() 
+{
+    if (bCurrentSquadTaskIsExecute) return;
+
+    if (SquadTasksQueue.IsEmpty()) return;
+
+    TObjectPtr<USquadBaseTask> FirstQueueTask;
+    if (!SquadTasksQueue.Peek(FirstQueueTask)) return;
+
+    
+    if (CurrentSquadTask == FirstQueueTask)
+    {
+        return;
+    }
+    else
+    {
+        TObjectPtr<USquadBaseTask> NewCurrenWueueTask;
+        SquadTasksQueue.Dequeue(NewCurrenWueueTask);
+        CurrentSquadTask = NewCurrenWueueTask;
+        CurrentSquadTask->ExecuteTask(); 
+        bCurrentSquadTaskIsExecute = true;
     }
 }

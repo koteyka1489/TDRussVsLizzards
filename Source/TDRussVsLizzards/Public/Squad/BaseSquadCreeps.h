@@ -13,12 +13,15 @@ class ABaseCreepActor;
 class UBoxComponent;
 class UActorMovementComponent;
 class USceneComponent;
+class USquadBaseTask;
 
 struct FSquadSizes
 {
     int32 Width;
     int32 Heigth;
 };
+
+
 
 enum class ESquadCurrentAnimation
 {
@@ -77,6 +80,10 @@ private:
     FSquadSizes CurrentSquadSizes;
     ESquadCurrentAnimation CurrentAnimation = ESquadCurrentAnimation::Idle;
 
+    TQueue<TObjectPtr<USquadBaseTask>> SquadTasksQueue;
+    TObjectPtr<USquadBaseTask> CurrentSquadTask = nullptr;
+    bool bCurrentSquadTaskIsExecute             = false;
+
     void UpdateSquadLocationStart();
     void SetBoxExtendBySquadSize();
     void MoveToLocation(FVector Destination);
@@ -88,5 +95,10 @@ private:
     void BindOnCreepIsClickedtDelegate();
 
     void OnMovingComplete();
+    void OnRotatingCreepsComplete();
+    void OnRotatingFrontSquadComplete();
+
     void PlayRunAnimation();
+    double CalculateDotFrontSquadToLocation(FVector Location);
+    void ExecuteCurrentTaskQueue();
 };

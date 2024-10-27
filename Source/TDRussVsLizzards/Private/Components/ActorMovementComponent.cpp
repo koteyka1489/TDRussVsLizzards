@@ -107,6 +107,7 @@ void UActorMovementComponent::RotatingToLocation(float DeltaTime)
     if (DotPawnForwardToDestination >= 0.999)
     {
         bDestinationToRotatingIsSet = false;
+        OnRotatingCreepsComplete.ExecuteIfBound();
         return;
     }
     else
@@ -171,6 +172,7 @@ void UActorMovementComponent::RotatingFrontSquadToLocation(float DeltaTime)
         DestinationCreepsToRotateFrontSquad.Empty();
         CreepEndRotatFrontSquadCounter = 0;
         UpdateCreepsLocationFromCenterSquad();
+        OnRotatingFrontSquadComplete.ExecuteIfBound();
     }
 }
 

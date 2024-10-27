@@ -7,6 +7,8 @@
 #include "ActorMovementComponent.generated.h"
 
 DECLARE_DELEGATE(FOnMovingComplete)
+DECLARE_DELEGATE(FOnRotatingCreepsComplete)
+DECLARE_DELEGATE(FOnRotatingFrontSquadComplete)
 
 class ABaseCreepActor;
 class ABaseSquadCreeps;
@@ -26,6 +28,8 @@ public:
     void RotateFrontSquadToLocation(FVector Location);
 
     FOnMovingComplete OnMovingComplete;
+    FOnRotatingCreepsComplete OnRotatingCreepsComplete;
+    FOnRotatingFrontSquadComplete OnRotatingFrontSquadComplete;
 
 private:
     TObjectPtr<ABaseSquadCreeps> OwnerSquad;
