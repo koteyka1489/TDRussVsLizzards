@@ -8,4 +8,5 @@
 void URotateFrontSquadTask::ExecuteTask() 
 {
     SquadOwner->GetSquadMovementComponent()->RotateFrontSquadToLocation(Destination);
+    SquadOwner->PlayRunAnimation();
 }

@@ -8,4 +8,5 @@
 void URotateCreepsTask::ExecuteTask()
 {
     SquadOwner->GetSquadMovementComponent()->RotateToLocation(Destination);
+    SquadOwner->PlayRunAnimation();
 }

@@ -42,6 +42,7 @@ public:
 
     void SquadUnChoisen();
     void SquadUnChoisenBySelectBox();
+    void PlayRunAnimation();
 
     void MoveAndRotatingSquadToLocation(FVector Destination);
 
@@ -98,7 +99,7 @@ private:
     void OnRotatingCreepsComplete();
     void OnRotatingFrontSquadComplete();
 
-    void PlayRunAnimation();
+    
     double CalculateDotFrontSquadToLocation(FVector Location);
     void ExecuteCurrentTaskQueue();
 };
