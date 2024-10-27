@@ -129,8 +129,7 @@ void ACameraPawn::OnRightMouseClickChois(FHitResult Hit)
 
     for (auto& Squad : ChoisenSquads)
     {
-        Squad->RotateFrontSquadToLocation(Hit.Location);
-        Squad->MoveToLocation(Hit.Location);
+        Squad->MoveAndRotatingSquadToLocation(Hit.Location);
     }
 }
 

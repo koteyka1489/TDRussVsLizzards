@@ -32,6 +32,8 @@ private:
     TArray<TObjectPtr<ABaseCreepActor>>* CreepsArray;
     TArray<FVector> CreepsLocationFromCenterSquad;
     TArray<FVector> DestinationCreepsToRotateFrontSquad;
+    
+
 
     FVector DestinationToMoving{};
     FVector DestinationToRotating{};

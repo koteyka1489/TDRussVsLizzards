@@ -35,7 +35,6 @@ void ABaseSquadCreeps::BeginPlay()
     Creeps.Reserve(CreepsNum);
 
     SpawnCreepsN();
-
     UpdateSquadLocationStart();
     SetBoxExtendBySquadSize();
 
@@ -66,33 +65,18 @@ void ABaseSquadCreeps::UpdateSquadLocationStart()
     SetActorLocation(GetActorLocation() + SquadRightToLeftCornerHalfVec + FrontToBackHalfVec);
 }
 
-
-
-void ABaseSquadCreeps::SetBoxExtendBySquadSize() 
+void ABaseSquadCreeps::SetBoxExtendBySquadSize()
 {
-    FVector SquadRightCorner              = Creeps[0]->GetActorLocation();
- 
+    FVector SquadRightCorner = Creeps[0]->GetActorLocation();
+
     FVector NewBoxExtend = GetActorLocation() - SquadRightCorner;
     NewBoxExtend         = NewBoxExtend.GetAbs();
     NewBoxExtend.Z       = 200.0;
 
     SquadSizesBox->SetBoxExtent(NewBoxExtend);
-
 }
 
-ESquadMovingDirection ABaseSquadCreeps::CalculateSquadMovingDirection(FVector Destination)
-{
-    FVector VecToDestination = (Destination - GetActorLocation()).GetSafeNormal();
-    float Dot                = FVector::DotProduct(VecToDestination, GetActorForwardVector());
-    if (Dot >= 0.0)
-    {
-        return ESquadMovingDirection::FrontMoving;
-    }
-    else
-    {
-        return ESquadMovingDirection::BackMoving;
-    }
-}
+
 
 void ABaseSquadCreeps::SpawnCreepsN()
 {
@@ -225,24 +209,25 @@ void ABaseSquadCreeps::SquadUnChoisenBySelectBox()
     }
 }
 
+void ABaseSquadCreeps::MoveAndRotatingSquadToLocation(FVector Destination) 
+{
+
+}
+
 void ABaseSquadCreeps::MoveToLocation(FVector Destination)
 {
     MovementComponent->MoveToLocation(Destination);
-
-    if (CurrentAnimation != ESquadCurrentAnimation::Run)
-    {
-        for (auto& Creep : Creeps)
-        {
-            Creep->PlayAnimationRun();
-        }
-        CurrentAnimation = ESquadCurrentAnimation::Run;
-    }
+    PlayRunAnimation();
 }
 
 void ABaseSquadCreeps::RotateFrontSquadToLocation(FVector Destination)
 {
     MovementComponent->RotateFrontSquadToLocation(Destination);
+    PlayRunAnimation();
+}
 
+void ABaseSquadCreeps::PlayRunAnimation()
+{
     if (CurrentAnimation != ESquadCurrentAnimation::Run)
     {
         for (auto& Creep : Creeps)

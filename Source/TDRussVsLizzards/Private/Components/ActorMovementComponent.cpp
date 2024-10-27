@@ -4,6 +4,9 @@
 #include "Squad/BaseSquadCreeps.h"
 #include "Creeps/BaseCreepActor.h"
 #include "DrawDebugHelpers.h"
+#include "Kismet/KismetArrayLibrary.h"
+
+
 
 UActorMovementComponent::UActorMovementComponent()
 {
@@ -147,7 +150,7 @@ void UActorMovementComponent::RotatingFrontSquadToLocation(float DeltaTime)
     {
         FVector VecToDestination = DestinationCreepsToRotateFrontSquad[CreepIndex] - Creep->GetActorLocation();
 
-        if (VecToDestination.Length() <= 1.0)
+        if (VecToDestination.Length() <= 5.0)
         {
             CreepEndRotatFrontSquadCounter++;
         }

@@ -22,13 +22,6 @@ struct FSquadSizes
     int32 Heigth;
 };
 
-enum class ESquadMovingDirection
-{
-    FrontMoving,
-    BackMoving,
-    LeftMoving,
-    RightMoving
-};
 
 enum class ESquadCurrentAnimation
 {
@@ -50,8 +43,9 @@ public:
     void SquadUnChoisen();
     void SquadUnChoisenBySelectBox();
 
-    void MoveToLocation(FVector Destination);
-    void RotateFrontSquadToLocation(FVector Destination);
+    void MoveAndRotatingSquadToLocation(FVector Destination);
+
+    
     void OnCreepIsClicked();
 
     TArray<TObjectPtr<ABaseCreepActor>>* GetCreeps() { return &Creeps; }
@@ -90,13 +84,14 @@ private:
     bool bSquadIsChosen = false;
     FSquadSizes CurrentSquadSizes;
 
-    ESquadMovingDirection CurrentMovingDirection = ESquadMovingDirection::FrontMoving;
+
     ESquadCurrentAnimation CurrentAnimation      = ESquadCurrentAnimation::Idle;
 
     void UpdateSquadLocationStart();
     void SetBoxExtendBySquadSize();
-    
-    ESquadMovingDirection CalculateSquadMovingDirection(FVector Destination);
+    void MoveToLocation(FVector Destination);
+    void RotateFrontSquadToLocation(FVector Destination);
+
 
     void SpawnCreepsN();
     FSquadSizes CalculateCurrentSquadSizes();
@@ -104,4 +99,5 @@ private:
     void BindOnCreepIsClickedtDelegate();
 
     void OnMovingComplete();
+    void PlayRunAnimation();
 };
