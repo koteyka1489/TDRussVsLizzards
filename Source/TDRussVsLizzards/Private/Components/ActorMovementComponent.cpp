@@ -30,7 +30,7 @@ void UActorMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType
     }
     if (bDestinationToRotatingIsSet)
     {
-        RotatingToLocation(DeltaTime);
+        RotatingToLocationQuat(DeltaTime);
     }
     if (bDestinationToMovingIsSet && !bDestinationToSquadFrontRotationIsSet)
     {
@@ -144,9 +144,33 @@ void UActorMovementComponent::RotatingToLocation(float DeltaTime)
     }
 }
 
+void UActorMovementComponent::RotatingToLocationQuat(float DeltaTime)
+{
+    FQuat SquadQuat   = OwnerSquad->GetActorQuat();
+    FVector Direction = (DestinationToRotating - OwnerSquad->GetActorLocation()).GetSafeNormal2D();
+
+    FRotator TargetRotator   = FRotationMatrix::MakeFromX(Direction).Rotator();
+    FQuat TargetRotationQuat = TargetRotator.Quaternion();
+
+    if (SquadQuat.Equals(TargetRotationQuat, KINDA_SMALL_NUMBER))
+    {
+        bDestinationToRotatingIsSet = false;
+        OnRotatingCreepsComplete.ExecuteIfBound();
+        return;
+    }
+
+    FQuat NewRotation = FMath::QInterpConstantTo(SquadQuat, TargetRotationQuat, DeltaTime, InterpSpeed);
+
+    for (auto& Creep : *CreepsArray)
+    {
+        Creep->SetActorRotation(NewRotation);
+    }
+    OwnerSquad->SetActorRotation(NewRotation);
+}
+
 void UActorMovementComponent::RotatingFrontSquadToLocation(float DeltaTime)
 {
-    
+
     float FrameSpeed               = SpeedMoving * DeltaTime;
     int32 CreepIndex               = 0;
     CreepEndRotatFrontSquadCounter = 0;

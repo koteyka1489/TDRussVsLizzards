@@ -51,12 +51,13 @@ private:
 
     float SpeedMoving                = 500.0f;
     float SpeedRotating              = 300.0f;
-    
+    float InterpSpeed                    = 5.0f;
     int32 CreepEndRotatFrontSquadCounter = 0;
 
     
     void MovingToLocation(float DeltaTime);
     void RotatingToLocation(float DeltaTime);
+    void RotatingToLocationQuat(float DeltaTime);
     void RotatingFrontSquadToLocation(float DeltaTime);
     void CalculateDestinationCreepsToRotateFrontSquad();
     void UpdateCreepsLocationFromCenterSquad();
