@@ -21,8 +21,6 @@ struct FSquadSizes
     int32 Heigth;
 };
 
-
-
 enum class ESquadCurrentAnimation
 {
     Idle,
@@ -87,8 +85,6 @@ private:
 
     void UpdateSquadLocationStart();
     void SetBoxExtendBySquadSize();
-    void MoveToLocation(FVector Destination);
-    void RotateFrontSquadToLocation(FVector Destination);
 
     void SpawnCreepsN();
     FSquadSizes CalculateCurrentSquadSizes();
@@ -99,7 +95,6 @@ private:
     void OnRotatingCreepsComplete();
     void OnRotatingFrontSquadComplete();
 
-    
     double CalculateDotFrontSquadToLocation(FVector Location);
     void ExecuteCurrentTaskQueue();
 };

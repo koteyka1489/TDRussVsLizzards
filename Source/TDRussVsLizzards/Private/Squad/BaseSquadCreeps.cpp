@@ -228,8 +228,8 @@ void ABaseSquadCreeps::SquadUnChoisenBySelectBox()
 
 void ABaseSquadCreeps::MoveAndRotatingSquadToLocation(FVector Destination)
 {
-    SquadTasksQueue.Empty();
-    bCurrentSquadTaskIsExecute = false;
+
+    if (bCurrentSquadTaskIsExecute) return;
 
     double DotSquadToDestination = CalculateDotFrontSquadToLocation(Destination);
 
@@ -260,18 +260,6 @@ void ABaseSquadCreeps::MoveAndRotatingSquadToLocation(FVector Destination)
     }
 }
 
-void ABaseSquadCreeps::MoveToLocation(FVector Destination)
-{
-    MovementComponent->MoveToLocation(Destination);
-    PlayRunAnimation();
-}
-
-void ABaseSquadCreeps::RotateFrontSquadToLocation(FVector Destination)
-{
-    MovementComponent->RotateFrontSquadToLocation(Destination);
-    PlayRunAnimation();
-}
-
 void ABaseSquadCreeps::PlayRunAnimation()
 {
     if (CurrentAnimation != ESquadCurrentAnimation::Run)
@@ -293,12 +281,9 @@ double ABaseSquadCreeps::CalculateDotFrontSquadToLocation(FVector Location)
 
 void ABaseSquadCreeps::ExecuteCurrentTaskQueue()
 {
-    if (bCurrentSquadTaskIsExecute) return;
-
-    if (SquadTasksQueue.IsEmpty()) return;
 
     TObjectPtr<USquadBaseTask> FirstQueueTask;
-    if (!SquadTasksQueue.Peek(FirstQueueTask)) return;
+    if (!SquadTasksQueue.Peek(FirstQueueTask) || bCurrentSquadTaskIsExecute || SquadTasksQueue.IsEmpty()) return;
 
     if (CurrentSquadTask == FirstQueueTask)
     {
@@ -309,9 +294,9 @@ void ABaseSquadCreeps::ExecuteCurrentTaskQueue()
         TObjectPtr<USquadBaseTask> NewCurrenWueueTask;
         if (SquadTasksQueue.Dequeue(NewCurrenWueueTask))
         {
-            CurrentSquadTask = NewCurrenWueueTask;
-            CurrentSquadTask->ExecuteTask();
             bCurrentSquadTaskIsExecute = true;
+            CurrentSquadTask           = NewCurrenWueueTask;
+            CurrentSquadTask->ExecuteTask();
         }
     }
 }

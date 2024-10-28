@@ -40,6 +40,7 @@ void UActorMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType
 
 void UActorMovementComponent::MoveToLocation(FVector Location)
 {
+
     DestinationToMoving       = Location;
     DestinationToMoving.Z     = 0.0;
     bDestinationToMovingIsSet = true;
@@ -107,7 +108,7 @@ void UActorMovementComponent::RotatingToLocation(float DeltaTime)
 
     float DotPawnForwardToDestination = FVector::DotProduct(VecToDestinationNormalize, CreepForwardVec);
 
-    if (DotPawnForwardToDestination >= 0.999)
+    if (DotPawnForwardToDestination >= 0.98)
     {
         bDestinationToRotatingIsSet = false;
         OnRotatingCreepsComplete.ExecuteIfBound();
@@ -145,7 +146,7 @@ void UActorMovementComponent::RotatingToLocation(float DeltaTime)
 
 void UActorMovementComponent::RotatingFrontSquadToLocation(float DeltaTime)
 {
-
+    
     float FrameSpeed               = SpeedMoving * DeltaTime;
     int32 CreepIndex               = 0;
     CreepEndRotatFrontSquadCounter = 0;
