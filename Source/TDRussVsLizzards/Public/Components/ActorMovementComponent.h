@@ -38,7 +38,7 @@ private:
     TArray<FVector> DestinationCreepsToRotateFrontSquad;
     
 
-
+    
     FVector DestinationToMoving{};
     FVector DestinationToRotating{};
     FVector DestinationToSquadFrontRotation{};
@@ -47,6 +47,7 @@ private:
     bool bDestinationToRotatingIsSet = false;
     bool bDestinationToSquadFrontRotationIsSet = false;
     bool bAutoOrientToMovement                 = true;
+    bool bAutoOrientToFrontSquadRotation       = true;
 
     float SpeedMoving                = 500.0f;
     float SpeedRotating              = 300.0f;

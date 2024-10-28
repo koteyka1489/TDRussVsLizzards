@@ -84,8 +84,6 @@ void ABaseSquadCreeps::SetBoxExtendBySquadSize()
     SquadSizesBox->SetBoxExtent(NewBoxExtend);
 }
 
-
-
 void ABaseSquadCreeps::SpawnCreepsN()
 {
     CurrentSquadSizes.Heigth = 6;
@@ -179,7 +177,7 @@ void ABaseSquadCreeps::OnCreepIsClicked()
 void ABaseSquadCreeps::OnMovingComplete()
 {
     bCurrentSquadTaskIsExecute = false;
-    CurrentAnimation = ESquadCurrentAnimation::Idle;
+    CurrentAnimation           = ESquadCurrentAnimation::Idle;
     for (auto& Creep : Creeps)
     {
         Creep->PlayAnimationIdle();
@@ -189,13 +187,11 @@ void ABaseSquadCreeps::OnMovingComplete()
 void ABaseSquadCreeps::OnRotatingCreepsComplete()
 {
     bCurrentSquadTaskIsExecute = false;
-
 }
 
 void ABaseSquadCreeps::OnRotatingFrontSquadComplete()
 {
     bCurrentSquadTaskIsExecute = false;
-
 }
 
 void ABaseSquadCreeps::SquadUnChoisen()
@@ -230,10 +226,10 @@ void ABaseSquadCreeps::SquadUnChoisenBySelectBox()
     }
 }
 
-void ABaseSquadCreeps::MoveAndRotatingSquadToLocation(FVector Destination) 
+void ABaseSquadCreeps::MoveAndRotatingSquadToLocation(FVector Destination)
 {
     SquadTasksQueue.Empty();
-    bCurrentSquadTaskIsExecute   = false;
+    bCurrentSquadTaskIsExecute = false;
 
     double DotSquadToDestination = CalculateDotFrontSquadToLocation(Destination);
 
@@ -246,13 +242,13 @@ void ABaseSquadCreeps::MoveAndRotatingSquadToLocation(FVector Destination)
         auto MoveToLocationTask = NewObject<UMoveSquadTask>();
         MoveToLocationTask->InitDestinationTask(Destination, this);
         SquadTasksQueue.Enqueue(MoveToLocationTask);
-
     }
     else
     {
-        auto RotateCreepsTask = NewObject<URotateCreepsTask>();
-        RotateCreepsTask->InitDestinationTask(Destination, this);
-        SquadTasksQueue.Enqueue(RotateCreepsTask);
+        FVector TurnAroundVector = GetActorLocation() + (-GetActorForwardVector() * 1000);
+        auto TurnAroundTask      = NewObject<URotateCreepsTask>();
+        TurnAroundTask->InitDestinationTask(TurnAroundVector, this);
+        SquadTasksQueue.Enqueue(TurnAroundTask);
 
         auto RotateFrontTask = NewObject<URotateFrontSquadTask>();
         RotateFrontTask->InitDestinationTask(Destination, this);
@@ -262,8 +258,6 @@ void ABaseSquadCreeps::MoveAndRotatingSquadToLocation(FVector Destination)
         MoveToLocationTask->InitDestinationTask(Destination, this);
         SquadTasksQueue.Enqueue(MoveToLocationTask);
     }
-
-
 }
 
 void ABaseSquadCreeps::MoveToLocation(FVector Destination)
@@ -292,12 +286,12 @@ void ABaseSquadCreeps::PlayRunAnimation()
 
 double ABaseSquadCreeps::CalculateDotFrontSquadToLocation(FVector Location)
 {
-    FVector SquadForwardVector = GetActorForwardVector();
+    FVector SquadForwardVector             = GetActorForwardVector();
     FVector SquadToLocationNormalizeVector = (Location - GetActorLocation()).GetSafeNormal2D();
     return SquadForwardVector.Dot(SquadToLocationNormalizeVector);
 }
 
-void ABaseSquadCreeps::ExecuteCurrentTaskQueue() 
+void ABaseSquadCreeps::ExecuteCurrentTaskQueue()
 {
     if (bCurrentSquadTaskIsExecute) return;
 
@@ -306,7 +300,6 @@ void ABaseSquadCreeps::ExecuteCurrentTaskQueue()
     TObjectPtr<USquadBaseTask> FirstQueueTask;
     if (!SquadTasksQueue.Peek(FirstQueueTask)) return;
 
-    
     if (CurrentSquadTask == FirstQueueTask)
     {
         return;
@@ -314,9 +307,11 @@ void ABaseSquadCreeps::ExecuteCurrentTaskQueue()
     else
     {
         TObjectPtr<USquadBaseTask> NewCurrenWueueTask;
-        SquadTasksQueue.Dequeue(NewCurrenWueueTask);
-        CurrentSquadTask = NewCurrenWueueTask;
-        CurrentSquadTask->ExecuteTask(); 
-        bCurrentSquadTaskIsExecute = true;
+        if (SquadTasksQueue.Dequeue(NewCurrenWueueTask))
+        {
+            CurrentSquadTask = NewCurrenWueueTask;
+            CurrentSquadTask->ExecuteTask();
+            bCurrentSquadTaskIsExecute = true;
+        }
     }
 }

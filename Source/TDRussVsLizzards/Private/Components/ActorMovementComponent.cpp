@@ -6,8 +6,6 @@
 #include "DrawDebugHelpers.h"
 #include "Kismet/KismetArrayLibrary.h"
 
-
-
 UActorMovementComponent::UActorMovementComponent()
 {
     PrimaryComponentTick.bCanEverTick = true;
@@ -57,6 +55,11 @@ void UActorMovementComponent::RotateFrontSquadToLocation(FVector Location)
     UpdateCreepsLocationFromCenterSquad();
     bDestinationToSquadFrontRotationIsSet = true;
     CalculateDestinationCreepsToRotateFrontSquad();
+
+    if (bAutoOrientToFrontSquadRotation)
+    {
+        RotateToLocation(Location);
+    }
 }
 
 void UActorMovementComponent::RotateToLocation(FVector Location)
