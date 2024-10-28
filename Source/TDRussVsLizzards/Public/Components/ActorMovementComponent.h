@@ -56,7 +56,6 @@ private:
 
     
     void MovingToLocation(float DeltaTime);
-    void RotatingToLocation(float DeltaTime);
     void RotatingToLocationQuat(float DeltaTime);
     void RotatingFrontSquadToLocation(float DeltaTime);
     void CalculateDestinationCreepsToRotateFrontSquad();

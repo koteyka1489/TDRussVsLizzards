@@ -99,50 +99,6 @@ void UActorMovementComponent::MovingToLocation(float DeltaTime)
     }
 }
 
-void UActorMovementComponent::RotatingToLocation(float DeltaTime)
-{
-
-    FVector VecToDestinationNormalize = (DestinationToRotating - OwnerSquad->GetActorLocation()).GetSafeNormal();
-    VecToDestinationNormalize.Z       = 0.0;
-    FVector CreepForwardVec           = OwnerSquad->GetActorForwardVector();
-
-    float DotPawnForwardToDestination = FVector::DotProduct(VecToDestinationNormalize, CreepForwardVec);
-
-    if (DotPawnForwardToDestination >= 0.98)
-    {
-        bDestinationToRotatingIsSet = false;
-        OnRotatingCreepsComplete.ExecuteIfBound();
-        return;
-    }
-    else
-    {
-        FVector CreepRightVec           = OwnerSquad->GetActorRightVector();
-        float DotPawnRightToDestination = FVector::DotProduct(VecToDestinationNormalize, CreepRightVec);
-
-        FRotator OffsetRotation = FRotator{0.0f, SpeedRotating * DeltaTime, 0.0f};
-
-        if (DotPawnRightToDestination >= 0.0)
-        {
-            for (auto& Creep : *CreepsArray)
-            {
-                FRotator NewRotation = Creep->GetActorRotation() + OffsetRotation;
-                Creep->SetActorRotation(NewRotation);
-            }
-            FRotator NewRotation = OwnerSquad->GetActorRotation() + OffsetRotation;
-            OwnerSquad->SetActorRotation(NewRotation);
-        }
-        else
-        {
-            for (auto& Creep : *CreepsArray)
-            {
-                FRotator NewRotation = Creep->GetActorRotation() - OffsetRotation;
-                Creep->SetActorRotation(NewRotation);
-            }
-            FRotator NewRotation = OwnerSquad->GetActorRotation() - OffsetRotation;
-            OwnerSquad->SetActorRotation(NewRotation);
-        }
-    }
-}
 
 void UActorMovementComponent::RotatingToLocationQuat(float DeltaTime)
 {
