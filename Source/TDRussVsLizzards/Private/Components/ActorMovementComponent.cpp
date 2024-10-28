@@ -5,6 +5,7 @@
 #include "Creeps/BaseCreepActor.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/KismetArrayLibrary.h"
+#include "Kismet/KismetMathLibrary.h"
 
 UActorMovementComponent::UActorMovementComponent()
 {
@@ -108,13 +109,14 @@ void UActorMovementComponent::RotatingToLocationQuat(float DeltaTime)
     FRotator TargetRotator   = FRotationMatrix::MakeFromX(Direction).Rotator();
     FQuat TargetRotationQuat = TargetRotator.Quaternion();
 
+
     if (SquadQuat.Equals(TargetRotationQuat, KINDA_SMALL_NUMBER))
     {
         bDestinationToRotatingIsSet = false;
         OnRotatingCreepsComplete.ExecuteIfBound();
         return;
     }
-
+    
     FQuat NewRotation = FMath::QInterpConstantTo(SquadQuat, TargetRotationQuat, DeltaTime, InterpSpeed);
 
     for (auto& Creep : *CreepsArray)
