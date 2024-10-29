@@ -13,6 +13,14 @@ DECLARE_DELEGATE(FOnRotatingFrontSquadComplete)
 class ABaseCreepActor;
 class ABaseSquadCreeps;
 
+enum class ERotateFrontSquadBySide
+{
+    LeftCorner, 
+    RightCorner,
+    Center
+};
+
+
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class TDRUSSVSLIZZARDS_API UActorMovementComponent : public UActorComponent
 {
@@ -26,6 +34,7 @@ public:
     void MoveToLocation(FVector Location);
     void RotateToLocation(FVector Location);
     void RotateFrontSquadToLocation(FVector Location);
+    void RotateFrontSquadToLocationFromSide(FVector Location, ERotateFrontSquadBySide SideIn);
 
     FOnMovingComplete OnMovingComplete;
     FOnRotatingCreepsComplete OnRotatingCreepsComplete;
@@ -35,7 +44,9 @@ private:
     TObjectPtr<ABaseSquadCreeps> OwnerSquad;
     TArray<TObjectPtr<ABaseCreepActor>>* CreepsArray;
     TArray<FVector> CreepsLocationFromCenterSquad;
-    TArray<FVector> DestinationCreepsToRotateFrontSquad;
+    TArray<FVector> CreepsLocationFromRightCornerSquad;
+    TArray<FVector> CreepsLocationFromLeftCornerSquad;
+    TArray<FVector> DestinationCreepsToRotateFrontSquadFromCenter;
     
 
     
@@ -57,7 +68,8 @@ private:
     
     void MovingToLocation(float DeltaTime);
     void RotatingToLocationQuat(float DeltaTime);
-    void RotatingFrontSquadToLocation(float DeltaTime);
+    void RotatingFrontSquadToLocationFromCenter(float DeltaTime);
     void CalculateDestinationCreepsToRotateFrontSquad();
-    void UpdateCreepsLocationFromCenterSquad();
+    void CalculateDestinationCreepsToRotateFrontSquadBySide(ERotateFrontSquadBySide Side);
+    void UpdateCreepsLocationFromSidesSquad();
 };

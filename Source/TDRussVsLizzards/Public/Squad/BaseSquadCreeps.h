@@ -14,6 +14,7 @@ class UBoxComponent;
 class UActorMovementComponent;
 class USceneComponent;
 class USquadBaseTask;
+enum class ERotateFrontSquadBySide;
 
 struct FSquadSizes
 {
@@ -49,7 +50,8 @@ public:
     UActorMovementComponent* GetSquadMovementComponent() { return MovementComponent; }
 
     TArray<TObjectPtr<ABaseCreepActor>>* GetCreeps() { return &Creeps; }
-
+    FVector GetRightCornerCreepLocation();
+    FVector GetLeftCornerCreepLocation();
     FOnSquadIsChoisen OnSquadIsChoisen;
     FOnSquadIsUnChoisen OnSquadIsUnChoisen;
 
@@ -75,13 +77,16 @@ protected:
 private:
     TArray<TObjectPtr<ABaseCreepActor>> Creeps;
 
-    bool bSquadIsChosen = false;
     FSquadSizes CurrentSquadSizes;
     ESquadCurrentAnimation CurrentAnimation = ESquadCurrentAnimation::Idle;
 
     TQueue<TObjectPtr<USquadBaseTask>> SquadTasksQueue;
     TObjectPtr<USquadBaseTask> CurrentSquadTask = nullptr;
     bool bCurrentSquadTaskIsExecute             = false;
+    bool bSquadIsChosen                         = false;
+
+
+
 
     void UpdateSquadLocationStart();
     void SetBoxExtendBySquadSize();
@@ -96,5 +101,7 @@ private:
     void OnRotatingFrontSquadComplete();
 
     double CalculateDotFrontSquadToLocation(FVector Location);
+    double CalculateDotRightVectorSquadToLocation(FVector Location);
+    ERotateFrontSquadBySide GetSideToFrontSquadRotating(FVector Location);
     void ExecuteCurrentTaskQueue();
 };

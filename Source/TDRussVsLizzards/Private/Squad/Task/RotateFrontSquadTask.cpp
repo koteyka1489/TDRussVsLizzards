@@ -7,6 +7,11 @@
 
 void URotateFrontSquadTask::ExecuteTask() 
 {
-    SquadOwner->GetSquadMovementComponent()->RotateFrontSquadToLocation(Destination);
+    SquadOwner->GetSquadMovementComponent()->RotateFrontSquadToLocationFromSide(Destination, Side);
     SquadOwner->PlayRunAnimation();
+}
+
+void URotateFrontSquadTask::InitSideRotating(ERotateFrontSquadBySide SideIn) 
+{
+    Side = SideIn;
 }

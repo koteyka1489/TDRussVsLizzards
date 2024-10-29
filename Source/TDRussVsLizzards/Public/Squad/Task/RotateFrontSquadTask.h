@@ -6,9 +6,8 @@
 #include "Squad/Task/SquadBaseTask.h"
 #include "RotateFrontSquadTask.generated.h"
 
-/**
- *
- */
+enum class ERotateFrontSquadBySide;
+
 UCLASS()
 class TDRUSSVSLIZZARDS_API URotateFrontSquadTask : public USquadBaseTask
 {
@@ -16,4 +15,8 @@ class TDRUSSVSLIZZARDS_API URotateFrontSquadTask : public USquadBaseTask
 
 public:
     virtual void ExecuteTask() override;
+    void InitSideRotating(ERotateFrontSquadBySide SideIn);
+
+private:
+    ERotateFrontSquadBySide Side;
 };
