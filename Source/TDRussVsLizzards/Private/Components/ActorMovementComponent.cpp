@@ -169,7 +169,6 @@ void UActorMovementComponent::RotatingFrontSquadToLocationFromCenter(float Delta
     FVector NewLocation      = OwnerSquad->GetActorLocation() + Offset;
     OwnerSquad->SetActorLocation(NewLocation);
 
-
     if (CreepsArray->Num() == CreepEndRotatFrontSquadCounter)
     {
         bDestinationToSquadFrontRotationIsSet = false;
@@ -274,10 +273,10 @@ void UActorMovementComponent::UpdateCreepsLocationFromSidesSquad()
     if (CreepsArray->Num() == 0) return;
     FVector SquadLocation = OwnerSquad->GetActorLocation();
 
-    if (!CreepsLocationFromCenterSquad.IsEmpty())
-    {
-        CreepsLocationFromCenterSquad.Empty();
-    }
+    CreepsLocationFromCenterSquad.Empty();
+    CreepsLocationFromRightCornerSquad.Empty();
+    CreepsLocationFromLeftCornerSquad.Empty();
+
     FVector RightCornerCreepLocation = OwnerSquad->GetRightCornerCreepLocation();
     FVector LeftCornerCreepLocation  = OwnerSquad->GetLeftCornerCreepLocation();
 

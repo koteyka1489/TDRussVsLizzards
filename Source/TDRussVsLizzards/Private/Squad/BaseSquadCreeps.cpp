@@ -253,6 +253,10 @@ void ABaseSquadCreeps::MoveAndRotatingSquadToLocation(FVector Destination)
         RotateFrontTask->InitSideRotating(GetSideToFrontSquadRotating(Destination));
         SquadTasksQueue.Enqueue(RotateFrontTask);
 
+        auto RotateCreepsToDestTask = NewObject<URotateCreepsTask>();
+        RotateCreepsToDestTask->InitDestinationTask(Destination, this);
+        SquadTasksQueue.Enqueue(RotateCreepsToDestTask);
+
         auto MoveToLocationTask = NewObject<UMoveSquadTask>();
         MoveToLocationTask->InitDestinationTask(Destination, this);
         SquadTasksQueue.Enqueue(MoveToLocationTask);
@@ -268,6 +272,10 @@ void ABaseSquadCreeps::MoveAndRotatingSquadToLocation(FVector Destination)
         RotateFrontTask->InitDestinationTask(Destination, this);
         RotateFrontTask->InitSideRotating(GetSideToFrontSquadRotating(Destination));
         SquadTasksQueue.Enqueue(RotateFrontTask);
+
+        auto RotateCreepsToDestTask = NewObject<URotateCreepsTask>();
+        RotateCreepsToDestTask->InitDestinationTask(Destination, this);
+        SquadTasksQueue.Enqueue(RotateCreepsToDestTask);
 
         auto MoveToLocationTask = NewObject<UMoveSquadTask>();
         MoveToLocationTask->InitDestinationTask(Destination, this);
