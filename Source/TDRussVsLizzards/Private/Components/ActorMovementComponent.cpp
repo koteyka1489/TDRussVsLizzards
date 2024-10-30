@@ -130,7 +130,7 @@ void UActorMovementComponent::RotatingToLocationQuat(float DeltaTime)
 
     FQuat NewRotation = FMath::QInterpConstantTo(SquadQuat, TargetRotationQuat, DeltaTime, InterpSpeed);
 
-    for (auto& Creep : *CreepsArray)
+    for (const auto& Creep : *CreepsArray)
     {
         Creep->SetActorRotation(NewRotation);
     }
@@ -144,7 +144,7 @@ void UActorMovementComponent::RotatingFrontSquadToLocationFromCenter(float Delta
     int32 CreepIndex               = 0;
     CreepEndRotatFrontSquadCounter = 0;
 
-    for (auto& Creep : *CreepsArray)
+    for (const auto& Creep : *CreepsArray)
     {
         FVector VecToDestination = DestinationCreepsToRotateFrontSquadFromCenter[CreepIndex] - Creep->GetActorLocation();
 
@@ -252,13 +252,11 @@ void UActorMovementComponent::CalculateDestinationCreepsToRotateFrontSquadBySide
 
     FQuat BetweenQuat = FQuat::FindBetweenNormals(SquadForwardVector, VecSquadToRotationDestinationNormalize);
     // FQuat BetweenQuatNormalize = BetweenQuat.GetNormalized();
-    for (auto& Creep : *CreepsArray)
+    for (const auto& Creep : *CreepsArray)
     {
         FVector DestVec = BetweenQuat.RotateVector(CreepsLocationFromSidePtr[CreepIndex]);
 
         DestinationCreepsToRotateFrontSquadFromCenter.Add(BaseRotatingLocation + DestVec);
-
-        DrawDebugLine(GetWorld(), BaseRotatingLocation, BaseRotatingLocation + DestVec, FColor::Red, false, 2, 0u, 10.f);
 
         CreepIndex++;
     }
@@ -280,7 +278,7 @@ void UActorMovementComponent::UpdateCreepsLocationFromSidesSquad()
     FVector RightCornerCreepLocation = OwnerSquad->GetRightCornerCreepLocation();
     FVector LeftCornerCreepLocation  = OwnerSquad->GetLeftCornerCreepLocation();
 
-    for (auto& Creep : *CreepsArray)
+    for (const auto& Creep : *CreepsArray)
     {
         CreepsLocationFromCenterSquad.Add(Creep->GetActorLocation() - SquadLocation);
         CreepsLocationFromRightCornerSquad.Add(Creep->GetActorLocation() - RightCornerCreepLocation);

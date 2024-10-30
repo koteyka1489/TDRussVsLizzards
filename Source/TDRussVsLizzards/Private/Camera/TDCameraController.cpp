@@ -6,7 +6,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "DrawDebugHelpers.h"
 
-DEFINE_LOG_CATEGORY_STATIC(LogCameraController, Display, Display);
+DEFINE_LOG_CATEGORY_STATIC(LogCameraController, All, All);
 
 ATDCameraController::ATDCameraController() {}
 
@@ -51,6 +51,8 @@ void ATDCameraController::SetupInputComponent()
         MultiplySelectSquadsAction, ETriggerEvent::Started, this, &ATDCameraController::MultiplySelectSquadsOn);
     EnhancedInputComponent->BindAction(
         MultiplySelectSquadsAction, ETriggerEvent::Completed, this, &ATDCameraController::MultiplySelectSquadsOff);
+
+    EnhancedInputComponent->BindAction(StopSquadAction, ETriggerEvent::Started, this, &ATDCameraController::StopSquad);
 }
 
 void ATDCameraController::MoveCameraUpDown(const FInputActionValue& Value)
@@ -60,7 +62,7 @@ void ATDCameraController::MoveCameraUpDown(const FInputActionValue& Value)
     }
     else
     {
-        UE_LOG(LogTemp, Error, TEXT("OnMoveCameraUpDown Delegate is not bound"));
+        UE_LOG(LogCameraController, Error, TEXT("OnMoveCameraUpDown Delegate is not bound"));
         checkNoEntry();
     }
 }
@@ -72,7 +74,7 @@ void ATDCameraController::MoveCameraRightLeft(const FInputActionValue& Value)
     }
     else
     {
-        UE_LOG(LogTemp, Error, TEXT("OnMoveCameraRightLeft Delegate is not bound"));
+        UE_LOG(LogCameraController, Error, TEXT("OnMoveCameraRightLeft Delegate is not bound"));
         checkNoEntry();
     }
 }
@@ -84,7 +86,7 @@ void ATDCameraController::ZoomUpAction(const FInputActionValue& Value)
     }
     else
     {
-        UE_LOG(LogTemp, Error, TEXT("OnZoomChanged Delegate is not bound"));
+        UE_LOG(LogCameraController, Error, TEXT("OnZoomChanged Delegate is not bound"));
         checkNoEntry();
     }
 }
@@ -96,7 +98,7 @@ void ATDCameraController::RotateCamera(const FInputActionValue& Value)
     }
     else
     {
-        UE_LOG(LogTemp, Error, TEXT("OnRotateCamera Delegate is not bound"));
+        UE_LOG(LogCameraController, Error, TEXT("OnRotateCamera Delegate is not bound"));
         checkNoEntry();
     }
 }
@@ -108,7 +110,7 @@ void ATDCameraController::ChangeAngleCamera(const FInputActionValue& Value)
     }
     else
     {
-        UE_LOG(LogTemp, Error, TEXT("OnChangeAngleCamera Delegate is not bound"));
+        UE_LOG(LogCameraController, Error, TEXT("OnChangeAngleCamera Delegate is not bound"));
         checkNoEntry();
     }
 }
@@ -120,7 +122,7 @@ void ATDCameraController::SetLeftClickChois()
     }
     else
     {
-        UE_LOG(LogTemp, Error, TEXT("OnLeftMouseClickChois Delegate is not bound"));
+        UE_LOG(LogCameraController, Error, TEXT("OnLeftMouseClickChois Delegate is not bound"));
         checkNoEntry();
     }
 }
@@ -132,7 +134,7 @@ void ATDCameraController::SetRightClickChois()
     }
     else
     {
-        UE_LOG(LogTemp, Error, TEXT("OnRightMouseClickChois Delegate is not bound"));
+        UE_LOG(LogCameraController, Error, TEXT("OnRightMouseClickChois Delegate is not bound"));
         checkNoEntry();
     }
 }
@@ -144,7 +146,7 @@ void ATDCameraController::MultiplySelectSquadsOn()
     }
     else
     {
-        UE_LOG(LogTemp, Error, TEXT("OnMultiplySelectSquad Delegate is not bound"));
+        UE_LOG(LogCameraController, Error, TEXT("OnMultiplySelectSquad Delegate is not bound"));
         checkNoEntry();
     }
 }
@@ -156,7 +158,7 @@ void ATDCameraController::MultiplySelectSquadsOff()
     }
     else
     {
-        UE_LOG(LogTemp, Error, TEXT("OnMultiplySelectSquad Delegate is not bound"));
+        UE_LOG(LogCameraController, Error, TEXT("OnMultiplySelectSquad Delegate is not bound"));
         checkNoEntry();
     }
 }
@@ -173,7 +175,7 @@ void ATDCameraController::LeftClickTriggered()
         }
         else
         {
-            UE_LOG(LogTemp, Error, TEXT("OnLeftMouseHold Delegate is not bound"));
+            UE_LOG(LogCameraController, Error, TEXT("OnLeftMouseHold Delegate is not bound"));
             checkNoEntry();
         }
     }
@@ -181,18 +183,30 @@ void ATDCameraController::LeftClickTriggered()
 
 void ATDCameraController::LeftClickCompleted()
 {
-    if (LefMouseDownTime > LeftMouseButtonHoldTreshold )
+    if (LefMouseDownTime > LeftMouseButtonHoldTreshold)
     {
         if (OnLeftMouseHoldCompleted.ExecuteIfBound())
         {
-            LefMouseDownTime = 0.0f;
+            LefMouseDownTime       = 0.0f;
             bSelectionBoxIsSpawned = false;
         }
         else
         {
-            UE_LOG(LogTemp, Error, TEXT("OnLeftMouseHold Delegate is not bound"));
+            UE_LOG(LogCameraController, Error, TEXT("OnLeftMouseHold Delegate is not bound"));
             checkNoEntry();
         }
+    }
+}
+
+void ATDCameraController::StopSquad()
+{
+    if (OnStopSquad.ExecuteIfBound())
+    {
+    }
+    else
+    {
+        UE_LOG(LogCameraController, Error, TEXT("OnStopSquad Delegate is not bound"));
+        checkNoEntry();
     }
 }
 
