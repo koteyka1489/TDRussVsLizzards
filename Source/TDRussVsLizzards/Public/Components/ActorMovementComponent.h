@@ -35,6 +35,7 @@ public:
     void RotateToLocation(FVector Location);
     void RotateFrontSquadToLocation(FVector Location);
     void RotateFrontSquadToLocationFromSide(FVector Location, ERotateFrontSquadBySide SideIn);
+    void StopAllMovings();
 
     FOnMovingComplete OnMovingComplete;
     FOnRotatingCreepsComplete OnRotatingCreepsComplete;

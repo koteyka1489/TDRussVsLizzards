@@ -295,6 +295,14 @@ void ABaseSquadCreeps::PlayRunAnimation()
     }
 }
 
+void ABaseSquadCreeps::StopAllTasks() 
+{
+    MovementComponent->StopAllMovings();
+    CurrentSquadTask = nullptr;
+    bCurrentSquadTaskIsExecute = false;
+    SquadTasksQueue.Empty();
+}
+
 double ABaseSquadCreeps::CalculateDotFrontSquadToLocation(FVector Location)
 {
     FVector SquadForwardVector             = GetActorForwardVector();

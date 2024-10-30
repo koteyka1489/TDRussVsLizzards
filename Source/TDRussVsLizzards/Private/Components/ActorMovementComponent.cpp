@@ -77,6 +77,17 @@ void UActorMovementComponent::RotateFrontSquadToLocationFromSide(FVector Locatio
     }
 }
 
+void UActorMovementComponent::StopAllMovings() 
+{
+    bDestinationToMovingIsSet = false;
+    bDestinationToRotatingIsSet = false;
+    bDestinationToSquadFrontRotationIsSet = false;
+    DestinationCreepsToRotateFrontSquadFromCenter.Empty();
+    CreepEndRotatFrontSquadCounter = 0;
+    UpdateCreepsLocationFromSidesSquad();
+    OnMovingComplete.ExecuteIfBound();
+}
+
 void UActorMovementComponent::RotateToLocation(FVector Location)
 {
     DestinationToRotating       = Location;

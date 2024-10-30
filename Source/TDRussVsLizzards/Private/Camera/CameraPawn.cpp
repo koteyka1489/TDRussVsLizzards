@@ -43,6 +43,7 @@ void ACameraPawn::BeginPlay()
         CameraController->OnMultiplySelectSquad.BindUObject(this, &ACameraPawn::OnMultiplySelectSquad);
         CameraController->OnLeftMouseHold.BindUObject(this, &ACameraPawn::OnLeftMouseHold);
         CameraController->OnLeftMouseHoldCompleted.BindUObject(this, &ACameraPawn::OnLeftMouseHoldCompleted);
+        CameraController->OnStopSquad.BindUObject(this, &ACameraPawn::OnStopSquad);
     }
 
     GetSquadsOnLevel();
@@ -179,6 +180,16 @@ void ACameraPawn::OnLeftMouseHoldCompleted()
         SelectionBox  = nullptr;
         bBoxIsSpawned = false;
         bMultiplySelectSquadBySelectedBox = false;
+    }
+}
+
+void ACameraPawn::OnStopSquad() 
+{
+    if (ChoisenSquads.Num() == 0) return;
+
+    for (auto& Squad : ChoisenSquads)
+    {
+        Squad->StopAllTasks();
     }
 }
 

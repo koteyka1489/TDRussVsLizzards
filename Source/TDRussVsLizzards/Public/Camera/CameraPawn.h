@@ -83,6 +83,7 @@ private:
     void OnMultiplySelectSquad(bool Value);
     void OnLeftMouseHold();
     void OnLeftMouseHoldCompleted();
+    void OnStopSquad();
 
     void GetSquadsOnLevel();
     void BindOnSquadIsChoisenDelegate();

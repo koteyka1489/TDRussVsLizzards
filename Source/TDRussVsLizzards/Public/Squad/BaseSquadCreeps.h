@@ -42,6 +42,7 @@ public:
     void SquadUnChoisen();
     void SquadUnChoisenBySelectBox();
     void PlayRunAnimation();
+    void StopAllTasks();
 
     void MoveAndRotatingSquadToLocation(FVector Destination);
 
