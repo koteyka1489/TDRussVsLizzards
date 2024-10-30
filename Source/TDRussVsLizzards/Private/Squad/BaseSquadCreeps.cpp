@@ -178,14 +178,12 @@ void ABaseSquadCreeps::OnCreepIsClicked()
 FVector ABaseSquadCreeps::GetRightCornerCreepLocation()
 {
     return Creeps[0]->GetActorLocation();
-    
 }
 
 FVector ABaseSquadCreeps::GetLeftCornerCreepLocation()
 {
     return Creeps[CurrentSquadSizes.Width - 1]->GetActorLocation();
 }
-
 
 void ABaseSquadCreeps::OnMovingComplete()
 {
@@ -241,11 +239,9 @@ void ABaseSquadCreeps::SquadUnChoisenBySelectBox()
 
 void ABaseSquadCreeps::MoveAndRotatingSquadToLocation(FVector Destination)
 {
-
-    if (bCurrentSquadTaskIsExecute) return;
+    StopAllTasks();
 
     double DotSquadToDestination = CalculateDotFrontSquadToLocation(Destination);
-
     if (DotSquadToDestination >= 0.0)
     {
         auto RotateFrontTask = NewObject<URotateFrontSquadTask>();
@@ -295,10 +291,10 @@ void ABaseSquadCreeps::PlayRunAnimation()
     }
 }
 
-void ABaseSquadCreeps::StopAllTasks() 
+void ABaseSquadCreeps::StopAllTasks()
 {
     MovementComponent->StopAllMovings();
-    CurrentSquadTask = nullptr;
+    CurrentSquadTask           = nullptr;
     bCurrentSquadTaskIsExecute = false;
     SquadTasksQueue.Empty();
 }
@@ -312,7 +308,7 @@ double ABaseSquadCreeps::CalculateDotFrontSquadToLocation(FVector Location)
 
 double ABaseSquadCreeps::CalculateDotRightVectorSquadToLocation(FVector Location)
 {
-    FVector SquadRightVector             = GetActorRightVector();
+    FVector SquadRightVector               = GetActorRightVector();
     FVector SquadToLocationNormalizeVector = (Location - GetActorLocation()).GetSafeNormal2D();
     return SquadRightVector.Dot(SquadToLocationNormalizeVector);
 }
@@ -329,7 +325,6 @@ ERotateFrontSquadBySide ABaseSquadCreeps::GetSideToFrontSquadRotating(FVector Lo
     {
         Result = ERotateFrontSquadBySide::LeftCorner;
     }
-
 
     return Result;
 }
