@@ -10,6 +10,9 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogBaseCreepActor, All, All);
+
+
 ABaseCreepActor::ABaseCreepActor()
 {
     PrimaryActorTick.bCanEverTick = false;
@@ -29,6 +32,8 @@ ABaseCreepActor::ABaseCreepActor()
     CapsuleComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
     CapsuleComponent->SetCapsuleHalfHeight(120.0f);
     CapsuleComponent->SetCapsuleRadius(80.0f);
+    CapsuleComponent->SetVisibility(true);
+
 
     check(IsValid(SkeletalMeshComponent));
     SkeletalMeshComponent->SetRelativeLocation(FVector(0.0, 0.0, -90.0));
@@ -47,6 +52,7 @@ ABaseCreepActor::ABaseCreepActor()
     SkeletalMeshComponent->bVisibleInRealTimeSkyCaptures      = false;
     SkeletalMeshComponent->bVisibleInReflectionCaptures       = false;
     SkeletalMeshComponent->bEnablePhysicsOnDedicatedServer    = false;
+    SkeletalMeshComponent->VisibilityBasedAnimTickOption      = EVisibilityBasedAnimTickOption::OnlyTickPoseWhenRendered;
 
     check(IsValid(StaticMeshComponent));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> SelectCircleMesh(
@@ -71,12 +77,9 @@ void ABaseCreepActor::BeginPlay()
 
 void ABaseCreepActor::SetCreepIsClicked()
 {
-    if (OnCreepIsClicked.ExecuteIfBound())
+    if (!OnCreepIsClicked.ExecuteIfBound())
     {
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("OnCreepIsClicked not bound"));
+        UE_LOG(LogBaseCreepActor, Error, TEXT("OnCreepIsClicked not bound"));
         checkNoEntry();
     }
 }
@@ -102,6 +105,14 @@ void ABaseCreepActor::PlayAnimationRun()
     SkeletalMeshComponent->PlayAnimation(CreepRunAnimation, true);
 }
 
-void ABaseCreepActor::InitSkeletalMesh() {}
+void ABaseCreepActor::InitSkeletalMesh() 
+{
+    check(0);
+    UE_LOG(LogBaseCreepActor, Error, TEXT("Need override this function on derrived class"));
+}
 
-void ABaseCreepActor::InitAnimations() {}
+void ABaseCreepActor::InitAnimations() 
+{
+    check(0);
+    UE_LOG(LogBaseCreepActor, Error, TEXT("Need override this function on derrived class"));
+}

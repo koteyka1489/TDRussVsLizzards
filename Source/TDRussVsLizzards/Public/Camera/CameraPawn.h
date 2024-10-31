@@ -99,5 +99,4 @@ private:
     void MoveCameraByMouse();
     void CreateSelectionBox();
 
-    
 };

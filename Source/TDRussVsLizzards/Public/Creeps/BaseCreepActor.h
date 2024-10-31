@@ -37,16 +37,16 @@ public:
 
 protected:
     UPROPERTY()
-    UCapsuleComponent* CapsuleComponent;
+    TObjectPtr<UCapsuleComponent> CapsuleComponent;
 
     UPROPERTY()
     TObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
 
     UPROPERTY()
-    UHealthComponent* HealthComponent;
+    TObjectPtr<UHealthComponent> HealthComponent;
 
     UPROPERTY()
-    UStaticMeshComponent* StaticMeshComponent;
+    TObjectPtr<UStaticMeshComponent> StaticMeshComponent;
 
     UPROPERTY()
     TObjectPtr<UAnimSequence> CreepIdleAnimation;

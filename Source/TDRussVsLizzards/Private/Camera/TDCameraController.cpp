@@ -200,7 +200,6 @@ FHitResult ATDCameraController::GetClickHit()
     if (!bHitSuccessful)
     {
         UE_LOG(LogCameraController, Error, TEXT("Trace no Hit on Click"));
-        checkNoEntry();
     }
     return Hit;
 }
