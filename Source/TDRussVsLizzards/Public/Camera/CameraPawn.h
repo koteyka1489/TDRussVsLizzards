@@ -27,13 +27,13 @@ protected:
     virtual void BeginPlay() override;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-    USceneComponent* SceneComponent;
+    TObjectPtr<USceneComponent> SceneComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-    USpringArmComponent* SpringArmComponent;
+    TObjectPtr<USpringArmComponent> SpringArmComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-    UCameraComponent* CameraComponent;
+    TObjectPtr<UCameraComponent> CameraComponent;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
     double ZoomStart = 4000.0;
@@ -70,6 +70,14 @@ protected:
 
 private:
     TObjectPtr<ATDCameraController> CameraController;
+    TArray<TObjectPtr<ABaseSquadCreeps>> SquadsOnLevel;
+    TArray<TObjectPtr<ABaseSquadCreeps>> ChoisenSquads;
+    bool bMultiplySelectSquadByClick       = false;
+    bool bMultiplySelectSquadBySelectedBox = false;
+
+    TObjectPtr<ASelectionBox> SelectionBox;
+    FVector SelectionBoxStartLocation;
+    bool bBoxIsSpawned = false;
 
     void OnZoomChanged(float Direction);
     void OnMoveCameraUpDown(float Direction);
@@ -77,7 +85,7 @@ private:
     void OnRotateCamera(float Direction);
     void OnChangeAngleCamera(float Direction);
     void OnLeftMouseClickChois(FHitResult Hit);
-    void OnRightMouseClickChois(FHitResult Hit);
+    void OnRightMouseClick(FHitResult Hit);
     void OnSquadIsChoisen(ABaseSquadCreeps* SquadIn);
     void OnSquadIsUnChoisen(ABaseSquadCreeps* SquadIn);
     void OnMultiplySelectSquad(bool Value);
@@ -91,13 +99,5 @@ private:
     void MoveCameraByMouse();
     void CreateSelectionBox();
 
-    TArray<TObjectPtr<ABaseSquadCreeps>> SquadsOnLevel;
-    TArray<TObjectPtr<ABaseSquadCreeps>> ChoisenSquads;
-    bool bMultiplySelectSquadByClick = false;
-    bool bMultiplySelectSquadBySelectedBox = false;
-
-
-    TObjectPtr<ASelectionBox> SelectionBox;
-    FVector SelectionBoxStartLocation;
-    bool bBoxIsSpawned = false;
+    
 };

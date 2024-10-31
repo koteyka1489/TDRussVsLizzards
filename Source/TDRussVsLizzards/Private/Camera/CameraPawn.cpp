@@ -17,13 +17,12 @@ ACameraPawn::ACameraPawn()
     SceneComponent = CreateDefaultSubobject<USceneComponent>("SceneComponent");
     SetRootComponent(SceneComponent);
 
-    SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>("SpringArmComponent");
+    SpringArmComponent                  = CreateDefaultSubobject<USpringArmComponent>("SpringArmComponent");
+    SpringArmComponent->TargetArmLength = ZoomStart;
     SpringArmComponent->SetupAttachment(GetRootComponent());
 
     CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
     CameraComponent->SetupAttachment(SpringArmComponent);
-
-    SpringArmComponent->TargetArmLength = ZoomStart;
 }
 
 void ACameraPawn::BeginPlay()
@@ -38,7 +37,7 @@ void ACameraPawn::BeginPlay()
         CameraController->OnMoveCameraRightLeft.BindUObject(this, &ACameraPawn::OnMoveCameraRightLeft);
         CameraController->OnRotateCamera.BindUObject(this, &ACameraPawn::OnRotateCamera);
         CameraController->OnLeftMouseClickChois.BindUObject(this, &ACameraPawn::OnLeftMouseClickChois);
-        CameraController->OnRightMouseClickChois.BindUObject(this, &ACameraPawn::OnRightMouseClickChois);
+        CameraController->OnRightMouseClickChois.BindUObject(this, &ACameraPawn::OnRightMouseClick);
         CameraController->OnChangeAngleCamera.BindUObject(this, &ACameraPawn::OnChangeAngleCamera);
         CameraController->OnMultiplySelectSquad.BindUObject(this, &ACameraPawn::OnMultiplySelectSquad);
         CameraController->OnLeftMouseHold.BindUObject(this, &ACameraPawn::OnLeftMouseHold);
@@ -124,7 +123,7 @@ void ACameraPawn::OnLeftMouseClickChois(FHitResult Hit)
     }
 }
 
-void ACameraPawn::OnRightMouseClickChois(FHitResult Hit)
+void ACameraPawn::OnRightMouseClick(FHitResult Hit)
 {
     if (ChoisenSquads.Num() == 0) return;
 
@@ -138,7 +137,6 @@ void ACameraPawn::OnSquadIsChoisen(ABaseSquadCreeps* SquadIn)
 {
     if (bMultiplySelectSquadByClick || bMultiplySelectSquadBySelectedBox)
     {
-        
         for (auto& Squad : ChoisenSquads)
         {
             if (Squad.Get() == SquadIn) return;
@@ -152,7 +150,7 @@ void ACameraPawn::OnSquadIsChoisen(ABaseSquadCreeps* SquadIn)
     }
 }
 
-void ACameraPawn::OnSquadIsUnChoisen(ABaseSquadCreeps* SquadIn) 
+void ACameraPawn::OnSquadIsUnChoisen(ABaseSquadCreeps* SquadIn)
 {
     ChoisenSquads.Remove(SquadIn);
 }
@@ -167,7 +165,7 @@ void ACameraPawn::OnLeftMouseHold()
     if (!bBoxIsSpawned)
     {
         CreateSelectionBox();
-        bBoxIsSpawned = true;
+        bBoxIsSpawned                     = true;
         bMultiplySelectSquadBySelectedBox = true;
     }
 }
@@ -177,13 +175,13 @@ void ACameraPawn::OnLeftMouseHoldCompleted()
     if (bBoxIsSpawned)
     {
         SelectionBox->SelectionComplete();
-        SelectionBox  = nullptr;
-        bBoxIsSpawned = false;
+        SelectionBox                      = nullptr;
+        bBoxIsSpawned                     = false;
         bMultiplySelectSquadBySelectedBox = false;
     }
 }
 
-void ACameraPawn::OnStopSquad() 
+void ACameraPawn::OnStopSquad()
 {
     if (ChoisenSquads.Num() == 0) return;
 
