@@ -55,6 +55,7 @@ ABaseCreepActor::ABaseCreepActor()
     SkeletalMeshComponent->bVisibleInReflectionCaptures       = false;
     SkeletalMeshComponent->bEnablePhysicsOnDedicatedServer    = false;
     SkeletalMeshComponent->VisibilityBasedAnimTickOption      = EVisibilityBasedAnimTickOption::OnlyTickPoseWhenRendered;
+    
 
     // Budgeted Skeletal Mesh prop
     SkeletalMeshComponent->SetAutoRegisterWithBudgetAllocator(true);
