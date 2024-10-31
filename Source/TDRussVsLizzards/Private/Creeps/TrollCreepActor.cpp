@@ -3,6 +3,7 @@
 #include "Creeps/TrollCreepActor.h"
 #include "Components/WeaponComponent.h"
 #include "Weapon/CudgelWeapon.h"
+#include "SkeletalMeshComponentBudgeted.h"
 
 ATrollCreepActor::ATrollCreepActor()
 {

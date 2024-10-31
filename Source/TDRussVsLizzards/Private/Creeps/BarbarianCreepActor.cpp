@@ -3,6 +3,7 @@
 #include "Creeps/BarbarianCreepActor.h"
 #include "Components/WeaponComponent.h"
 #include "Weapon/AxelWeapon.h"
+#include "SkeletalMeshComponentBudgeted.h"
 
 ABarbarianCreepActor::ABarbarianCreepActor()
 {

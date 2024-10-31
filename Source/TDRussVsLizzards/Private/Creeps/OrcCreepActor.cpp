@@ -3,6 +3,7 @@
 #include "Creeps/OrcCreepActor.h"
 #include "Components/WeaponComponent.h"
 #include "Weapon/HummerWeapon.h"
+#include "SkeletalMeshComponentBudgeted.h"
 
 AOrcCreepActor::AOrcCreepActor()
 {

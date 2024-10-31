@@ -9,6 +9,8 @@
 #include "DrawDebugHelpers.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "SkeletalMeshComponentBudgeted.h"
+
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseCreepActor, All, All);
 
@@ -20,7 +22,7 @@ ABaseCreepActor::ABaseCreepActor()
     CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>("CapsuleComponent");
     SetRootComponent(CapsuleComponent);
 
-    SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>("SkeletalMeshComponent");
+    SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponentBudgeted>("SkeletalMeshComponent");
     SkeletalMeshComponent->SetupAttachment(GetRootComponent());
 
     StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponent");
@@ -54,6 +56,11 @@ ABaseCreepActor::ABaseCreepActor()
     SkeletalMeshComponent->bEnablePhysicsOnDedicatedServer    = false;
     SkeletalMeshComponent->VisibilityBasedAnimTickOption      = EVisibilityBasedAnimTickOption::OnlyTickPoseWhenRendered;
 
+    // Budgeted Skeletal Mesh prop
+    SkeletalMeshComponent->SetAutoRegisterWithBudgetAllocator(true);
+    SkeletalMeshComponent->SetAutoCalculateSignificance(true);
+    
+
     check(IsValid(StaticMeshComponent));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> SelectCircleMesh(
         TEXT("/Script/Engine.StaticMesh'/Game/Squads/SM_SelectCircle.SM_SelectCircle'"));
@@ -73,6 +80,7 @@ void ABaseCreepActor::BeginPlay()
     check(IsValid(HealthComponent));
 
     PlayAnimationIdle();
+    
 }
 
 void ABaseCreepActor::SetCreepIsClicked()

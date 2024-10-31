@@ -3,6 +3,8 @@
 #include "Components/WeaponComponent.h"
 #include "Weapon/BaseWeapon.h"
 #include "Creeps/BaseCreepActor.h"
+#include "SkeletalMeshComponentBudgeted.h"
+
 
 UWeaponComponent::UWeaponComponent()
 {

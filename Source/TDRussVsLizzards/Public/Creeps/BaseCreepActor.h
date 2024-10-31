@@ -14,6 +14,7 @@ class UCapsuleComponent;
 class UWeaponComponent;
 class UStaticMeshComponent;
 class UAnimMontage;
+class USkeletalMeshComponentBudgeted;
 
 UCLASS(Abstract)
 class TDRUSSVSLIZZARDS_API ABaseCreepActor : public AActor
@@ -24,7 +25,7 @@ public:
     ABaseCreepActor();
     virtual void BeginPlay() override;
 
-    TObjectPtr<USkeletalMeshComponent> GetSkeletalMeshComponent() { return SkeletalMeshComponent; }
+    TObjectPtr<USkeletalMeshComponentBudgeted> GetSkeletalMeshComponent() { return SkeletalMeshComponent; }
 
     void SetCreepIsClicked();
     void SetCreepIsChoisen(bool ChoisenStatus);
@@ -39,8 +40,12 @@ protected:
     UPROPERTY()
     TObjectPtr<UCapsuleComponent> CapsuleComponent;
 
+   /* UPROPERTY()
+    TObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;*/
+
     UPROPERTY()
-    TObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
+    TObjectPtr<USkeletalMeshComponentBudgeted> SkeletalMeshComponent;
+
 
     UPROPERTY()
     TObjectPtr<UHealthComponent> HealthComponent;
