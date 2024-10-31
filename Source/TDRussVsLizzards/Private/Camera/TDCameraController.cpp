@@ -215,7 +215,8 @@ FVector ATDCameraController::GetMouseLocationOnTerrain()
     bHitSuccessful = DeprojectMousePositionToWorld(MouseWorldLocation, MouseWorldDirection);
     if (bHitSuccessful)
     {
-        FVector TraceEnd = MouseWorldLocation + MouseWorldDirection * 100000;
+        const float TraceDistance = 1000000.f;
+        FVector TraceEnd          = MouseWorldLocation + MouseWorldDirection * TraceDistance;
 
         bHitSuccessful = GetWorld()->LineTraceSingleByChannel(Hit, MouseWorldLocation, TraceEnd, ECollisionChannel::ECC_GameTraceChannel1);
 
