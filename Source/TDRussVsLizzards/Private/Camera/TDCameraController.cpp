@@ -57,10 +57,7 @@ void ATDCameraController::SetupInputComponent()
 
 void ATDCameraController::MoveCameraUpDown(const FInputActionValue& Value)
 {
-    if (OnMoveCameraUpDown.ExecuteIfBound(Value.Get<float>()))
-    {
-    }
-    else
+    if (!OnMoveCameraUpDown.ExecuteIfBound(Value.Get<float>()))
     {
         UE_LOG(LogCameraController, Error, TEXT("OnMoveCameraUpDown Delegate is not bound"));
         checkNoEntry();
@@ -69,10 +66,7 @@ void ATDCameraController::MoveCameraUpDown(const FInputActionValue& Value)
 
 void ATDCameraController::MoveCameraRightLeft(const FInputActionValue& Value)
 {
-    if (OnMoveCameraRightLeft.ExecuteIfBound(Value.Get<float>()))
-    {
-    }
-    else
+    if (!OnMoveCameraRightLeft.ExecuteIfBound(Value.Get<float>()))
     {
         UE_LOG(LogCameraController, Error, TEXT("OnMoveCameraRightLeft Delegate is not bound"));
         checkNoEntry();
@@ -81,10 +75,7 @@ void ATDCameraController::MoveCameraRightLeft(const FInputActionValue& Value)
 
 void ATDCameraController::ZoomUpAction(const FInputActionValue& Value)
 {
-    if (OnZoomChanged.ExecuteIfBound(Value.Get<float>()))
-    {
-    }
-    else
+    if (!OnZoomChanged.ExecuteIfBound(Value.Get<float>()))
     {
         UE_LOG(LogCameraController, Error, TEXT("OnZoomChanged Delegate is not bound"));
         checkNoEntry();
@@ -93,10 +84,7 @@ void ATDCameraController::ZoomUpAction(const FInputActionValue& Value)
 
 void ATDCameraController::RotateCamera(const FInputActionValue& Value)
 {
-    if (OnRotateCamera.ExecuteIfBound(Value.Get<float>()))
-    {
-    }
-    else
+    if (!OnRotateCamera.ExecuteIfBound(Value.Get<float>()))
     {
         UE_LOG(LogCameraController, Error, TEXT("OnRotateCamera Delegate is not bound"));
         checkNoEntry();
@@ -105,10 +93,7 @@ void ATDCameraController::RotateCamera(const FInputActionValue& Value)
 
 void ATDCameraController::ChangeAngleCamera(const FInputActionValue& Value)
 {
-    if (OnChangeAngleCamera.ExecuteIfBound(Value.Get<float>()))
-    {
-    }
-    else
+    if (!OnChangeAngleCamera.ExecuteIfBound(Value.Get<float>()))
     {
         UE_LOG(LogCameraController, Error, TEXT("OnChangeAngleCamera Delegate is not bound"));
         checkNoEntry();
@@ -117,10 +102,7 @@ void ATDCameraController::ChangeAngleCamera(const FInputActionValue& Value)
 
 void ATDCameraController::SetLeftClickChois()
 {
-    if (OnLeftMouseClickChois.ExecuteIfBound(GetClickHit()))
-    {
-    }
-    else
+    if (!OnLeftMouseClickChois.ExecuteIfBound(GetClickHit()))
     {
         UE_LOG(LogCameraController, Error, TEXT("OnLeftMouseClickChois Delegate is not bound"));
         checkNoEntry();
@@ -129,10 +111,7 @@ void ATDCameraController::SetLeftClickChois()
 
 void ATDCameraController::SetRightClickChois()
 {
-    if (OnRightMouseClickChois.ExecuteIfBound(GetClickHit()))
-    {
-    }
-    else
+    if (!OnRightMouseClickChois.ExecuteIfBound(GetClickHit()))
     {
         UE_LOG(LogCameraController, Error, TEXT("OnRightMouseClickChois Delegate is not bound"));
         checkNoEntry();
@@ -141,10 +120,7 @@ void ATDCameraController::SetRightClickChois()
 
 void ATDCameraController::MultiplySelectSquadsOn()
 {
-    if (OnMultiplySelectSquad.ExecuteIfBound(true))
-    {
-    }
-    else
+    if (!OnMultiplySelectSquad.ExecuteIfBound(true))
     {
         UE_LOG(LogCameraController, Error, TEXT("OnMultiplySelectSquad Delegate is not bound"));
         checkNoEntry();
@@ -153,10 +129,7 @@ void ATDCameraController::MultiplySelectSquadsOn()
 
 void ATDCameraController::MultiplySelectSquadsOff()
 {
-    if (OnMultiplySelectSquad.ExecuteIfBound(false))
-    {
-    }
-    else
+    if (!OnMultiplySelectSquad.ExecuteIfBound(false))
     {
         UE_LOG(LogCameraController, Error, TEXT("OnMultiplySelectSquad Delegate is not bound"));
         checkNoEntry();
@@ -200,10 +173,7 @@ void ATDCameraController::LeftClickCompleted()
 
 void ATDCameraController::StopSquad()
 {
-    if (OnStopSquad.ExecuteIfBound())
-    {
-    }
-    else
+    if (!OnStopSquad.ExecuteIfBound())
     {
         UE_LOG(LogCameraController, Error, TEXT("OnStopSquad Delegate is not bound"));
         checkNoEntry();
@@ -212,25 +182,26 @@ void ATDCameraController::StopSquad()
 
 FHitResult ATDCameraController::GetClickHit()
 {
-    FHitResult Hit;
+    FHitResult Hit{};
     bool bHitSuccessful = false;
     FVector MouseWorldLocation{};
     FVector MouseWorldDirection{};
 
     bHitSuccessful = DeprojectMousePositionToWorld(MouseWorldLocation, MouseWorldDirection);
-    if (bHitSuccessful)
+    if (!bHitSuccessful)
     {
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("Unable to determine value Mouse Click"));
+        UE_LOG(LogCameraController, Error, TEXT("Unable to determine value Mouse Click"));
         checkNoEntry();
     }
 
     FVector TraceEnd = MouseWorldLocation + MouseWorldDirection * 100000;
 
     bHitSuccessful = GetWorld()->LineTraceSingleByChannel(Hit, MouseWorldLocation, TraceEnd, ECollisionChannel::ECC_Visibility);
-
+    if (!bHitSuccessful)
+    {
+        UE_LOG(LogCameraController, Error, TEXT("Trace no Hit on Click"));
+        checkNoEntry();
+    }
     return Hit;
 }
 
