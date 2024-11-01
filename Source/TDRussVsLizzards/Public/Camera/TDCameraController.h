@@ -31,14 +31,17 @@ public:
     ATDCameraController();
     FVector GetMouseLocationOnTerrain();
 
-    // Delegates
+    // Delegates camera pawn
     FOnZoomChanged OnZoomChanged;
     FOnMoveCameraUpDown OnMoveCameraUpDown;
     FOnMoveCameraRightLeft OnMoveCameraRightLeft;
     FOnRotateCamera OnRotateCamera;
+    FOnChangeAngleCamera OnChangeAngleCamera;
+
+
+    // Delegates Player TO DO Class
     FOnLeftMouseClickChois OnLeftMouseClickChois;
     FOnRightMouseClickChois OnRightMouseClickChois;
-    FOnChangeAngleCamera OnChangeAngleCamera;
     FOnMultiplySelectSquad OnMultiplySelectSquad;
     FOnLeftMouseHold OnLeftMouseHold;
     FOnLeftMouseHoldCompleted OnLeftMouseHoldCompleted;
