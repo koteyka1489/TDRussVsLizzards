@@ -6,7 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "BaseSquadCreeps.generated.h"
 
-DECLARE_DELEGATE_OneParam(FOnSquadIsChoisen, ABaseSquadCreeps*);
 DECLARE_DELEGATE_OneParam(FOnSquadIsUnChoisen, ABaseSquadCreeps*);
 
 class ABaseCreepActor;
@@ -46,14 +45,14 @@ public:
 
     void MoveAndRotatingSquadToLocation(FVector Destination);
 
-    void OnCreepIsClicked();
+    void SetSquadIsChoisen();
 
     UActorMovementComponent* GetSquadMovementComponent() { return MovementComponent; }
 
     TArray<TObjectPtr<ABaseCreepActor>>* GetCreeps() { return &Creeps; }
     FVector GetRightCornerCreepLocation();
     FVector GetLeftCornerCreepLocation();
-    FOnSquadIsChoisen OnSquadIsChoisen;
+
     FOnSquadIsUnChoisen OnSquadIsUnChoisen;
 
 protected:
@@ -86,16 +85,12 @@ private:
     bool bCurrentSquadTaskIsExecute             = false;
     bool bSquadIsChosen                         = false;
 
-
-
-
     void UpdateSquadLocationStart();
     void SetBoxExtendBySquadSize();
 
     void SpawnCreepsN();
     FSquadSizes CalculateCurrentSquadSizes();
 
-    void BindOnCreepIsClickedtDelegate();
 
     void OnMovingComplete();
     void OnRotatingCreepsComplete();

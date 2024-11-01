@@ -79,6 +79,7 @@ private:
     FVector SelectionBoxStartLocation;
     bool bBoxIsSpawned = false;
 
+    void AddSquadToChoisenSquadsArray(ABaseSquadCreeps* SquadIn);
     void OnZoomChanged(float Direction);
     void OnMoveCameraUpDown(float Direction);
     void OnMoveCameraRightLeft(float Direction);
@@ -86,7 +87,7 @@ private:
     void OnChangeAngleCamera(float Direction);
     void OnLeftMouseClickChois(FHitResult Hit);
     void OnRightMouseClick(FHitResult Hit);
-    void OnSquadIsChoisen(ABaseSquadCreeps* SquadIn);
+    
     void OnSquadIsUnChoisen(ABaseSquadCreeps* SquadIn);
     void OnMultiplySelectSquad(bool Value);
     void OnLeftMouseHold();

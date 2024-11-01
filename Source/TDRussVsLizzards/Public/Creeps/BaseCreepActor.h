@@ -6,7 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "BaseCreepActor.generated.h"
 
-DECLARE_DELEGATE(FOnCreepIsClicked);
 
 class UHealthComponent;
 class USkeletalMeshComponent;
@@ -15,6 +14,7 @@ class UWeaponComponent;
 class UStaticMeshComponent;
 class UAnimMontage;
 class USkeletalMeshComponentBudgeted;
+class USceneComponent;
 
 UCLASS(Abstract)
 class TDRUSSVSLIZZARDS_API ABaseCreepActor : public AActor
@@ -34,18 +34,13 @@ public:
     void PlayAnimationWalk();
     void PlayAnimationRun();
 
-    FOnCreepIsClicked OnCreepIsClicked;
 
 protected:
     UPROPERTY()
-    TObjectPtr<UCapsuleComponent> CapsuleComponent;
-
-   /* UPROPERTY()
-    TObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;*/
+    TObjectPtr<USceneComponent> SceneComponent;
 
     UPROPERTY()
     TObjectPtr<USkeletalMeshComponentBudgeted> SkeletalMeshComponent;
-
 
     UPROPERTY()
     TObjectPtr<UHealthComponent> HealthComponent;

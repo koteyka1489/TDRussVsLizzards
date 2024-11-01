@@ -110,8 +110,8 @@ void ASelectionBox::UpdateSelectingChoisedSquad()
 {
     if (SelectedSquads.Num() == 0) return;
 
-    for (auto& SelectedSquad : SelectedSquads)
-    {
-        SelectedSquad->OnCreepIsClicked();
-    }
+    //for (auto& SelectedSquad : SelectedSquads)
+    //{
+    //    SelectedSquad->OnCreepIsClicked();
+    //}
 }

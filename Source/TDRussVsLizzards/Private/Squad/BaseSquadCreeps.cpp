@@ -25,7 +25,8 @@ ABaseSquadCreeps::ABaseSquadCreeps()
     SquadSizesBox = CreateDefaultSubobject<UBoxComponent>("BoxComponent");
     SquadSizesBox->SetBoxExtent(FVector(1.0, 1.0, 1.0));
     SquadSizesBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-    SquadSizesBox->SetCollisionResponseToAllChannels(ECR_Overlap);
+    SquadSizesBox->SetCollisionResponseToAllChannels(ECR_Ignore);
+    SquadSizesBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
     SquadSizesBox->SetVisibility(true);
     SquadSizesBox->bHiddenInGame = false;
     SquadSizesBox->SetupAttachment(GetRootComponent());
@@ -43,7 +44,6 @@ void ABaseSquadCreeps::BeginPlay()
     UpdateSquadLocationStart();
     SetBoxExtendBySquadSize();
 
-    BindOnCreepIsClickedtDelegate();
     MovementComponent->OnMovingComplete.BindUObject(this, &ABaseSquadCreeps::OnMovingComplete);
     MovementComponent->OnRotatingCreepsComplete.BindUObject(this, &ABaseSquadCreeps::OnRotatingCreepsComplete);
     MovementComponent->OnRotatingFrontSquadComplete.BindUObject(this, &ABaseSquadCreeps::OnRotatingFrontSquadComplete);
@@ -138,36 +138,12 @@ FSquadSizes ABaseSquadCreeps::CalculateCurrentSquadSizes()
     return Result;
 }
 
-void ABaseSquadCreeps::BindOnCreepIsClickedtDelegate()
-{
 
-    if (!Creeps.IsEmpty())
-    {
-        for (auto& Creep : Creeps)
-        {
-            Creep->OnCreepIsClicked.BindUObject(this, &ABaseSquadCreeps::OnCreepIsClicked);
-        }
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("Creeps array is empty"));
-        checkNoEntry();
-    }
-}
-
-void ABaseSquadCreeps::OnCreepIsClicked()
+void ABaseSquadCreeps::SetSquadIsChoisen()
 {
     if (bSquadIsChosen) return;
 
     bSquadIsChosen = true;
-    if (OnSquadIsChoisen.ExecuteIfBound(this))
-    {
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("OnSquadIsChoisen Is not bound"));
-        checkNoEntry();
-    }
 
     for (auto& Creep : Creeps)
     {

@@ -10,17 +10,16 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "SkeletalMeshComponentBudgeted.h"
-
+#include "Components/SceneComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseCreepActor, All, All);
-
 
 ABaseCreepActor::ABaseCreepActor()
 {
     PrimaryActorTick.bCanEverTick = false;
 
-    CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>("CapsuleComponent");
-    SetRootComponent(CapsuleComponent);
+    SceneComponent = CreateDefaultSubobject<USceneComponent>("SceneComponent");
+    SetRootComponent(SceneComponent);
 
     SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponentBudgeted>("SkeletalMeshComponent");
     SkeletalMeshComponent->SetupAttachment(GetRootComponent());
@@ -29,13 +28,6 @@ ABaseCreepActor::ABaseCreepActor()
     StaticMeshComponent->SetupAttachment(GetRootComponent());
 
     HealthComponent = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
-
-    check(IsValid(CapsuleComponent));
-    CapsuleComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
-    CapsuleComponent->SetCapsuleHalfHeight(120.0f);
-    CapsuleComponent->SetCapsuleRadius(80.0f);
-    CapsuleComponent->SetVisibility(true);
-
 
     check(IsValid(SkeletalMeshComponent));
     SkeletalMeshComponent->SetRelativeLocation(FVector(0.0, 0.0, -90.0));
@@ -55,12 +47,10 @@ ABaseCreepActor::ABaseCreepActor()
     SkeletalMeshComponent->bVisibleInReflectionCaptures       = false;
     SkeletalMeshComponent->bEnablePhysicsOnDedicatedServer    = false;
     SkeletalMeshComponent->VisibilityBasedAnimTickOption      = EVisibilityBasedAnimTickOption::OnlyTickPoseWhenRendered;
-    
 
     // Budgeted Skeletal Mesh prop
     SkeletalMeshComponent->SetAutoRegisterWithBudgetAllocator(true);
     SkeletalMeshComponent->SetAutoCalculateSignificance(true);
-    
 
     check(IsValid(StaticMeshComponent));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> SelectCircleMesh(
@@ -76,22 +66,10 @@ ABaseCreepActor::ABaseCreepActor()
 void ABaseCreepActor::BeginPlay()
 {
     Super::BeginPlay();
-    check(IsValid(CapsuleComponent));
-    check(IsValid(SkeletalMeshComponent));
-    check(IsValid(HealthComponent));
 
     PlayAnimationIdle();
-    
 }
 
-void ABaseCreepActor::SetCreepIsClicked()
-{
-    if (!OnCreepIsClicked.ExecuteIfBound())
-    {
-        UE_LOG(LogBaseCreepActor, Error, TEXT("OnCreepIsClicked not bound"));
-        checkNoEntry();
-    }
-}
 
 void ABaseCreepActor::SetCreepIsChoisen(bool ChoisenStatus)
 {
@@ -114,13 +92,13 @@ void ABaseCreepActor::PlayAnimationRun()
     SkeletalMeshComponent->PlayAnimation(CreepRunAnimation, true);
 }
 
-void ABaseCreepActor::InitSkeletalMesh() 
+void ABaseCreepActor::InitSkeletalMesh()
 {
     check(0);
     UE_LOG(LogBaseCreepActor, Error, TEXT("Need override this function on derrived class"));
 }
 
-void ABaseCreepActor::InitAnimations() 
+void ABaseCreepActor::InitAnimations()
 {
     check(0);
     UE_LOG(LogBaseCreepActor, Error, TEXT("Need override this function on derrived class"));

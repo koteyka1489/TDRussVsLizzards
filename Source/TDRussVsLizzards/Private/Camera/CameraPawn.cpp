@@ -5,10 +5,10 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/TDCameraController.h"
 #include "Kismet/GameplayStatics.h"
-#include "Creeps/BaseCreepActor.h"
 #include "Squad/BaseSquadCreeps.h"
 #include "Kismet/GameplayStatics.h"
 #include "Camera/SelectionBox.h"
+#include "Components/BoxComponent.h"
 
 ACameraPawn::ACameraPawn()
 {
@@ -112,19 +112,28 @@ void ACameraPawn::OnChangeAngleCamera(float Direction)
 
 void ACameraPawn::OnLeftMouseClickChois(FHitResult Hit)
 {
-    auto Creep = Cast<ABaseCreepActor>(Hit.GetActor());
-    if (IsValid(Creep))
-    {
-        Creep->SetCreepIsClicked();
-    }
-    else
+    auto Box = Cast<UBoxComponent>(Hit.GetComponent());
+    if (!Box)
     {
         UnchoiseCurrentSquad();
+        return;
     }
+
+    auto Squad = Cast<ABaseSquadCreeps>(Box->GetOwner());
+
+    if (!Squad)
+    {
+        UnchoiseCurrentSquad();
+        return;
+    }
+
+    Squad->SetSquadIsChoisen();
+    AddSquadToChoisenSquadsArray(Squad);
 }
 
 void ACameraPawn::OnRightMouseClick(FHitResult Hit)
 {
+    
     if (ChoisenSquads.Num() == 0) return;
 
     for (auto& Squad : ChoisenSquads)
@@ -133,7 +142,7 @@ void ACameraPawn::OnRightMouseClick(FHitResult Hit)
     }
 }
 
-void ACameraPawn::OnSquadIsChoisen(ABaseSquadCreeps* SquadIn)
+void ACameraPawn::AddSquadToChoisenSquadsArray(ABaseSquadCreeps* SquadIn)
 {
     if (bMultiplySelectSquadByClick || bMultiplySelectSquadBySelectedBox)
     {
@@ -214,25 +223,20 @@ void ACameraPawn::BindOnSquadIsChoisenDelegate()
 
     for (auto& Squad : SquadsOnLevel)
     {
-        Squad->OnSquadIsChoisen.BindUObject(this, &ACameraPawn::OnSquadIsChoisen);
+
         Squad->OnSquadIsUnChoisen.BindUObject(this, &ACameraPawn::OnSquadIsUnChoisen);
     }
 }
 
 void ACameraPawn::UnchoiseCurrentSquad()
 {
-    if (ChoisenSquads.Num() == 0)
+    if (ChoisenSquads.Num() == 0) return;
+
+    for (auto& Squad : ChoisenSquads)
     {
-        return;
+        Squad->SquadUnChoisen();
     }
-    else
-    {
-        for (auto& Squad : ChoisenSquads)
-        {
-            Squad->SquadUnChoisen();
-        }
-        ChoisenSquads.Empty(20);
-    }
+    ChoisenSquads.Empty(20);
 }
 
 void ACameraPawn::MoveCameraByMouse()
