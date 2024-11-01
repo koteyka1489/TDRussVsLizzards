@@ -66,6 +66,12 @@ void ACameraPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
     Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+void ACameraPawn::SetSquadIsChoisen(TObjectPtr<ABaseSquadCreeps> ChoisenSquad) 
+{
+    ChoisenSquad->SetSquadIsChoisen();
+    AddSquadToChoisenSquadsArray(ChoisenSquad);
+}
+
 void ACameraPawn::OnZoomChanged(float Direction)
 {
     float DeltaTime                     = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
@@ -127,8 +133,7 @@ void ACameraPawn::OnLeftMouseClickChois(FHitResult Hit)
         return;
     }
 
-    Squad->SetSquadIsChoisen();
-    AddSquadToChoisenSquadsArray(Squad);
+    SetSquadIsChoisen(Squad);
 }
 
 void ACameraPawn::OnRightMouseClick(FHitResult Hit)
@@ -161,7 +166,7 @@ void ACameraPawn::AddSquadToChoisenSquadsArray(ABaseSquadCreeps* SquadIn)
 
 void ACameraPawn::OnSquadIsUnChoisen(ABaseSquadCreeps* SquadIn)
 {
-    ChoisenSquads.Remove(SquadIn);
+    ChoisenSquads.RemoveSingle(SquadIn);
 }
 
 void ACameraPawn::OnMultiplySelectSquad(bool Value)
@@ -223,8 +228,7 @@ void ACameraPawn::BindOnSquadIsChoisenDelegate()
 
     for (auto& Squad : SquadsOnLevel)
     {
-
-        Squad->OnSquadIsUnChoisen.BindUObject(this, &ACameraPawn::OnSquadIsUnChoisen);
+        Squad->OnSquadIsUnChoisenBySelectionBox.BindUObject(this, &ACameraPawn::OnSquadIsUnChoisen);
     }
 }
 

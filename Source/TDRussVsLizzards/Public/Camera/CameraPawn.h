@@ -23,6 +23,8 @@ public:
     virtual void Tick(float DeltaTime) override;
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+    void SetSquadIsChoisen(TObjectPtr<ABaseSquadCreeps> ChoisenSquad);
+
 protected:
     virtual void BeginPlay() override;
 

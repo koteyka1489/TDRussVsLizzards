@@ -12,7 +12,9 @@ ABaseWeapon::ABaseWeapon()
 
 
     check(IsValid(WeaponStaticMesh));
-    WeaponStaticMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Ignore);
+    WeaponStaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    WeaponStaticMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+    WeaponStaticMesh->SetGenerateOverlapEvents(false);
     WeaponStaticMesh->SetVisibility(true, true);
     WeaponStaticMesh->SetSimulatePhysics(false);
     WeaponStaticMesh->CastShadow                   = 0u;

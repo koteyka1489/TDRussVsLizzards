@@ -14,6 +14,8 @@
 #include "Squad/Task/RotateFrontSquadTask.h"
 #include "Squad/Task/SquadBaseTask.h"
 #include "Components/ActorMovementComponent.h"
+#include "Camera/CameraPawn.h"
+#include "Kismet/GameplayStatics.h"
 
 ABaseSquadCreeps::ABaseSquadCreeps()
 {
@@ -25,7 +27,7 @@ ABaseSquadCreeps::ABaseSquadCreeps()
     SquadSizesBox = CreateDefaultSubobject<UBoxComponent>("BoxComponent");
     SquadSizesBox->SetBoxExtent(FVector(1.0, 1.0, 1.0));
     SquadSizesBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-    SquadSizesBox->SetCollisionResponseToAllChannels(ECR_Ignore);
+    SquadSizesBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
     SquadSizesBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
     SquadSizesBox->SetVisibility(true);
     SquadSizesBox->bHiddenInGame = false;
@@ -47,6 +49,12 @@ void ABaseSquadCreeps::BeginPlay()
     MovementComponent->OnMovingComplete.BindUObject(this, &ABaseSquadCreeps::OnMovingComplete);
     MovementComponent->OnRotatingCreepsComplete.BindUObject(this, &ABaseSquadCreeps::OnRotatingCreepsComplete);
     MovementComponent->OnRotatingFrontSquadComplete.BindUObject(this, &ABaseSquadCreeps::OnRotatingFrontSquadComplete);
+
+    auto CameraPawn = Cast<ACameraPawn>(UGameplayStatics::GetActorOfClass(GetWorld(), ACameraPawn::StaticClass()));
+    if (CameraPawn)
+    {
+        SetOwner(CameraPawn);
+    }
 }
 
 void ABaseSquadCreeps::Tick(float DeltaTime)
@@ -138,7 +146,6 @@ FSquadSizes ABaseSquadCreeps::CalculateCurrentSquadSizes()
     return Result;
 }
 
-
 void ABaseSquadCreeps::SetSquadIsChoisen()
 {
     if (bSquadIsChosen) return;
@@ -199,7 +206,7 @@ void ABaseSquadCreeps::SquadUnChoisenBySelectBox()
 
     bSquadIsChosen = false;
 
-    if (OnSquadIsUnChoisen.ExecuteIfBound(this))
+    if (OnSquadIsUnChoisenBySelectionBox.ExecuteIfBound(this))
     {
         for (auto& Creep : Creeps)
         {
@@ -208,7 +215,7 @@ void ABaseSquadCreeps::SquadUnChoisenBySelectBox()
     }
     else
     {
-        UE_LOG(LogTemp, Error, TEXT("OnSquadIsUnChoisen Is not bound"));
+        UE_LOG(LogTemp, Error, TEXT("OnSquadIsUnChoisenBySelectionBox Is not bound"));
         checkNoEntry();
     }
 }

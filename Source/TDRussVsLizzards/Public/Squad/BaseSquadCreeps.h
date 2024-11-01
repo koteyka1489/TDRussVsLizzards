@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "BaseSquadCreeps.generated.h"
 
-DECLARE_DELEGATE_OneParam(FOnSquadIsUnChoisen, ABaseSquadCreeps*);
+DECLARE_DELEGATE_OneParam(FOnSquadIsUnChoisenBySelectionBox, ABaseSquadCreeps*);
 
 class ABaseCreepActor;
 class UBoxComponent;
@@ -53,7 +53,7 @@ public:
     FVector GetRightCornerCreepLocation();
     FVector GetLeftCornerCreepLocation();
 
-    FOnSquadIsUnChoisen OnSquadIsUnChoisen;
+    FOnSquadIsUnChoisenBySelectionBox OnSquadIsUnChoisenBySelectionBox;
 
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")

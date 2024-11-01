@@ -59,6 +59,8 @@ ABaseCreepActor::ABaseCreepActor()
     checkf(SelectCircleMesh.Succeeded(), TEXT("Find SelectCircleMesh is not Succeeded "));
     StaticMeshComponent->SetStaticMesh(SelectCircleMesh.Object);
     StaticMeshComponent->SetVisibility(false);
+    StaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    StaticMeshComponent->SetGenerateOverlapEvents(false);
     StaticMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
     StaticMeshComponent->SetRelativeLocation(FVector(0.0, 0.0, -80.0));
 }

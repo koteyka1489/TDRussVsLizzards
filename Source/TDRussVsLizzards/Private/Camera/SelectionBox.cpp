@@ -4,8 +4,9 @@
 #include "Components/BoxComponent.h"
 #include "Components/DecalComponent.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Creeps/BaseCreepActor.h"
 #include "Squad/BaseSquadCreeps.h"
+#include "Components/BoxComponent.h"
+#include "Camera/CameraPawn.h"
 
 ASelectionBox::ASelectionBox()
 {
@@ -15,7 +16,7 @@ ASelectionBox::ASelectionBox()
     SetRootComponent(BoxCollider);
     BoxCollider->SetBoxExtent(FVector(1.0, 1.0, 1.0));
     BoxCollider->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-    BoxCollider->SetCollisionResponseToAllChannels(ECR_Overlap);
+    BoxCollider->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
     BoxCollider->SetVisibility(false);
     BoxCollider->bHiddenInGame = true;
 
@@ -33,8 +34,7 @@ void ASelectionBox::BeginPlay()
     StartLocation.Z = 0.0;
 
     BoxCollider->OnComponentBeginOverlap.AddDynamic(this, &ASelectionBox::OnBoxColliderBeginOverlap);
-   // BoxCollider->OnComponentEndOverlap.AddDynamic(this, &ASelectionBox::OnBoxColliderEndOverlap);
-    
+    BoxCollider->OnComponentEndOverlap.AddDynamic(this, &ASelectionBox::OnBoxColliderEndOverlap);
 }
 
 void ASelectionBox::Update(FVector MouseLocation)
@@ -52,11 +52,12 @@ void ASelectionBox::SelectionComplete()
 void ASelectionBox::OnBoxColliderBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
     int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-    auto OverlapCreep = Cast<ABaseCreepActor>(OtherActor);
-    if (!IsValid(OverlapCreep)) return;
 
-    auto OverlapSquad = Cast<ABaseSquadCreeps>(OverlapCreep->GetOwner());
-    if (!IsValid(OverlapSquad)) return;
+    auto OverlapBox = Cast<UBoxComponent>(OtherComp);
+    if (!OverlapBox) return;
+
+    auto OverlapSquad = Cast<ABaseSquadCreeps>(OverlapBox->GetOwner());
+    if (!OverlapSquad) return;
 
     if (SelectedSquads.Num() == 0)
     {
@@ -75,20 +76,22 @@ void ASelectionBox::OnBoxColliderBeginOverlap(UPrimitiveComponent* OverlappedCom
     }
 }
 
-//void ASelectionBox::OnBoxColliderEndOverlap(
-//    UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-//{
-//    auto OverlapCreep = Cast<ABaseCreepActor>(OtherActor);
-//    if (!IsValid(OverlapCreep)) return;
-//
-//    auto OverlapSquad = Cast<ABaseSquadCreeps>(OverlapCreep->GetOwner());
-//    if (!IsValid(OverlapSquad)) return;
-//
-//    if (SelectedSquads.Num() == 0) return;
-//
-//    OverlapSquad->SquadUnChoisenBySelectBox();
-//
-//}
+void ASelectionBox::OnBoxColliderEndOverlap(
+    UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+
+    auto OverlapBox = Cast<UBoxComponent>(OtherComp);
+    if (!OverlapBox) return;
+
+    auto OverlapSquad = Cast<ABaseSquadCreeps>(OverlapBox->GetOwner());
+    if (!IsValid(OverlapSquad)) return;
+
+    if (SelectedSquads.Num() == 0) return;
+
+    SelectedSquads.RemoveSingle(OverlapSquad);
+
+    OverlapSquad->SquadUnChoisenBySelectBox();
+}
 
 void ASelectionBox::UpdateBoxSizesAndLocation(FVector MouseLocation)
 {
@@ -110,8 +113,13 @@ void ASelectionBox::UpdateSelectingChoisedSquad()
 {
     if (SelectedSquads.Num() == 0) return;
 
-    //for (auto& SelectedSquad : SelectedSquads)
-    //{
-    //    SelectedSquad->OnCreepIsClicked();
-    //}
+    for (auto& SelectedSquad : SelectedSquads)
+    {
+        auto OwnerCameraPawn = Cast<ACameraPawn>(SelectedSquad->GetOwner());
+
+        if (OwnerCameraPawn)
+        {
+            OwnerCameraPawn->SetSquadIsChoisen(SelectedSquad);
+        }
+    }
 }
