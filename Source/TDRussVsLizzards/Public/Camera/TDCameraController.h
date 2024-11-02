@@ -31,15 +31,14 @@ public:
     ATDCameraController();
     FVector GetMouseLocationOnTerrain();
 
-    // Delegates camera pawn
+    // Delegates Camera Pawn
     FOnZoomChanged OnZoomChanged;
     FOnMoveCameraUpDown OnMoveCameraUpDown;
     FOnMoveCameraRightLeft OnMoveCameraRightLeft;
     FOnRotateCamera OnRotateCamera;
     FOnChangeAngleCamera OnChangeAngleCamera;
 
-
-    // Delegates Player TO DO Class
+    // Delegates Team Controller
     FOnLeftMouseClickChois OnLeftMouseClickChois;
     FOnRightMouseClickChois OnRightMouseClickChois;
     FOnMultiplySelectSquad OnMultiplySelectSquad;
@@ -114,7 +113,7 @@ private:
     void StopSquad();
 
     FHitResult GetClickHit();
-    
+
     bool bSelectionBoxIsSpawned = false;
-    float LefMouseDownTime = 0.0f;
+    float LefMouseDownTime      = 0.0f;
 };

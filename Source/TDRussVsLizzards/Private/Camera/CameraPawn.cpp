@@ -36,17 +36,8 @@ void ACameraPawn::BeginPlay()
         CameraController->OnMoveCameraUpDown.BindUObject(this, &ACameraPawn::OnMoveCameraUpDown);
         CameraController->OnMoveCameraRightLeft.BindUObject(this, &ACameraPawn::OnMoveCameraRightLeft);
         CameraController->OnRotateCamera.BindUObject(this, &ACameraPawn::OnRotateCamera);
-        CameraController->OnLeftMouseClickChois.BindUObject(this, &ACameraPawn::OnLeftMouseClickChois);
-        CameraController->OnRightMouseClickChois.BindUObject(this, &ACameraPawn::OnRightMouseClick);
         CameraController->OnChangeAngleCamera.BindUObject(this, &ACameraPawn::OnChangeAngleCamera);
-        CameraController->OnMultiplySelectSquad.BindUObject(this, &ACameraPawn::OnMultiplySelectSquad);
-        CameraController->OnLeftMouseHold.BindUObject(this, &ACameraPawn::OnLeftMouseHold);
-        CameraController->OnLeftMouseHoldCompleted.BindUObject(this, &ACameraPawn::OnLeftMouseHoldCompleted);
-        CameraController->OnStopSquad.BindUObject(this, &ACameraPawn::OnStopSquad);
     }
-
-    GetSquadsOnLevel();
-    BindOnSquadIsChoisenDelegate();
 }
 
 void ACameraPawn::Tick(float DeltaTime)
@@ -54,22 +45,11 @@ void ACameraPawn::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 
     MoveCameraByMouse();
-
-    if (bBoxIsSpawned)
-    {
-        SelectionBox->Update(CameraController->GetMouseLocationOnTerrain());
-    }
 }
 
 void ACameraPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
-}
-
-void ACameraPawn::SetSquadIsChoisen(TObjectPtr<ABaseSquadCreeps> ChoisenSquad) 
-{
-    ChoisenSquad->SetSquadIsChoisen();
-    AddSquadToChoisenSquadsArray(ChoisenSquad);
 }
 
 void ACameraPawn::OnZoomChanged(float Direction)
@@ -116,133 +96,6 @@ void ACameraPawn::OnChangeAngleCamera(float Direction)
     SetActorRotation(NewRotate);
 }
 
-void ACameraPawn::OnLeftMouseClickChois(FHitResult Hit)
-{
-    auto Box = Cast<UBoxComponent>(Hit.GetComponent());
-    if (!Box)
-    {
-        UnchoiseCurrentSquad();
-        return;
-    }
-
-    auto Squad = Cast<ABaseSquadCreeps>(Box->GetOwner());
-
-    if (!Squad)
-    {
-        UnchoiseCurrentSquad();
-        return;
-    }
-
-    SetSquadIsChoisen(Squad);
-}
-
-void ACameraPawn::OnRightMouseClick(FHitResult Hit)
-{
-    
-    if (ChoisenSquads.Num() == 0) return;
-
-    for (auto& Squad : ChoisenSquads)
-    {
-        Squad->MoveAndRotatingSquadToLocation(Hit.Location);
-    }
-}
-
-void ACameraPawn::AddSquadToChoisenSquadsArray(ABaseSquadCreeps* SquadIn)
-{
-    if (bMultiplySelectSquadByClick || bMultiplySelectSquadBySelectedBox)
-    {
-        for (auto& Squad : ChoisenSquads)
-        {
-            if (Squad.Get() == SquadIn) return;
-        }
-        ChoisenSquads.Add(SquadIn);
-    }
-    else
-    {
-        UnchoiseCurrentSquad();
-        ChoisenSquads.Add(SquadIn);
-    }
-}
-
-void ACameraPawn::OnSquadIsUnChoisen(ABaseSquadCreeps* SquadIn)
-{
-    ChoisenSquads.RemoveSingle(SquadIn);
-}
-
-void ACameraPawn::OnMultiplySelectSquad(bool Value)
-{
-    bMultiplySelectSquadByClick = Value;
-}
-
-void ACameraPawn::OnLeftMouseHold()
-{
-    if (!bBoxIsSpawned)
-    {
-        CreateSelectionBox();
-        bBoxIsSpawned                     = true;
-        bMultiplySelectSquadBySelectedBox = true;
-    }
-}
-
-void ACameraPawn::OnLeftMouseHoldCompleted()
-{
-    if (bBoxIsSpawned)
-    {
-        SelectionBox->SelectionComplete();
-        SelectionBox                      = nullptr;
-        bBoxIsSpawned                     = false;
-        bMultiplySelectSquadBySelectedBox = false;
-    }
-}
-
-void ACameraPawn::OnStopSquad()
-{
-    if (ChoisenSquads.Num() == 0) return;
-
-    for (auto& Squad : ChoisenSquads)
-    {
-        Squad->StopAllTasks();
-    }
-}
-
-void ACameraPawn::GetSquadsOnLevel()
-{
-    TArray<AActor*> Actors;
-    UGameplayStatics::GetAllActorsOfClass(GetWorld(), ABaseSquadCreeps::StaticClass(), Actors);
-
-    if (Actors.IsEmpty()) return;
-
-    for (auto& Actor : Actors)
-    {
-        auto Squad = Cast<ABaseSquadCreeps>(Actor);
-        if (IsValid(Squad))
-        {
-            SquadsOnLevel.Add(Squad);
-        }
-    }
-}
-
-void ACameraPawn::BindOnSquadIsChoisenDelegate()
-{
-    if (SquadsOnLevel.IsEmpty()) return;
-
-    for (auto& Squad : SquadsOnLevel)
-    {
-        Squad->OnSquadIsUnChoisenBySelectionBox.BindUObject(this, &ACameraPawn::OnSquadIsUnChoisen);
-    }
-}
-
-void ACameraPawn::UnchoiseCurrentSquad()
-{
-    if (ChoisenSquads.Num() == 0) return;
-
-    for (auto& Squad : ChoisenSquads)
-    {
-        Squad->SquadUnChoisen();
-    }
-    ChoisenSquads.Empty(20);
-}
-
 void ACameraPawn::MoveCameraByMouse()
 {
 
@@ -274,18 +127,4 @@ void ACameraPawn::MoveCameraByMouse()
             OnMoveCameraUpDown(-1.0f);
         }
     }
-}
-
-void ACameraPawn::CreateSelectionBox()
-{
-    if (!GetWorld()) return;
-
-    FActorSpawnParameters SpawnInfo;
-    SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-    SpawnInfo.Owner                          = this;
-    SpawnInfo.Instigator                     = this;
-    SelectionBoxStartLocation                = CameraController->GetMouseLocationOnTerrain();
-
-    SelectionBox =
-        GetWorld()->SpawnActor<ASelectionBox>(SelectionBoxDefaultClass, SelectionBoxStartLocation, FRotator::ZeroRotator, SpawnInfo);
 }

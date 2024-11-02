@@ -23,8 +23,6 @@ public:
     virtual void Tick(float DeltaTime) override;
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-    void SetSquadIsChoisen(TObjectPtr<ABaseSquadCreeps> ChoisenSquad);
-
 protected:
     virtual void BeginPlay() override;
 
@@ -67,39 +65,13 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Camera")
     int32 MoveMouseTreshold = 50;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SelectionBox")
-    TSubclassOf<ASelectionBox> SelectionBoxDefaultClass;
-
 private:
     TObjectPtr<ATDCameraController> CameraController;
-    TArray<TObjectPtr<ABaseSquadCreeps>> SquadsOnLevel;
-    TArray<TObjectPtr<ABaseSquadCreeps>> ChoisenSquads;
-    bool bMultiplySelectSquadByClick       = false;
-    bool bMultiplySelectSquadBySelectedBox = false;
 
-    TObjectPtr<ASelectionBox> SelectionBox;
-    FVector SelectionBoxStartLocation;
-    bool bBoxIsSpawned = false;
-
-    void AddSquadToChoisenSquadsArray(ABaseSquadCreeps* SquadIn);
     void OnZoomChanged(float Direction);
     void OnMoveCameraUpDown(float Direction);
     void OnMoveCameraRightLeft(float Direction);
     void OnRotateCamera(float Direction);
     void OnChangeAngleCamera(float Direction);
-    void OnLeftMouseClickChois(FHitResult Hit);
-    void OnRightMouseClick(FHitResult Hit);
-    
-    void OnSquadIsUnChoisen(ABaseSquadCreeps* SquadIn);
-    void OnMultiplySelectSquad(bool Value);
-    void OnLeftMouseHold();
-    void OnLeftMouseHoldCompleted();
-    void OnStopSquad();
-
-    void GetSquadsOnLevel();
-    void BindOnSquadIsChoisenDelegate();
-    void UnchoiseCurrentSquad();
     void MoveCameraByMouse();
-    void CreateSelectionBox();
-
 };

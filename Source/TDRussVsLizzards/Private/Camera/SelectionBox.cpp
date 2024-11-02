@@ -6,7 +6,8 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Squad/BaseSquadCreeps.h"
 #include "Components/BoxComponent.h"
-#include "Camera/CameraPawn.h"
+#include "Team/TeamController.h"
+
 
 ASelectionBox::ASelectionBox()
 {
@@ -115,11 +116,11 @@ void ASelectionBox::UpdateSelectingChoisedSquad()
 
     for (auto& SelectedSquad : SelectedSquads)
     {
-        auto OwnerCameraPawn = Cast<ACameraPawn>(SelectedSquad->GetOwner());
+        auto TeamController = Cast<ATeamController>(SelectedSquad->GetOwner());
 
-        if (OwnerCameraPawn)
+        if (TeamController)
         {
-            OwnerCameraPawn->SetSquadIsChoisen(SelectedSquad);
+            TeamController->SetSquadIsChoisen(SelectedSquad);
         }
     }
 }
