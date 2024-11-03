@@ -60,6 +60,8 @@ public:
     void SetSquadIsChoisen();
 
     int32 GetCreepsNum() { return CreepsNum; }
+    FCreepsOffsetInSquad GetCreepsOffsetInSquad() { return CreepsOffsetInSquad; }
+    double GetCreepPositionRandom() { return CreepPositionRandom; }
 
     UActorMovementComponent* GetSquadMovementComponent() { return MovementComponent; }
 
@@ -83,7 +85,7 @@ protected:
     int32 CreepsNum = 50;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad")
-    double CreepPositionRandom = 10.0f;
+    double CreepPositionRandom = 20.0;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad")
     TSubclassOf<ABaseCreepActor> CreepsType;

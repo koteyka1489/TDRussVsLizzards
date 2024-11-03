@@ -95,12 +95,28 @@ void ATeamController::OnLeftMouseHoldCompleted()
 }
 void ATeamController::OnRightMouseClick(FHitResult Hit)
 {
-    GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Red, TEXT("Right Mouse Click"));
     if (ChoisenSquads.Num() == 0) return;
 
     for (auto& Squad : ChoisenSquads)
     {
         Squad->MoveAndRotatingSquadToLocation(Hit.Location);
+    }
+}
+
+void ATeamController::OnRightMouseHold()
+{
+    if (!bRebuildSquadIsContinue)
+    {
+        RebuildSquadStartLocation = CameraController->GetMouseLocationOnTerrain();
+        bRebuildSquadIsContinue   = true;
+    }
+}
+
+void ATeamController::OnRightMouseHoldCompleted()
+{
+    if (bRebuildSquadIsContinue)
+    {
+        bRebuildSquadIsContinue = false;
     }
 }
 
@@ -129,23 +145,6 @@ void ATeamController::OnSquadIsUnChoisen(ABaseSquadCreeps* SquadIn)
 void ATeamController::OnMultiplySelectSquad(bool Value)
 {
     bMultiplySelectSquadByClick = Value;
-}
-
-void ATeamController::OnRightMouseHold()
-{
-    if (!bRebuildSquadIsContinue)
-    {
-        RebuildSquadStartLocation = CameraController->GetMouseLocationOnTerrain();
-        bRebuildSquadIsContinue   = true;
-    }
-}
-
-void ATeamController::OnRightMouseHoldCompleted()
-{
-    if (bRebuildSquadIsContinue)
-    {
-        bRebuildSquadIsContinue = false;
-    }
 }
 
 void ATeamController::OnStopSquad()
@@ -213,8 +212,30 @@ void ATeamController::UpdateRebuildSquad()
 {
     if (ChoisenSquads.Num() == 0) return;
 
+    if (ChoisenSquads.Num() == 1)
+    {
+        FVector EndPoint = CameraController->GetMouseLocationOnTerrain();
+        DrawDebugLine(GetWorld(), RebuildSquadStartLocation, EndPoint, FColor::Green, false, 0, 0u, 10.f);
 
+        double RebuildVectorLength = (EndPoint - RebuildSquadStartLocation).Size();
+        int32 NewWidth             = CalcelateNewWidthSquad(RebuildVectorLength, ChoisenSquads[0]);
 
-    FVector EndPoint = CameraController->GetMouseLocationOnTerrain();
-    DrawDebugLine(GetWorld(), RebuildSquadStartLocation, EndPoint, FColor::Green, false, 0, 0u, 10.f);
+        FString Message = FString::Printf(TEXT("Calc Squad new width %i"), NewWidth);
+        GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Red, Message);
+    }
+    else
+    {
+    }
+}
+
+int32 ATeamController::CalcelateNewWidthSquad(double LengthRebuildVector, TObjectPtr<ABaseSquadCreeps> RebuildSquad)
+{
+    int32 Result{};
+
+    FCreepsOffsetInSquad CreepsOffsetInSquad = RebuildSquad->GetCreepsOffsetInSquad();
+    int32 LengthIntRebuildVector             = static_cast<int32>(LengthRebuildVector);
+    int32 OffsetWidthIntInSquad              = static_cast<int32>(CreepsOffsetInSquad.Y);
+    Result                                   = LengthIntRebuildVector / OffsetWidthIntInSquad + 1;
+
+    return Result;
 }

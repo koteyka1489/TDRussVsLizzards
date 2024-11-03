@@ -10,6 +10,18 @@ class ABaseSquadCreeps;
 class ATDCameraController;
 class ASelectionBox;
 
+USTRUCT(BlueprintType)
+struct FRebuidSquadClampWidth
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SelectionBox")
+    int32 Min = 3;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SelectionBox")
+    int32 Max = 60;
+};
+
 UCLASS()
 class TDRUSSVSLIZZARDS_API ATeamController : public AActor
 {
@@ -26,6 +38,9 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SelectionBox")
     TSubclassOf<ASelectionBox> SelectionBoxDefaultClass;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SelectionBox")
+    FRebuidSquadClampWidth RebuidSquadClampWidth;
+
 private:
     TObjectPtr<ATDCameraController> CameraController;
     TArray<TObjectPtr<ABaseSquadCreeps>> SquadsOnLevel;
@@ -39,7 +54,6 @@ private:
 
     FVector RebuildSquadStartLocation = FVector::Zero();
     bool bRebuildSquadIsContinue      = false;
-
 
     void OnLeftMouseClickChois(FHitResult Hit);
     void OnLeftMouseHold();
@@ -62,4 +76,5 @@ private:
     void CreateSelectionBox();
 
     void UpdateRebuildSquad();
+    int32 CalcelateNewWidthSquad(double LengthRebuildVector, TObjectPtr<ABaseSquadCreeps> RebuildSquad);
 };
