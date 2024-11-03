@@ -16,6 +16,7 @@
 #include "Components/ActorMovementComponent.h"
 #include "Camera/CameraPawn.h"
 #include "Kismet/GameplayStatics.h"
+#include "Team/TeamController.h"
 
 ABaseSquadCreeps::ABaseSquadCreeps()
 {
@@ -50,10 +51,10 @@ void ABaseSquadCreeps::BeginPlay()
     MovementComponent->OnRotatingCreepsComplete.BindUObject(this, &ABaseSquadCreeps::OnRotatingCreepsComplete);
     MovementComponent->OnRotatingFrontSquadComplete.BindUObject(this, &ABaseSquadCreeps::OnRotatingFrontSquadComplete);
 
-    auto CameraPawn = Cast<ACameraPawn>(UGameplayStatics::GetActorOfClass(GetWorld(), ACameraPawn::StaticClass()));
-    if (CameraPawn)
+    auto TeamController = Cast<ATeamController>(UGameplayStatics::GetActorOfClass(GetWorld(), ATeamController::StaticClass()));
+    if (TeamController)
     {
-        SetOwner(CameraPawn);
+        SetOwner(TeamController);
     }
 }
 

@@ -20,6 +20,7 @@ ASelectionBox::ASelectionBox()
     BoxCollider->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
     BoxCollider->SetVisibility(false);
     BoxCollider->bHiddenInGame = true;
+    BoxCollider->SetGenerateOverlapEvents(true);
 
     DecalComponent = CreateDefaultSubobject<UDecalComponent>(TEXT("DecalComponent"));
     DecalComponent->SetupAttachment(GetRootComponent());
@@ -53,6 +54,7 @@ void ASelectionBox::SelectionComplete()
 void ASelectionBox::OnBoxColliderBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
     int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+    
 
     auto OverlapBox = Cast<UBoxComponent>(OtherComp);
     if (!OverlapBox) return;
@@ -75,11 +77,15 @@ void ASelectionBox::OnBoxColliderBeginOverlap(UPrimitiveComponent* OverlappedCom
         }
         SelectedSquads.Add(OverlapSquad);
     }
+
+    FString Message = FString::Printf(TEXT("SelectedSquads NUM - %i"), SelectedSquads.Num());
+    GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, Message);
 }
 
 void ASelectionBox::OnBoxColliderEndOverlap(
     UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+
 
     auto OverlapBox = Cast<UBoxComponent>(OtherComp);
     if (!OverlapBox) return;
@@ -92,6 +98,9 @@ void ASelectionBox::OnBoxColliderEndOverlap(
     SelectedSquads.RemoveSingle(OverlapSquad);
 
     OverlapSquad->SquadUnChoisenBySelectBox();
+
+    FString Message = FString::Printf(TEXT("SelectedSquads NUM - %i"), SelectedSquads.Num());
+    GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, Message);
 }
 
 void ASelectionBox::UpdateBoxSizesAndLocation(FVector MouseLocation)
