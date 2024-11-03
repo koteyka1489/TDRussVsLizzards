@@ -34,22 +34,32 @@ private:
     bool bMultiplySelectSquadBySelectedBox = false;
 
     TObjectPtr<ASelectionBox> SelectionBox;
-    FVector SelectionBoxStartLocation;
-    bool bBoxIsSpawned = false;
+    FVector SelectionBoxStartLocation = FVector::Zero();
+    bool bBoxIsSpawned                = false;
+
+    FVector RebuildSquadStartLocation = FVector::Zero();
+    bool bRebuildSquadIsContinue      = false;
+
 
     void OnLeftMouseClickChois(FHitResult Hit);
-    void OnRightMouseClick(FHitResult Hit);
-    void OnSquadIsUnChoisen(ABaseSquadCreeps* SquadIn);
-    void OnMultiplySelectSquad(bool Value);
     void OnLeftMouseHold();
     void OnLeftMouseHoldCompleted();
+
+    void OnRightMouseClick(FHitResult Hit);
     void OnRightMouseHold();
     void OnRightMouseHoldCompleted();
+
+    void OnSquadIsUnChoisen(ABaseSquadCreeps* SquadIn);
+    void OnMultiplySelectSquad(bool Value);
+
     void OnStopSquad();
     void AddSquadToChoisenSquadsArray(ABaseSquadCreeps* SquadIn);
 
     void GetSquadsOnLevel();
     void BindOnSquadIsChoisenDelegate();
     void UnchoiseCurrentSquad();
+
     void CreateSelectionBox();
+
+    void UpdateRebuildSquad();
 };

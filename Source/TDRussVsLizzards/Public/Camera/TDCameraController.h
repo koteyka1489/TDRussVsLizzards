@@ -16,13 +16,14 @@ DECLARE_DELEGATE_OneParam(FOnMoveCameraRightLeft, float);
 DECLARE_DELEGATE_OneParam(FOnRotateCamera, float);
 DECLARE_DELEGATE_OneParam(FOnLeftMouseClickChois, FHitResult);
 DECLARE_DELEGATE_OneParam(FOnRightMouseClickChois, FHitResult);
+DECLARE_DELEGATE(FOnRightMouseHold);
+DECLARE_DELEGATE(FOnRightMouseHoldCompleted);
 DECLARE_DELEGATE_OneParam(FOnChangeAngleCamera, float);
 DECLARE_DELEGATE_OneParam(FOnMultiplySelectSquad, bool);
 DECLARE_DELEGATE(FOnLeftMouseHold);
 DECLARE_DELEGATE(FOnLeftMouseHoldCompleted);
 DECLARE_DELEGATE(FOnStopSquad);
-DECLARE_DELEGATE(FOnRightMouseHold);
-DECLARE_DELEGATE(FOnRightMouseHoldCompleted);
+
 
 UCLASS()
 class TDRUSSVSLIZZARDS_API ATDCameraController : public APlayerController

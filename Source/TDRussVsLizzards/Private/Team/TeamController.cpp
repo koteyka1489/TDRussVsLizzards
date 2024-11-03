@@ -6,7 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/BoxComponent.h"
 #include "Camera/SelectionBox.h"
-
+#include "DrawDebugHelpers.h"
 #include "GameFramework/GameStateBase.h"
 
 ATeamController::ATeamController()
@@ -41,6 +41,10 @@ void ATeamController::Tick(float DeltaTime)
     {
         SelectionBox->Update(CameraController->GetMouseLocationOnTerrain());
     }
+    if (bRebuildSquadIsContinue)
+    {
+        UpdateRebuildSquad();
+    }
 }
 
 void ATeamController::SetSquadIsChoisen(TObjectPtr<ABaseSquadCreeps> ChoisenSquad)
@@ -69,6 +73,26 @@ void ATeamController::OnLeftMouseClickChois(FHitResult Hit)
     SetSquadIsChoisen(Squad);
 }
 
+void ATeamController::OnLeftMouseHold()
+{
+    if (!bBoxIsSpawned)
+    {
+        CreateSelectionBox();
+        bBoxIsSpawned                     = true;
+        bMultiplySelectSquadBySelectedBox = true;
+    }
+}
+
+void ATeamController::OnLeftMouseHoldCompleted()
+{
+    if (bBoxIsSpawned)
+    {
+        SelectionBox->SelectionComplete();
+        SelectionBox                      = nullptr;
+        bBoxIsSpawned                     = false;
+        bMultiplySelectSquadBySelectedBox = false;
+    }
+}
 void ATeamController::OnRightMouseClick(FHitResult Hit)
 {
     GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Red, TEXT("Right Mouse Click"));
@@ -107,35 +131,21 @@ void ATeamController::OnMultiplySelectSquad(bool Value)
     bMultiplySelectSquadByClick = Value;
 }
 
-void ATeamController::OnLeftMouseHold()
+void ATeamController::OnRightMouseHold()
 {
-    if (!bBoxIsSpawned)
+    if (!bRebuildSquadIsContinue)
     {
-        CreateSelectionBox();
-        bBoxIsSpawned                     = true;
-        bMultiplySelectSquadBySelectedBox = true;
+        RebuildSquadStartLocation = CameraController->GetMouseLocationOnTerrain();
+        bRebuildSquadIsContinue   = true;
     }
-}
-
-void ATeamController::OnLeftMouseHoldCompleted()
-{
-    if (bBoxIsSpawned)
-    {
-        SelectionBox->SelectionComplete();
-        SelectionBox                      = nullptr;
-        bBoxIsSpawned                     = false;
-        bMultiplySelectSquadBySelectedBox = false;
-    }
-}
-
-void ATeamController::OnRightMouseHold() 
-{
-    GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Red, TEXT("Right Mouse hold"));
 }
 
 void ATeamController::OnRightMouseHoldCompleted()
 {
-    GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Red, TEXT("Right Mouse Complete"));
+    if (bRebuildSquadIsContinue)
+    {
+        bRebuildSquadIsContinue = false;
+    }
 }
 
 void ATeamController::OnStopSquad()
@@ -197,4 +207,14 @@ void ATeamController::CreateSelectionBox()
 
     SelectionBox =
         GetWorld()->SpawnActor<ASelectionBox>(SelectionBoxDefaultClass, SelectionBoxStartLocation, FRotator::ZeroRotator, SpawnInfo);
+}
+
+void ATeamController::UpdateRebuildSquad()
+{
+    if (ChoisenSquads.Num() == 0) return;
+
+
+
+    FVector EndPoint = CameraController->GetMouseLocationOnTerrain();
+    DrawDebugLine(GetWorld(), RebuildSquadStartLocation, EndPoint, FColor::Green, false, 0, 0u, 10.f);
 }

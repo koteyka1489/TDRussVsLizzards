@@ -28,6 +28,18 @@ enum class ESquadCurrentAnimation
     Run
 };
 
+USTRUCT(BlueprintType)
+struct FCreepsOffsetInSquad
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad")
+    double X = 200.0;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad")
+    double Y = 200.0;
+};
+
 UCLASS()
 class TDRUSSVSLIZZARDS_API ABaseSquadCreeps : public AActor
 {
@@ -46,6 +58,8 @@ public:
     void MoveAndRotatingSquadToLocation(FVector Destination);
 
     void SetSquadIsChoisen();
+
+    int32 GetCreepsNum() { return CreepsNum; }
 
     UActorMovementComponent* GetSquadMovementComponent() { return MovementComponent; }
 
@@ -74,6 +88,9 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad")
     TSubclassOf<ABaseCreepActor> CreepsType;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad")
+    FCreepsOffsetInSquad CreepsOffsetInSquad;
+
 private:
     TArray<TObjectPtr<ABaseCreepActor>> Creeps;
 
@@ -90,7 +107,6 @@ private:
 
     void SpawnCreepsN();
     FSquadSizes CalculateCurrentSquadSizes();
-
 
     void OnMovingComplete();
     void OnRotatingCreepsComplete();
