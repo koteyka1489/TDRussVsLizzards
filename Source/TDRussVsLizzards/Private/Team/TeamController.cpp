@@ -215,13 +215,28 @@ void ATeamController::UpdateRebuildSquad()
     if (ChoisenSquads.Num() == 1)
     {
         FVector EndPoint = CameraController->GetMouseLocationOnTerrain();
-        DrawDebugLine(GetWorld(), RebuildSquadStartLocation, EndPoint, FColor::Green, false, 0, 0u, 10.f);
+        DrawDebugLine(GetWorld(), RebuildSquadStartLocation, EndPoint, FColor::Cyan, false, 0, 0u, 20.f);
 
-        double RebuildVectorLength = (EndPoint - RebuildSquadStartLocation).Size();
+        FVector RebuildVector = EndPoint - RebuildSquadStartLocation;
+        FVector RebuildVectorNormalize = RebuildVector.GetSafeNormal2D();
+        FVector PerpendicularRebuildVector(RebuildVectorNormalize.Y * -1.0, RebuildVectorNormalize.X * 1.0, RebuildVectorNormalize.Z);
+
+        FVector RebuildForwardVector = PerpendicularRebuildVector * -1.0;
+
+        FVector StartPerpendicularLine = FMath::Lerp(RebuildSquadStartLocation, EndPoint, 0.5);
+        DrawDebugLine(GetWorld(), StartPerpendicularLine, StartPerpendicularLine + RebuildForwardVector * 1000.0, FColor::Cyan,
+            false, 0,
+            0u, 20.f);
+
+
+        double RebuildVectorLength = RebuildVector.Size();
         int32 NewWidth             = CalcelateNewWidthSquad(RebuildVectorLength, ChoisenSquads[0]);
 
         FString Message = FString::Printf(TEXT("Calc Squad new width %i"), NewWidth);
         GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Red, Message);
+
+
+
     }
     else
     {
@@ -235,7 +250,8 @@ int32 ATeamController::CalcelateNewWidthSquad(double LengthRebuildVector, TObjec
     FCreepsOffsetInSquad CreepsOffsetInSquad = RebuildSquad->GetCreepsOffsetInSquad();
     int32 LengthIntRebuildVector             = static_cast<int32>(LengthRebuildVector);
     int32 OffsetWidthIntInSquad              = static_cast<int32>(CreepsOffsetInSquad.Y);
-    Result                                   = LengthIntRebuildVector / OffsetWidthIntInSquad + 1;
+    Result = FMath::Clamp(LengthIntRebuildVector / OffsetWidthIntInSquad + 1, RebuidSquadClampWidth.Min, RebuildSquad->GetCreepsNum() / 2);
+
 
     return Result;
 }

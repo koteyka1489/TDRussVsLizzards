@@ -62,7 +62,7 @@ void ABaseSquadCreeps::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    DrawDebugLine(GetWorld(), GetActorLocation(), GetActorLocation() + GetActorForwardVector() * 5000, FColor::Red, false, -1.f, 0u, 20.0f);
+    DrawDebugLine(GetWorld(), GetActorLocation(), GetActorLocation() + GetActorForwardVector() * 1000, FColor::Red, false, -1.f, 0u, 20.0f);
 
     ExecuteCurrentTaskQueue();
 }

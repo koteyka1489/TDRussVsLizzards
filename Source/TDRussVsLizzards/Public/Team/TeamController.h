@@ -16,7 +16,7 @@ struct FRebuidSquadClampWidth
     GENERATED_BODY()
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SelectionBox")
-    int32 Min = 3;
+    int32 Min = 5;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SelectionBox")
     int32 Max = 60;
