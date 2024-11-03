@@ -43,6 +43,8 @@ private:
     void OnMultiplySelectSquad(bool Value);
     void OnLeftMouseHold();
     void OnLeftMouseHoldCompleted();
+    void OnRightMouseHold();
+    void OnRightMouseHoldCompleted();
     void OnStopSquad();
     void AddSquadToChoisenSquadsArray(ABaseSquadCreeps* SquadIn);
 

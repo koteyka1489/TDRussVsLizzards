@@ -39,10 +39,12 @@ void ATDCameraController::SetupInputComponent()
     EnhancedInputComponent->BindAction(RotateRightCameraAction, ETriggerEvent::Triggered, this, &ATDCameraController::RotateCamera);
     EnhancedInputComponent->BindAction(RotateLeftCameraAction, ETriggerEvent::Triggered, this, &ATDCameraController::RotateCamera);
 
-    EnhancedInputComponent->BindAction(LeftClickMouse, ETriggerEvent::Started, this, &ATDCameraController::SetLeftClickChois);
+    EnhancedInputComponent->BindAction(LeftClickMouse, ETriggerEvent::Started, this, &ATDCameraController::LeftClickStarted);
     EnhancedInputComponent->BindAction(LeftClickMouse, ETriggerEvent::Triggered, this, &ATDCameraController::LeftClickTriggered);
     EnhancedInputComponent->BindAction(LeftClickMouse, ETriggerEvent::Completed, this, &ATDCameraController::LeftClickCompleted);
-    EnhancedInputComponent->BindAction(RightClickMouse, ETriggerEvent::Started, this, &ATDCameraController::SetRightClickChois);
+
+    EnhancedInputComponent->BindAction(RightClickMouse, ETriggerEvent::Triggered, this, &ATDCameraController::RightClickTriggered);
+    EnhancedInputComponent->BindAction(RightClickMouse, ETriggerEvent::Completed, this, &ATDCameraController::RightClickCompleted);
 
     EnhancedInputComponent->BindAction(CameraAngleUpAction, ETriggerEvent::Triggered, this, &ATDCameraController::ChangeAngleCamera);
     EnhancedInputComponent->BindAction(CameraAngleDownAction, ETriggerEvent::Triggered, this, &ATDCameraController::ChangeAngleCamera);
@@ -100,20 +102,11 @@ void ATDCameraController::ChangeAngleCamera(const FInputActionValue& Value)
     }
 }
 
-void ATDCameraController::SetLeftClickChois()
+void ATDCameraController::StopSquad()
 {
-    if (!OnLeftMouseClickChois.ExecuteIfBound(GetClickHit()))
+    if (!OnStopSquad.ExecuteIfBound())
     {
-        UE_LOG(LogCameraController, Error, TEXT("OnLeftMouseClickChois Delegate is not bound"));
-        checkNoEntry();
-    }
-}
-
-void ATDCameraController::SetRightClickChois()
-{
-    if (!OnRightMouseClickChois.ExecuteIfBound(GetClickHit()))
-    {
-        UE_LOG(LogCameraController, Error, TEXT("OnRightMouseClickChois Delegate is not bound"));
+        UE_LOG(LogCameraController, Error, TEXT("OnStopSquad Delegate is not bound"));
         checkNoEntry();
     }
 }
@@ -136,11 +129,20 @@ void ATDCameraController::MultiplySelectSquadsOff()
     }
 }
 
+void ATDCameraController::LeftClickStarted()
+{
+    if (!OnLeftMouseClickChois.ExecuteIfBound(GetClickHit()))
+    {
+        UE_LOG(LogCameraController, Error, TEXT("OnLeftMouseClickChois Delegate is not bound"));
+        checkNoEntry();
+    }
+}
+
 void ATDCameraController::LeftClickTriggered()
 {
-    LefMouseDownTime = GetInputKeyTimeDown(EKeys::LeftMouseButton);
+    LeftMouseDownTime = GetInputKeyTimeDown(EKeys::LeftMouseButton);
 
-    if (LefMouseDownTime > LeftMouseButtonHoldTreshold && !bSelectionBoxIsSpawned)
+    if (LeftMouseDownTime > LeftMouseButtonHoldTreshold && !bSelectionBoxIsSpawned)
     {
         if (OnLeftMouseHold.ExecuteIfBound())
         {
@@ -156,11 +158,11 @@ void ATDCameraController::LeftClickTriggered()
 
 void ATDCameraController::LeftClickCompleted()
 {
-    if (LefMouseDownTime > LeftMouseButtonHoldTreshold)
+    if (LeftMouseDownTime > LeftMouseButtonHoldTreshold)
     {
         if (OnLeftMouseHoldCompleted.ExecuteIfBound())
         {
-            LefMouseDownTime       = 0.0f;
+            LeftMouseDownTime      = 0.0f;
             bSelectionBoxIsSpawned = false;
         }
         else
@@ -171,12 +173,46 @@ void ATDCameraController::LeftClickCompleted()
     }
 }
 
-void ATDCameraController::StopSquad()
+void ATDCameraController::RightClickTriggered()
 {
-    if (!OnStopSquad.ExecuteIfBound())
+    RightMouseDownTime = GetInputKeyTimeDown(EKeys::RightMouseButton);
+
+    if (RightMouseDownTime >= RightMouseButtonHoldTreshold && !bRebuildSquadIsContinue)
     {
-        UE_LOG(LogCameraController, Error, TEXT("OnStopSquad Delegate is not bound"));
-        checkNoEntry();
+        if (OnRightMouseHold.ExecuteIfBound())
+        {
+            bRebuildSquadIsContinue = true;
+        }
+        else
+        {
+            UE_LOG(LogCameraController, Error, TEXT("OnRightMouseHold Delegate is not bound"));
+            checkNoEntry();
+        }
+    }
+}
+
+void ATDCameraController::RightClickCompleted() 
+{
+    if (RightMouseDownTime > RightMouseButtonHoldTreshold)
+    {
+        if (OnRightMouseHoldCompleted.ExecuteIfBound())
+        {
+            RightMouseDownTime      = 0.0f;
+            bRebuildSquadIsContinue = false;
+        }
+        else
+        {
+            UE_LOG(LogCameraController, Error, TEXT("OnRightMouseHoldCompleted Delegate is not bound"));
+            checkNoEntry();
+        }
+    }
+    else
+    {
+        if (!OnRightMouseClickChois.ExecuteIfBound(GetClickHit()))
+        {
+            UE_LOG(LogCameraController, Error, TEXT("OnRightMouseClickChois Delegate is not bound"));
+            checkNoEntry();
+        }
     }
 }
 

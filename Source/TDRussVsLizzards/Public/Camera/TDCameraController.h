@@ -21,6 +21,8 @@ DECLARE_DELEGATE_OneParam(FOnMultiplySelectSquad, bool);
 DECLARE_DELEGATE(FOnLeftMouseHold);
 DECLARE_DELEGATE(FOnLeftMouseHoldCompleted);
 DECLARE_DELEGATE(FOnStopSquad);
+DECLARE_DELEGATE(FOnRightMouseHold);
+DECLARE_DELEGATE(FOnRightMouseHoldCompleted);
 
 UCLASS()
 class TDRUSSVSLIZZARDS_API ATDCameraController : public APlayerController
@@ -45,6 +47,8 @@ public:
     FOnLeftMouseHold OnLeftMouseHold;
     FOnLeftMouseHoldCompleted OnLeftMouseHoldCompleted;
     FOnStopSquad OnStopSquad;
+    FOnRightMouseHold OnRightMouseHold;
+    FOnRightMouseHoldCompleted OnRightMouseHoldCompleted;
 
 protected:
     virtual void BeginPlay() override;
@@ -96,7 +100,10 @@ protected:
     UInputAction* StopSquadAction;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Mouse")
-    float LeftMouseButtonHoldTreshold = 0.08;
+    float LeftMouseButtonHoldTreshold = 0.08f;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Mouse")
+    float RightMouseButtonHoldTreshold = 0.15f;
 
 private:
     void MoveCameraUpDown(const FInputActionValue& Value);
@@ -104,16 +111,25 @@ private:
     void ZoomUpAction(const FInputActionValue& Value);
     void RotateCamera(const FInputActionValue& Value);
     void ChangeAngleCamera(const FInputActionValue& Value);
-    void SetLeftClickChois();
-    void SetRightClickChois();
+
     void MultiplySelectSquadsOn();
     void MultiplySelectSquadsOff();
+
+    void StopSquad();
+
+    void LeftClickStarted();
     void LeftClickTriggered();
     void LeftClickCompleted();
-    void StopSquad();
+
+    void RightClickStarted();
+    void RightClickTriggered();
+    void RightClickCompleted();
 
     FHitResult GetClickHit();
 
     bool bSelectionBoxIsSpawned = false;
-    float LefMouseDownTime      = 0.0f;
+    bool bRebuildSquadIsContinue = false;
+    float LeftMouseDownTime     = 0.0f;
+    float RightMouseDownTime    = 0.0f;
+
 };

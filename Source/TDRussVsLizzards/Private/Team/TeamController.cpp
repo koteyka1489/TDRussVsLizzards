@@ -27,6 +27,8 @@ void ATeamController::BeginPlay()
         CameraController->OnLeftMouseHold.BindUObject(this, &ATeamController::OnLeftMouseHold);
         CameraController->OnLeftMouseHoldCompleted.BindUObject(this, &ATeamController::OnLeftMouseHoldCompleted);
         CameraController->OnStopSquad.BindUObject(this, &ATeamController::OnStopSquad);
+        CameraController->OnRightMouseHold.BindUObject(this, &ATeamController::OnRightMouseHold);
+        CameraController->OnRightMouseHoldCompleted.BindUObject(this, &ATeamController::OnRightMouseHoldCompleted);
     }
 
     GetSquadsOnLevel();
@@ -69,7 +71,7 @@ void ATeamController::OnLeftMouseClickChois(FHitResult Hit)
 
 void ATeamController::OnRightMouseClick(FHitResult Hit)
 {
-
+    GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Red, TEXT("Right Mouse Click"));
     if (ChoisenSquads.Num() == 0) return;
 
     for (auto& Squad : ChoisenSquads)
@@ -124,6 +126,16 @@ void ATeamController::OnLeftMouseHoldCompleted()
         bBoxIsSpawned                     = false;
         bMultiplySelectSquadBySelectedBox = false;
     }
+}
+
+void ATeamController::OnRightMouseHold() 
+{
+    GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Red, TEXT("Right Mouse hold"));
+}
+
+void ATeamController::OnRightMouseHoldCompleted()
+{
+    GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Red, TEXT("Right Mouse Complete"));
 }
 
 void ATeamController::OnStopSquad()
