@@ -97,8 +97,13 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad")
     FCreepsOffsetInSquad CreepsOffsetInSquad;
 
+     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad")
+    FVector SquadBaseForwardVector = FVector(1.0, 0.0, 0.0);
+
     UPROPERTY()
     TObjectPtr<UInstancedStaticMeshComponent> InstancedNewLocationMesh;
+
+
 
 
 private:
@@ -117,8 +122,8 @@ private:
     void SetBoxExtendBySquadSize();
 
     void SpawnCreeps();
-    TArray<FVector> CalculateCreepsPositions(int32 HeightStart, int32 HeightEnd, int32 WidthStart, int32 WidthEnd, FVector SquadBaseSpawnLocation, bool UseLocationRandom = true);
-    FSquadSizes CalculateCurrentSquadSizes();
+    TArray<FVector> CalculateCreepsPositions(int32 HeightStart, int32 HeightEnd, int32 WidthStart, int32 WidthEnd, FVector SquadBaseSpawnLocation, FVector ForwarVectorToNewLocation, bool UseLocationRandom = true);
+    FQuat CalculateQuatBeetwenBaseSquadVec(FVector VectorIn);
 
     void OnMovingComplete();
     void OnRotatingCreepsComplete();
