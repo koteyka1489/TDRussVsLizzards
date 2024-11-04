@@ -136,4 +136,6 @@ private:
     double CalculateDotRightVectorSquadToLocation(FVector Location);
     ERotateFrontSquadBySide GetSideToFrontSquadRotating(FVector Location);
     void ExecuteCurrentTaskQueue();
+
+    FVector CalculateNewSquadCenterOnRebuild();
 };

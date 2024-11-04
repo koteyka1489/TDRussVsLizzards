@@ -98,6 +98,10 @@ void UActorMovementComponent::RebuildSquad(const TArray<FVector>& NewCreepLocati
     {
         bRebuildSquadIsSet = true;
         DestinationCreepsToRebuild.Append(NewCreepLocations);
+        if (bAutoOrientToMovement)
+        {
+            RotateToLocation(DestinationCreepsToRebuild[DestinationCreepsToRebuild.Num() - 1]);
+        }
     }
 }
 
@@ -219,6 +223,7 @@ void UActorMovementComponent::RebuildingSquad(float DeltaTime)
 
         if (VecToDestination.Length() <= 5.0)
         {
+            Creep->PlayAnimationIdle();
             CreepEndRebuildingCounter++;
         }
         else
@@ -232,7 +237,11 @@ void UActorMovementComponent::RebuildingSquad(float DeltaTime)
         CreepIndex++;
     }
 
-    OwnerSquad->UpdateSquadLocationStart();
+    FVector VecToDestination = DestinationCreepsToRebuild[CreepIndex] - OwnerSquad->GetActorLocation();
+    FVector Direction        = VecToDestination.GetSafeNormal();
+    FVector Offset           = FrameSpeed * Direction;
+    FVector NewLocation      = OwnerSquad->GetActorLocation() + Offset;
+    OwnerSquad->SetActorLocation(NewLocation);
 
     if (CreepEndRebuildingCounter == CreepsArray->Num())
     {

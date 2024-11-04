@@ -171,25 +171,27 @@ FQuat ABaseSquadCreeps::CalculateQuatBeetwenBaseSquadVec(FVector VectorIn)
 
 void ABaseSquadCreeps::RebuildSquad(int32 NewWidth, FVector NewStartCreepSpawnLocation, FVector NewSquadForwardVerctor)
 {
-
-    FSquadSizes NewSquadSizes;
-    NewSquadSizes.Width       = NewWidth;
-    NewSquadSizes.Heigth      = CreepsNum / NewSquadSizes.Width;
+    CurrentSquadSizes.Width       = NewWidth;
+    CurrentSquadSizes.Heigth  = CreepsNum / CurrentSquadSizes.Width;
     FRotator NewSquadRotation = NewSquadForwardVerctor.Rotation();
 
     InstancedNewLocationMesh->SetVisibility(true);
     InstancedNewLocationMesh->bHiddenInGame = false;
 
     RebuildCreepsNewLocations = CalculateCreepsPositions(
-        0, NewSquadSizes.Heigth, 0, NewSquadSizes.Width, NewStartCreepSpawnLocation, NewSquadForwardVerctor, false);
+        0, CurrentSquadSizes.Heigth, 0, CurrentSquadSizes.Width, NewStartCreepSpawnLocation, NewSquadForwardVerctor, false);
 
-    int32 CreepsShortage = CreepsNum - NewSquadSizes.Heigth * NewSquadSizes.Width;
+    int32 CreepsShortage = CreepsNum - CurrentSquadSizes.Heigth * CurrentSquadSizes.Width;
     if (CreepsShortage > 0)
     {
-        int32 StartSpawnRemainderCreeps = NewSquadSizes.Width / 2 - CreepsShortage / 2;
-        RebuildCreepsNewLocations.Append(CalculateCreepsPositions(NewSquadSizes.Heigth, NewSquadSizes.Heigth + 1, StartSpawnRemainderCreeps,
+        int32 StartSpawnRemainderCreeps = CurrentSquadSizes.Width / 2 - CreepsShortage / 2;
+        RebuildCreepsNewLocations.Append(
+            CalculateCreepsPositions(CurrentSquadSizes.Heigth, CurrentSquadSizes.Heigth + 1, StartSpawnRemainderCreeps,
             StartSpawnRemainderCreeps + CreepsShortage, NewStartCreepSpawnLocation, NewSquadForwardVerctor, false));
     }
+
+    RebuildCreepsNewLocations.Add(CalculateNewSquadCenterOnRebuild());
+
 
     if (!InstancedMeshNewLocIsSet)
     {
@@ -414,4 +416,16 @@ void ABaseSquadCreeps::ExecuteCurrentTaskQueue()
             CurrentSquadTask->ExecuteTask();
         }
     }
+}
+
+FVector ABaseSquadCreeps::CalculateNewSquadCenterOnRebuild()
+{
+    FVector RightCornerFrontNewPos = RebuildCreepsNewLocations[0];
+    FVector LeftCornerForntNewPos  = RebuildCreepsNewLocations[CurrentSquadSizes.Width - 1];
+    FVector RightBackCorner        = RebuildCreepsNewLocations[(CurrentSquadSizes.Heigth - 1) * CurrentSquadSizes.Width];
+
+    FVector RightToLeftInterp = (LeftCornerForntNewPos - RightCornerFrontNewPos) / 2;
+    FVector FrontToBackInterp = (RightBackCorner - RightCornerFrontNewPos) / 2;
+
+    return RebuildCreepsNewLocations[0] + RightToLeftInterp + FrontToBackInterp;
 }

@@ -76,5 +76,5 @@ private:
     void CreateSelectionBox();
 
     void UpdateRebuildSquad();
-    int32 CalcelateNewWidthSquad(double LengthRebuildVector, TObjectPtr<ABaseSquadCreeps> RebuildSquad);
+    int32 CalculateNewWidthSquad(double LengthRebuildVector, TObjectPtr<ABaseSquadCreeps> RebuildSquad);
 };
