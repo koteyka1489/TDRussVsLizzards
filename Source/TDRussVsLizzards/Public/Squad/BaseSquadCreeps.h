@@ -57,6 +57,7 @@ public:
     void StopAllTasks();
 
     void MoveAndRotatingSquadToLocation(FVector Destination);
+    void UpdateSquadLocationStart();
 
     void RebuildSquad(int32 NewWidth, FVector NewStartCreepSpawnLocation, FVector NewSquadForwardVerctor);
     void EndRebuildSquad();
@@ -108,6 +109,7 @@ protected:
 
 private:
     TArray<TObjectPtr<ABaseCreepActor>> Creeps;
+    TArray<FVector> RebuildCreepsNewLocations;
 
     FSquadSizes CurrentSquadSizes;
     ESquadCurrentAnimation CurrentAnimation = ESquadCurrentAnimation::Idle;
@@ -118,7 +120,7 @@ private:
     bool bSquadIsChosen                         = false;
     bool InstancedMeshNewLocIsSet                = false;
 
-    void UpdateSquadLocationStart();
+   
     void SetBoxExtendBySquadSize();
 
     void SpawnCreeps();
@@ -128,6 +130,7 @@ private:
     void OnMovingComplete();
     void OnRotatingCreepsComplete();
     void OnRotatingFrontSquadComplete();
+    void OnRebuildingSquadComplete();
 
     double CalculateDotFrontSquadToLocation(FVector Location);
     double CalculateDotRightVectorSquadToLocation(FVector Location);

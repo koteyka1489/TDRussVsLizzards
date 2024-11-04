@@ -37,6 +37,10 @@ void UActorMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType
     {
         MovingToLocation(DeltaTime);
     }
+    if (bRebuildSquadIsSet)
+    {
+        RebuildingSquad(DeltaTime);
+    }
 }
 
 void UActorMovementComponent::MoveToLocation(FVector Location)
@@ -77,15 +81,24 @@ void UActorMovementComponent::RotateFrontSquadToLocationFromSide(FVector Locatio
     }
 }
 
-void UActorMovementComponent::StopAllMovings() 
+void UActorMovementComponent::StopAllMovings()
 {
-    bDestinationToMovingIsSet = false;
-    bDestinationToRotatingIsSet = false;
+    bDestinationToMovingIsSet             = false;
+    bDestinationToRotatingIsSet           = false;
     bDestinationToSquadFrontRotationIsSet = false;
     DestinationCreepsToRotateFrontSquadFromCenter.Empty();
     CreepEndRotatFrontSquadCounter = 0;
     UpdateCreepsLocationFromSidesSquad();
     OnMovingComplete.ExecuteIfBound();
+}
+
+void UActorMovementComponent::RebuildSquad(const TArray<FVector>& NewCreepLocations)
+{
+    if (!bRebuildSquadIsSet)
+    {
+        bRebuildSquadIsSet = true;
+        DestinationCreepsToRebuild.Append(NewCreepLocations);
+    }
 }
 
 void UActorMovementComponent::RotateToLocation(FVector Location)
@@ -186,7 +199,51 @@ void UActorMovementComponent::RotatingFrontSquadToLocationFromCenter(float Delta
         DestinationCreepsToRotateFrontSquadFromCenter.Empty();
         CreepEndRotatFrontSquadCounter = 0;
         UpdateCreepsLocationFromSidesSquad();
-        OnRotatingFrontSquadComplete.ExecuteIfBound();
+        if (!OnRotatingFrontSquadComplete.ExecuteIfBound())
+        {
+            check(0);
+        }
+    }
+}
+
+void UActorMovementComponent::RebuildingSquad(float DeltaTime)
+{
+
+    float FrameSpeed          = SpeedMoving * DeltaTime;
+    int32 CreepIndex          = 0;
+    CreepEndRebuildingCounter = 0;
+
+    for (const auto& Creep : *CreepsArray)
+    {
+        FVector VecToDestination = DestinationCreepsToRebuild[CreepIndex] - Creep->GetActorLocation();
+
+        if (VecToDestination.Length() <= 5.0)
+        {
+            CreepEndRebuildingCounter++;
+        }
+        else
+        {
+            FVector Direction   = VecToDestination.GetSafeNormal();
+            FVector Offset      = FrameSpeed * Direction;
+            FVector NewLocation = Creep->GetActorLocation() + Offset;
+            Creep->SetActorLocation(NewLocation);
+        }
+
+        CreepIndex++;
+    }
+
+    OwnerSquad->UpdateSquadLocationStart();
+
+    if (CreepEndRebuildingCounter == CreepsArray->Num())
+    {
+        bRebuildSquadIsSet = false;
+        DestinationCreepsToRebuild.Empty();
+        CreepEndRebuildingCounter = 0;
+        UpdateCreepsLocationFromSidesSquad();
+        if (!OnRebuildingSquadComplete.ExecuteIfBound())
+        {
+            check(0);
+        }
     }
 }
 
