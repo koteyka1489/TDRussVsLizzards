@@ -63,7 +63,7 @@ private:
     bool bAutoOrientToMovement                 = true;
     bool bAutoOrientToFrontSquadRotation       = true;
 
-    float SpeedMoving                    = 500.0f;
+    float SpeedMoving                    = 600.0f;
     float SpeedRotating                  = 300.0f;
     float InterpSpeed                    = 5.0f;
     int32 CreepEndRotatFrontSquadCounter = 0;

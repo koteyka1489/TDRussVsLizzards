@@ -110,6 +110,7 @@ protected:
 private:
     TArray<TObjectPtr<ABaseCreepActor>> Creeps;
     TArray<FVector> RebuildCreepsNewLocations;
+    FVector RebuildSquadNewForwardVector;
 
     FSquadSizes CurrentSquadSizes;
     ESquadCurrentAnimation CurrentAnimation = ESquadCurrentAnimation::Idle;

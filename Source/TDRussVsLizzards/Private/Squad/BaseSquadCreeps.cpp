@@ -98,12 +98,16 @@ void ABaseSquadCreeps::UpdateSquadLocationStart()
 
 void ABaseSquadCreeps::SetBoxExtendBySquadSize()
 {
-    FVector SquadRightCorner = GetRightCornerCreepLocation();
+    FVector RightCornerFrontNewPos = Creeps[0]->GetActorLocation();
+    
+    FVector LeftCornerForntNewPos = Creeps[CurrentSquadSizes.Width - 1]->GetActorLocation();
+    FVector RightBackCorner       = Creeps[(CurrentSquadSizes.Heigth - 1) * CurrentSquadSizes.Width]->GetActorLocation();
 
-    FVector NewBoxExtend = GetActorLocation() - SquadRightCorner;
-    NewBoxExtend         = NewBoxExtend.GetAbs();
-    NewBoxExtend.Z       = 200.0;
+    double NewWidth = (LeftCornerForntNewPos - RightCornerFrontNewPos).Size() / 2;
+    double NewHeight = (RightBackCorner - RightCornerFrontNewPos).Size() / 2;
 
+    FVector NewBoxExtend{NewHeight, NewWidth, 200.0};
+   
     SquadSizesBox->SetBoxExtent(NewBoxExtend);
 }
 
@@ -171,6 +175,7 @@ FQuat ABaseSquadCreeps::CalculateQuatBeetwenBaseSquadVec(FVector VectorIn)
 
 void ABaseSquadCreeps::RebuildSquad(int32 NewWidth, FVector NewStartCreepSpawnLocation, FVector NewSquadForwardVerctor)
 {
+    RebuildSquadNewForwardVector = NewSquadForwardVerctor;
     CurrentSquadSizes.Width       = NewWidth;
     CurrentSquadSizes.Heigth  = CreepsNum / CurrentSquadSizes.Width;
     FRotator NewSquadRotation = NewSquadForwardVerctor.Rotation();
@@ -260,6 +265,7 @@ void ABaseSquadCreeps::OnMovingComplete()
 void ABaseSquadCreeps::OnRotatingCreepsComplete()
 {
     bCurrentSquadTaskIsExecute = false;
+    
 }
 
 void ABaseSquadCreeps::OnRotatingFrontSquadComplete()
@@ -269,7 +275,18 @@ void ABaseSquadCreeps::OnRotatingFrontSquadComplete()
 
 void ABaseSquadCreeps::OnRebuildingSquadComplete() 
 {
-    OnMovingComplete();
+    FVector VectorRebuildRotation = GetActorLocation() + RebuildSquadNewForwardVector * 1000;
+    auto RotateCreepsToDestTask = NewObject<URotateCreepsTask>();
+    RotateCreepsToDestTask->InitDestinationTask(VectorRebuildRotation, this);
+    SquadTasksQueue.Enqueue(RotateCreepsToDestTask);
+    CurrentAnimation = ESquadCurrentAnimation::Idle;
+    SetBoxExtendBySquadSize();
+
+
+    FVector VectorRebuildMovement = GetActorLocation() + RebuildSquadNewForwardVector;
+    auto MoveToLocationTask = NewObject<UMoveSquadTask>();
+    MoveToLocationTask->InitDestinationTask(VectorRebuildMovement, this);
+    SquadTasksQueue.Enqueue(MoveToLocationTask);
 }
 
 void ABaseSquadCreeps::SquadUnChoisen()

@@ -238,7 +238,7 @@ void ATeamController::UpdateRebuildSquad()
         double RebuildVectorLength = RebuildVector.Size();
         int32 NewWidth             = CalculateNewWidthSquad(RebuildVectorLength, ChoisenSquads[0]);
 
-        ChoisenSquads[0]->RebuildSquad(NewWidth, EndPoint, RebuildForwardVector);
+        ChoisenSquads[0]->RebuildSquad(NewWidth, EndPoint,  RebuildForwardVector);
     }
     else
     {
