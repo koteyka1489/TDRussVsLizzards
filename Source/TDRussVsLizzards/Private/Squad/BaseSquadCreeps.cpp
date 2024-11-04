@@ -108,10 +108,10 @@ void ABaseSquadCreeps::SpawnCreeps()
     SpawnInfo.Owner                          = this;
 
     TArray<FVector> SpawnLocations =
-        CalculateCreepsPositionsInSquad(0, CurrentSquadSizes.Heigth, 0, CurrentSquadSizes.Width, Squadlocation);
+        CalculateCreepsPositions(0, CurrentSquadSizes.Heigth, 0, CurrentSquadSizes.Width, Squadlocation);
 
     int32 StartSpawnRemainderCreeps = CurrentSquadSizes.Width / 2 - CreepsShortage / 2;
-    SpawnLocations.Append(CalculateCreepsPositionsInSquad(CurrentSquadSizes.Heigth, CurrentSquadSizes.Heigth + 1, StartSpawnRemainderCreeps,
+    SpawnLocations.Append(CalculateCreepsPositions(CurrentSquadSizes.Heigth, CurrentSquadSizes.Heigth + 1, StartSpawnRemainderCreeps,
         StartSpawnRemainderCreeps + CreepsShortage, Squadlocation));
 
     for (const auto& SpawnLocation : SpawnLocations)
@@ -121,7 +121,7 @@ void ABaseSquadCreeps::SpawnCreeps()
     }
 }
 
-TArray<FVector> ABaseSquadCreeps::CalculateCreepsPositionsInSquad(
+TArray<FVector> ABaseSquadCreeps::CalculateCreepsPositions(
     int32 HeightStart, int32 HeightEnd, int32 WidthStart, int32 WidthEnd, FVector SquadBaseSpawnLocation)
 {
     TArray<FVector> Result;
