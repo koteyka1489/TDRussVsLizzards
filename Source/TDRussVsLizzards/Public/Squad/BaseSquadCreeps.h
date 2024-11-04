@@ -107,7 +107,8 @@ private:
     void UpdateSquadLocationStart();
     void SetBoxExtendBySquadSize();
 
-    void SpawnCreepsN();
+    void SpawnCreeps();
+    TArray<FVector> CalculateCreepsPositionsInSquad(int32 HeightStart, int32 HeightEnd, int32 WidthStart, int32 WidthEnd, FVector SquadBaseSpawnLocation);
     FSquadSizes CalculateCurrentSquadSizes();
 
     void OnMovingComplete();

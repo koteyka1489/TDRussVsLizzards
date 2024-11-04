@@ -43,7 +43,7 @@ void ABaseSquadCreeps::BeginPlay()
 
     Creeps.Reserve(CreepsNum);
 
-    SpawnCreepsN();
+    SpawnCreeps();
     UpdateSquadLocationStart();
     SetBoxExtendBySquadSize();
 
@@ -94,7 +94,7 @@ void ABaseSquadCreeps::SetBoxExtendBySquadSize()
     SquadSizesBox->SetBoxExtent(NewBoxExtend);
 }
 
-void ABaseSquadCreeps::SpawnCreepsN()
+void ABaseSquadCreeps::SpawnCreeps()
 {
     CurrentSquadSizes.Heigth = 6;
     CurrentSquadSizes.Width  = CreepsNum / CurrentSquadSizes.Heigth;
@@ -107,37 +107,39 @@ void ABaseSquadCreeps::SpawnCreepsN()
     SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
     SpawnInfo.Owner                          = this;
 
-    for (int32 x = 0; x < CurrentSquadSizes.Heigth; x++)
+    TArray<FVector> SpawnLocations =
+        CalculateCreepsPositionsInSquad(0, CurrentSquadSizes.Heigth, 0, CurrentSquadSizes.Width, Squadlocation);
+
+    int32 StartSpawnRemainderCreeps = CurrentSquadSizes.Width / 2 - CreepsShortage / 2;
+    SpawnLocations.Append(CalculateCreepsPositionsInSquad(CurrentSquadSizes.Heigth, CurrentSquadSizes.Heigth + 1, StartSpawnRemainderCreeps,
+        StartSpawnRemainderCreeps + CreepsShortage, Squadlocation));
+
+    for (const auto& SpawnLocation : SpawnLocations)
     {
-        for (int32 y = 0; y < CurrentSquadSizes.Width; y++)
+        ABaseCreepActor* SpawnedCreep = GetWorld()->SpawnActor<ABaseCreepActor>(CreepsType, SpawnLocation, SpawnRotation, SpawnInfo);
+        Creeps.Add(SpawnedCreep);
+    }
+}
+
+TArray<FVector> ABaseSquadCreeps::CalculateCreepsPositionsInSquad(
+    int32 HeightStart, int32 HeightEnd, int32 WidthStart, int32 WidthEnd, FVector SquadBaseSpawnLocation)
+{
+    TArray<FVector> Result;
+
+    for (int32 HeightPos = HeightStart; HeightPos < HeightEnd; HeightPos++)
+    {
+        for (int32 WidthPos = WidthStart; WidthPos < WidthEnd; WidthPos++)
         {
             double XLocRand = FMath::FRandRange(-CreepPositionRandom, CreepPositionRandom);
             double YLocRand = FMath::FRandRange(-CreepPositionRandom, CreepPositionRandom);
 
-            const FVector SpawnLocation = FVector(Squadlocation.X + XLocRand - CreepsOffsetInSquad.X * (double)x,
-                Squadlocation.Y + YLocRand - CreepsOffsetInSquad.Y * (double)y, Squadlocation.Z + 90.0);
-
-            ABaseCreepActor* SpawnedCreep = GetWorld()->SpawnActor<ABaseCreepActor>(CreepsType, SpawnLocation, SpawnRotation, SpawnInfo);
-            Creeps.Add(SpawnedCreep);
+            const FVector SpawnLocation = FVector(SquadBaseSpawnLocation.X + XLocRand - CreepsOffsetInSquad.X * (double)HeightPos,
+                SquadBaseSpawnLocation.Y + YLocRand - CreepsOffsetInSquad.Y * (double)WidthPos, SquadBaseSpawnLocation.Z + 90.0);
+            Result.Add(SpawnLocation);
         }
     }
 
-    for (int32 x = CurrentSquadSizes.Heigth; x < CurrentSquadSizes.Heigth + 1; x++)
-    {
-
-        int32 StartSpawnRemainderCreeps = CurrentSquadSizes.Width / 2 - CreepsShortage / 2;
-        for (int32 y = StartSpawnRemainderCreeps; y < StartSpawnRemainderCreeps + CreepsShortage; y++)
-        {
-            double XLocRand = FMath::FRandRange(-CreepPositionRandom, CreepPositionRandom);
-            double YLocRand = FMath::FRandRange(-CreepPositionRandom, CreepPositionRandom);
-
-            const FVector SpawnLocation = FVector(Squadlocation.X + XLocRand - CreepsOffsetInSquad.X * (double)x,
-                Squadlocation.Y + YLocRand - CreepsOffsetInSquad.Y * (double)y, Squadlocation.Z + 90.0);
-
-            ABaseCreepActor* SpawnedCreep = GetWorld()->SpawnActor<ABaseCreepActor>(CreepsType, SpawnLocation, SpawnRotation, SpawnInfo);
-            Creeps.Add(SpawnedCreep);
-        }
-    }
+    return Result;
 }
 
 FSquadSizes ABaseSquadCreeps::CalculateCurrentSquadSizes()
