@@ -93,6 +93,7 @@ void ATeamController::OnLeftMouseHoldCompleted()
         bMultiplySelectSquadBySelectedBox = false;
     }
 }
+
 void ATeamController::OnRightMouseClick(FHitResult Hit)
 {
     if (ChoisenSquads.Num() == 0) return;
@@ -117,6 +118,13 @@ void ATeamController::OnRightMouseHoldCompleted()
     if (bRebuildSquadIsContinue)
     {
         bRebuildSquadIsContinue = false;
+
+        if (ChoisenSquads.Num() == 0) return;
+
+        if (ChoisenSquads.Num() == 1)
+        {
+            ChoisenSquads[0]->EndRebuildSquad();
+        }
     }
 }
 
@@ -235,7 +243,7 @@ void ATeamController::UpdateRebuildSquad()
         FString Message = FString::Printf(TEXT("Calc Squad new width %i"), NewWidth);
         GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Red, Message);
 
-
+        ChoisenSquads[0]->RebuildSquad(NewWidth, EndPoint, RebuildForwardVector);
 
     }
     else
