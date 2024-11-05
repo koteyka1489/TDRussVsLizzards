@@ -86,6 +86,7 @@ void UActorMovementComponent::StopAllMovings()
     bDestinationToMovingIsSet             = false;
     bDestinationToRotatingIsSet           = false;
     bDestinationToSquadFrontRotationIsSet = false;
+    bRebuildSquadIsSet                    = false;
     DestinationCreepsToRotateFrontSquadFromCenter.Empty();
     CreepEndRotatFrontSquadCounter = 0;
     UpdateCreepsLocationFromSidesSquad();
@@ -100,7 +101,7 @@ void UActorMovementComponent::RebuildSquad(const TArray<FVector>& NewCreepLocati
         DestinationCreepsToRebuild.Append(NewCreepLocations);
         if (bAutoOrientToMovement)
         {
-            RotateToLocation(DestinationCreepsToRebuild[DestinationCreepsToRebuild.Num() - 1]);
+            RotateToLocation(NewCreepLocations[NewCreepLocations.Num() -1]);
         }
     }
 }
