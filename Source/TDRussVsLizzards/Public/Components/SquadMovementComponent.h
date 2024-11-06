@@ -6,6 +6,15 @@
 #include "Components/ActorComponent.h"
 #include "SquadMovementComponent.generated.h"
 
+class ABaseCreepActor;
+
+enum class ESquadState
+{
+    Idle,
+    Rotating,
+    Movement
+};
+
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class TDRUSSVSLIZZARDS_API USquadMovementComponent : public UActorComponent
 {
@@ -16,6 +25,17 @@ public:
     virtual void BeginPlay() override;
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+    void SetSquadMovement();
+
 protected:
 private:
+    // Fields
+    TArray<TObjectPtr<ABaseCreepActor>>* CreepsArray;
+
+    ESquadState CurrentState = ESquadState::Idle;
+    TQueue<ESquadState> TasksQueue;
+
+    // Methods
+    void RotatingCreeps();
+    void MovingCreeps();
 };
