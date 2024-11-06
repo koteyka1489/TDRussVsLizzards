@@ -94,6 +94,12 @@ void ABaseCreepActor::PlayAnimationRun()
     SkeletalMeshComponent->PlayAnimation(CreepRunAnimation, true);
 }
 
+void ABaseCreepActor::SetCreepSpeeds(float SpeedRotatingIn, float SpeedMovingIn) 
+{
+    CreepSpeeds.SpeedMoving = SpeedMovingIn;
+    CreepSpeeds.SpeedRotating = SpeedRotatingIn;
+}
+
 void ABaseCreepActor::InitSkeletalMesh()
 {
     check(0);

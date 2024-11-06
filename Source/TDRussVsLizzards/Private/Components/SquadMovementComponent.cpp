@@ -31,12 +31,12 @@ void USquadMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType
 
     if (CurrentState == ESquadState::Rotating)
     {
-        RotatingCreeps();
+        RotatingCreeps(DeltaTime);
     }
 
     if (CurrentState == ESquadState::Movement)
     {
-        MovingCreeps();
+        MovingCreeps(DeltaTime);
     }
     
 }
@@ -47,12 +47,17 @@ void USquadMovementComponent::SetSquadMovement()
     TasksQueue.Enqueue(ESquadState::Movement);
 }
 
-void USquadMovementComponent::RotatingCreeps() 
+void USquadMovementComponent::RotatingCreeps(float DeltaTime)
 {
 
+    for (const auto& Creep : *CreepsArray)
+    {
+        
+    }
+    
 }
 
-void USquadMovementComponent::MovingCreeps() 
+void USquadMovementComponent::MovingCreeps(float DeltaTime)
 {
 
 }

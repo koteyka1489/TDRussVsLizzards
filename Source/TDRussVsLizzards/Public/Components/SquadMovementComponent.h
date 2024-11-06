@@ -36,6 +36,6 @@ private:
     TQueue<ESquadState> TasksQueue;
 
     // Methods
-    void RotatingCreeps();
-    void MovingCreeps();
+    void RotatingCreeps(float DeltaTime);
+    void MovingCreeps(float DeltaTime);
 };

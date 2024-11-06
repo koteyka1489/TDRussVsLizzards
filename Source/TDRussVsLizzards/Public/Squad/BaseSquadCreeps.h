@@ -30,6 +30,25 @@ enum class ESquadCurrentAnimation
 };
 
 USTRUCT(BlueprintType)
+struct FSquadCreepsSpeed
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad|CreepSpeed")
+    float SpeedMoving   = 600.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad|CreepSpeed")
+    float SpeedRotating = 300.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad|CreepSpeed")
+    float MovingRandom  = 50.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad|CreepSpeed")
+    float RotatingRandom = 50.0f;
+};
+
+
+USTRUCT(BlueprintType)
 struct FCreepsOffsetInSquad
 {
     GENERATED_BODY()
@@ -104,7 +123,8 @@ protected:
     UPROPERTY()
     TObjectPtr<UInstancedStaticMeshComponent> InstancedNewLocationMesh;
 
-
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad|CreepSpeed")
+    FSquadCreepsSpeed CreepsSpeed;
 
 
 private:

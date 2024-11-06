@@ -16,6 +16,12 @@ class UAnimMontage;
 class USkeletalMeshComponentBudgeted;
 class USceneComponent;
 
+struct FCreepSpeeds
+{
+    float SpeedMoving   = 100.0f;
+    float SpeedRotating = 20.0f;
+};
+
 UCLASS(Abstract)
 class TDRUSSVSLIZZARDS_API ABaseCreepActor : public AActor
 {
@@ -33,6 +39,13 @@ public:
     void PlayAnimationIdle();
     void PlayAnimationWalk();
     void PlayAnimationRun();
+
+    void SetCreepSpeeds(float SpeedRotatingIn, float SpeedMovingIn);
+    FCreepSpeeds& GetCreepSpeeds() { return CreepSpeeds; }
+
+    FVector& GetMovingDestination() { return MovingDestination; }
+    void  SetMovingDestination(FVector MovingDestinationIn) { MovingDestination = MovingDestinationIn; }
+
 
 
 protected:
@@ -62,4 +75,9 @@ protected:
 
 private:
     bool bCreepIsChoisen = false;
+
+    FVector MovingDestination = FVector::Zero();
+
+    FCreepSpeeds CreepSpeeds;
+    
 };

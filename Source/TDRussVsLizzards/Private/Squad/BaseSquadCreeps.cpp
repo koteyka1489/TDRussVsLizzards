@@ -69,6 +69,15 @@ void ABaseSquadCreeps::BeginPlay()
     {
         SetOwner(TeamController);
     }
+
+    for (auto& Creep : Creeps)
+    {
+
+        float RotatingMove = CreepsSpeed.SpeedRotating + FMath::RandRange(-CreepsSpeed.RotatingRandom, CreepsSpeed.RotatingRandom);
+        float SpeedMove    = CreepsSpeed.SpeedMoving + FMath::RandRange(-CreepsSpeed.MovingRandom, CreepsSpeed.MovingRandom);
+
+        Creep->SetCreepSpeeds(RotatingMove, SpeedMove);
+    }
 }
 
 void ABaseSquadCreeps::Tick(float DeltaTime)
@@ -99,15 +108,15 @@ void ABaseSquadCreeps::UpdateSquadLocationStart()
 void ABaseSquadCreeps::SetBoxExtendBySquadSize()
 {
     FVector RightCornerFrontNewPos = Creeps[0]->GetActorLocation();
-    
+
     FVector LeftCornerForntNewPos = Creeps[CurrentSquadSizes.Width - 1]->GetActorLocation();
     FVector RightBackCorner       = Creeps[(CurrentSquadSizes.Heigth - 1) * CurrentSquadSizes.Width]->GetActorLocation();
 
-    double NewWidth = (LeftCornerForntNewPos - RightCornerFrontNewPos).Size() / 2;
+    double NewWidth  = (LeftCornerForntNewPos - RightCornerFrontNewPos).Size() / 2;
     double NewHeight = (RightBackCorner - RightCornerFrontNewPos).Size() / 2;
 
     FVector NewBoxExtend{NewHeight, NewWidth, 200.0};
-   
+
     SquadSizesBox->SetBoxExtent(NewBoxExtend);
 }
 
@@ -176,9 +185,9 @@ FQuat ABaseSquadCreeps::CalculateQuatBeetwenBaseSquadVec(FVector VectorIn)
 void ABaseSquadCreeps::RebuildSquad(int32 NewWidth, FVector NewStartCreepSpawnLocation, FVector NewSquadForwardVerctor)
 {
     RebuildSquadNewForwardVector = NewSquadForwardVerctor;
-    CurrentSquadSizes.Width       = NewWidth;
-    CurrentSquadSizes.Heigth  = CreepsNum / CurrentSquadSizes.Width;
-    FRotator NewSquadRotation = NewSquadForwardVerctor.Rotation();
+    CurrentSquadSizes.Width      = NewWidth;
+    CurrentSquadSizes.Heigth     = CreepsNum / CurrentSquadSizes.Width;
+    FRotator NewSquadRotation    = NewSquadForwardVerctor.Rotation();
 
     InstancedNewLocationMesh->SetVisibility(true);
     InstancedNewLocationMesh->bHiddenInGame = false;
@@ -192,11 +201,10 @@ void ABaseSquadCreeps::RebuildSquad(int32 NewWidth, FVector NewStartCreepSpawnLo
         int32 StartSpawnRemainderCreeps = CurrentSquadSizes.Width / 2 - CreepsShortage / 2;
         RebuildCreepsNewLocations.Append(
             CalculateCreepsPositions(CurrentSquadSizes.Heigth, CurrentSquadSizes.Heigth + 1, StartSpawnRemainderCreeps,
-            StartSpawnRemainderCreeps + CreepsShortage, NewStartCreepSpawnLocation, NewSquadForwardVerctor, false));
+                StartSpawnRemainderCreeps + CreepsShortage, NewStartCreepSpawnLocation, NewSquadForwardVerctor, false));
     }
 
     RebuildCreepsNewLocations.Add(CalculateNewSquadCenterOnRebuild());
-
 
     if (!InstancedMeshNewLocIsSet)
     {
@@ -265,7 +273,6 @@ void ABaseSquadCreeps::OnMovingComplete()
 void ABaseSquadCreeps::OnRotatingCreepsComplete()
 {
     bCurrentSquadTaskIsExecute = false;
-    
 }
 
 void ABaseSquadCreeps::OnRotatingFrontSquadComplete()
@@ -273,18 +280,17 @@ void ABaseSquadCreeps::OnRotatingFrontSquadComplete()
     bCurrentSquadTaskIsExecute = false;
 }
 
-void ABaseSquadCreeps::OnRebuildingSquadComplete() 
+void ABaseSquadCreeps::OnRebuildingSquadComplete()
 {
     FVector VectorRebuildRotation = GetActorLocation() + RebuildSquadNewForwardVector * 1000;
-    auto RotateCreepsToDestTask = NewObject<URotateCreepsTask>();
+    auto RotateCreepsToDestTask   = NewObject<URotateCreepsTask>();
     RotateCreepsToDestTask->InitDestinationTask(VectorRebuildRotation, this);
     SquadTasksQueue.Enqueue(RotateCreepsToDestTask);
     CurrentAnimation = ESquadCurrentAnimation::Idle;
     SetBoxExtendBySquadSize();
 
-
     FVector VectorRebuildMovement = GetActorLocation() + RebuildSquadNewForwardVector;
-    auto MoveToLocationTask = NewObject<UMoveSquadTask>();
+    auto MoveToLocationTask       = NewObject<UMoveSquadTask>();
     MoveToLocationTask->InitDestinationTask(VectorRebuildMovement, this);
     SquadTasksQueue.Enqueue(MoveToLocationTask);
 }
