@@ -41,6 +41,7 @@ void UActorMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType
     {
         RebuildingSquad(DeltaTime);
     }
+
 }
 
 void UActorMovementComponent::MoveToLocation(FVector Location)

@@ -45,8 +45,7 @@ public:
     FVector& GetMovingDestination() { return MovingDestination; }
     void SetMovingDestination(FVector MovingDestinationIn) { MovingDestination = MovingDestinationIn; }
 
-    UFUNCTION(BlueprintCallable, Category = "Speed")
-    float GetCreepSpeedMoving();
+
 
 protected:
     UPROPERTY()
