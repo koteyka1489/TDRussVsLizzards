@@ -6,7 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "BaseCreepActor.generated.h"
 
-
 class UHealthComponent;
 class USkeletalMeshComponent;
 class UCapsuleComponent;
@@ -44,9 +43,10 @@ public:
     FCreepSpeeds& GetCreepSpeeds() { return CreepSpeeds; }
 
     FVector& GetMovingDestination() { return MovingDestination; }
-    void  SetMovingDestination(FVector MovingDestinationIn) { MovingDestination = MovingDestinationIn; }
+    void SetMovingDestination(FVector MovingDestinationIn) { MovingDestination = MovingDestinationIn; }
 
-
+    UFUNCTION(BlueprintCallable, Category = "Speed")
+    float GetCreepSpeedMoving();
 
 protected:
     UPROPERTY()
@@ -79,5 +79,4 @@ private:
     FVector MovingDestination = FVector::Zero();
 
     FCreepSpeeds CreepSpeeds;
-    
 };

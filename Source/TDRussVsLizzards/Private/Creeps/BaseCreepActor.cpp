@@ -72,7 +72,6 @@ void ABaseCreepActor::BeginPlay()
     PlayAnimationIdle();
 }
 
-
 void ABaseCreepActor::SetCreepIsChoisen(bool ChoisenStatus)
 {
     bCreepIsChoisen = ChoisenStatus;
@@ -94,10 +93,16 @@ void ABaseCreepActor::PlayAnimationRun()
     SkeletalMeshComponent->PlayAnimation(CreepRunAnimation, true);
 }
 
-void ABaseCreepActor::SetCreepSpeeds(float SpeedRotatingIn, float SpeedMovingIn) 
+void ABaseCreepActor::SetCreepSpeeds(float SpeedRotatingIn, float SpeedMovingIn)
 {
-    CreepSpeeds.SpeedMoving = SpeedMovingIn;
+    CreepSpeeds.SpeedMoving   = SpeedMovingIn;
     CreepSpeeds.SpeedRotating = SpeedRotatingIn;
+}
+
+float ABaseCreepActor::GetCreepSpeedMoving()
+{
+
+    return CreepSpeeds.SpeedMoving;
 }
 
 void ABaseCreepActor::InitSkeletalMesh()
