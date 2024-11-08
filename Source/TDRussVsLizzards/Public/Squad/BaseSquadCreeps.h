@@ -22,12 +22,7 @@ struct FSquadSizes
     int32 Heigth;
 };
 
-enum class ESquadCurrentAnimation
-{
-    Idle,
-    Walk,
-    Run
-};
+
 
 USTRUCT(BlueprintType)
 struct FSquadCreepsSpeed
@@ -72,7 +67,6 @@ public:
 
     void SquadUnChoisen();
     void SquadUnChoisenBySelectBox();
-    void PlayRunAnimation();
     void StopAllTasks();
 
     void MoveAndRotatingSquadToLocation(FVector Destination);
@@ -133,7 +127,6 @@ private:
     FVector RebuildSquadNewForwardVector;
 
     FSquadSizes CurrentSquadSizes;
-    ESquadCurrentAnimation CurrentAnimation = ESquadCurrentAnimation::Idle;
 
     TQueue<TObjectPtr<USquadBaseTask>> SquadTasksQueue;
     TObjectPtr<USquadBaseTask> CurrentSquadTask = nullptr;

@@ -225,7 +225,7 @@ void UActorMovementComponent::RebuildingSquad(float DeltaTime)
 
         if (VecToDestination.Length() <= 5.0)
         {
-            Creep->PlayAnimationIdle();
+            
             CreepEndRebuildingCounter++;
         }
         else

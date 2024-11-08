@@ -38,16 +38,14 @@ public:
     void SetCreepIsClicked();
     void SetCreepIsChoisen(bool ChoisenStatus);
 
-    void PlayAnimationIdle();
-    void PlayAnimationWalk();
-    void PlayAnimationRun();
 
     void SetCreepSpeeds(float SpeedRotatingIn, float SpeedMovingIn);
 
     UFUNCTION(BlueprintCallable, Category = "Speed")
-    float GetCreepSpeeds() { return CreepSpeeds.SpeedMoving; }
+    float GetCreepCurrentSpeedMoving() { return CreepCurrentSpeeds.SpeedMoving; }
 
     FVector& GetMovingDestination() { return MovingDestination; }
+
     void SetMovingDestination(FVector MovingDestinationIn) { MovingDestination = MovingDestinationIn; }
 
 
@@ -78,7 +76,10 @@ protected:
     virtual void InitAnimations();
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Speed")
-     FCreepSpeeds CreepSpeeds;
+     FCreepSpeeds CreepMaxSpeeds;
+
+     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Speed")
+     FCreepSpeeds CreepCurrentSpeeds;
 
 private:
     bool bCreepIsChoisen = false;

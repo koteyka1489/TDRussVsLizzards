@@ -234,7 +234,6 @@ void ABaseSquadCreeps::EndRebuildSquad()
     InstancedNewLocationMesh->bHiddenInGame = true;
     InstancedNewLocationMesh->ClearInstances();
     InstancedMeshNewLocIsSet = false;
-    PlayRunAnimation();
     MovementComponent->RebuildSquad(RebuildCreepsNewLocations);
 }
 
@@ -263,11 +262,7 @@ FVector ABaseSquadCreeps::GetLeftCornerCreepLocation()
 void ABaseSquadCreeps::OnMovingComplete()
 {
     bCurrentSquadTaskIsExecute = false;
-    CurrentAnimation           = ESquadCurrentAnimation::Idle;
-    for (auto& Creep : Creeps)
-    {
-        Creep->PlayAnimationIdle();
-    }
+
 }
 
 void ABaseSquadCreeps::OnRotatingCreepsComplete()
@@ -286,7 +281,6 @@ void ABaseSquadCreeps::OnRebuildingSquadComplete()
     auto RotateCreepsToDestTask   = NewObject<URotateCreepsTask>();
     RotateCreepsToDestTask->InitDestinationTask(VectorRebuildRotation, this);
     SquadTasksQueue.Enqueue(RotateCreepsToDestTask);
-    CurrentAnimation = ESquadCurrentAnimation::Idle;
     SetBoxExtendBySquadSize();
 
     FVector VectorRebuildMovement = GetActorLocation() + RebuildSquadNewForwardVector;
@@ -369,17 +363,7 @@ void ABaseSquadCreeps::MoveAndRotatingSquadToLocation(FVector Destination)
     }
 }
 
-void ABaseSquadCreeps::PlayRunAnimation()
-{
-    if (CurrentAnimation != ESquadCurrentAnimation::Run)
-    {
-        for (auto& Creep : Creeps)
-        {
-            Creep->PlayAnimationRun();
-        }
-        CurrentAnimation = ESquadCurrentAnimation::Run;
-    }
-}
+
 
 void ABaseSquadCreeps::StopAllTasks()
 {

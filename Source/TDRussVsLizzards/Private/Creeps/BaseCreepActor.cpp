@@ -69,7 +69,8 @@ void ABaseCreepActor::BeginPlay()
 {
     Super::BeginPlay();
 
-    PlayAnimationIdle();
+    CreepCurrentSpeeds.SpeedMoving   = 0.0f;
+    CreepCurrentSpeeds.SpeedRotating = 0.0f;
 }
 
 void ABaseCreepActor::SetCreepIsChoisen(bool ChoisenStatus)
@@ -78,27 +79,11 @@ void ABaseCreepActor::SetCreepIsChoisen(bool ChoisenStatus)
     StaticMeshComponent->SetVisibility(ChoisenStatus);
 }
 
-void ABaseCreepActor::PlayAnimationIdle()
-{
-    //SkeletalMeshComponent->PlayAnimation(CreepIdleAnimation, true);
-}
-
-void ABaseCreepActor::PlayAnimationWalk()
-{
-    //SkeletalMeshComponent->PlayAnimation(CreepWalkAnimation, true);
-}
-
-void ABaseCreepActor::PlayAnimationRun()
-{
-    //SkeletalMeshComponent->PlayAnimation(CreepRunAnimation, true);
-}
-
 void ABaseCreepActor::SetCreepSpeeds(float SpeedRotatingIn, float SpeedMovingIn)
 {
-    CreepSpeeds.SpeedMoving   = SpeedMovingIn;
-    CreepSpeeds.SpeedRotating = SpeedRotatingIn;
+    CreepMaxSpeeds.SpeedMoving   = SpeedMovingIn;
+    CreepMaxSpeeds.SpeedRotating = SpeedRotatingIn;
 }
-
 
 void ABaseCreepActor::InitSkeletalMesh()
 {
