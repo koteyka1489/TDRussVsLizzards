@@ -15,8 +15,11 @@ class UAnimMontage;
 class USkeletalMeshComponentBudgeted;
 class USceneComponent;
 
+USTRUCT(BlueprintType)
 struct FCreepSpeeds
 {
+    GENERATED_BODY()
+
     float SpeedMoving   = 100.0f;
     float SpeedRotating = 20.0f;
 };
@@ -40,7 +43,9 @@ public:
     void PlayAnimationRun();
 
     void SetCreepSpeeds(float SpeedRotatingIn, float SpeedMovingIn);
-    FCreepSpeeds& GetCreepSpeeds() { return CreepSpeeds; }
+
+    UFUNCTION(BlueprintCallable, Category = "Speed")
+    float GetCreepSpeeds() { return CreepSpeeds.SpeedMoving; }
 
     FVector& GetMovingDestination() { return MovingDestination; }
     void SetMovingDestination(FVector MovingDestinationIn) { MovingDestination = MovingDestinationIn; }
@@ -72,10 +77,13 @@ protected:
     virtual void InitSkeletalMesh();
     virtual void InitAnimations();
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Speed")
+     FCreepSpeeds CreepSpeeds;
+
 private:
     bool bCreepIsChoisen = false;
 
     FVector MovingDestination = FVector::Zero();
 
-    FCreepSpeeds CreepSpeeds;
+   
 };
