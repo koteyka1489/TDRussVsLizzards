@@ -6,23 +6,41 @@
 #include "Components/ActorComponent.h"
 #include "CreepMovementComponent.generated.h"
 
+USTRUCT(BlueprintType)
+struct FCreepSpeeds
+{
+    GENERATED_BODY()
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+    float SpeedMoving   = 100.0f;
+    float SpeedRotating = 20.0f;
+};
+
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class TDRUSSVSLIZZARDS_API UCreepMovementComponent : public UActorComponent
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
-public:	
-	// Sets default values for this component's properties
-	UCreepMovementComponent();
+public:
+    UCreepMovementComponent();
+    virtual void BeginPlay() override;
+    virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+    float GetCreepCurrentSpeedMoving() { return CreepCurrentSpeeds.SpeedMoving; }
+    float GetCreepCurrentSpeedRotating() { return CreepCurrentSpeeds.SpeedRotating; }
+
+    FVector& GetMovingDestination() { return MovingDestination; }
+    void SetMovingDestination(FVector MovingDestinationIn) { MovingDestination = MovingDestinationIn; }
+
+    void SetCreepSpeeds(float SpeedRotatingIn, float SpeedMovingIn);
 
 protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Speed")
+    FCreepSpeeds CreepMaxSpeeds;
 
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Speed")
+    FCreepSpeeds CreepCurrentSpeeds;
 
-		
+private:
+    FVector MovingDestination = FVector::Zero();
+
 };

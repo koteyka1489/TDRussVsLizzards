@@ -11,6 +11,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "SkeletalMeshComponentBudgeted.h"
 #include "Components/SceneComponent.h"
+#include "Components/CreepMovementComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseCreepActor, All, All);
 
@@ -63,14 +64,13 @@ ABaseCreepActor::ABaseCreepActor()
     StaticMeshComponent->SetGenerateOverlapEvents(false);
     StaticMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
     StaticMeshComponent->SetRelativeLocation(FVector(0.0, 0.0, -80.0));
+
+    MovementComponent = CreateDefaultSubobject<UCreepMovementComponent>("UCreepMovementComponent");
 }
 
 void ABaseCreepActor::BeginPlay()
 {
     Super::BeginPlay();
-
-    CreepCurrentSpeeds.SpeedMoving   = 0.0f;
-    CreepCurrentSpeeds.SpeedRotating = 0.0f;
 }
 
 void ABaseCreepActor::SetCreepIsChoisen(bool ChoisenStatus)
@@ -81,8 +81,17 @@ void ABaseCreepActor::SetCreepIsChoisen(bool ChoisenStatus)
 
 void ABaseCreepActor::SetCreepSpeeds(float SpeedRotatingIn, float SpeedMovingIn)
 {
-    CreepMaxSpeeds.SpeedMoving   = SpeedMovingIn;
-    CreepMaxSpeeds.SpeedRotating = SpeedRotatingIn;
+    MovementComponent->SetCreepSpeeds(SpeedRotatingIn, SpeedMovingIn);
+}
+
+float ABaseCreepActor::GetCreepCurrentSpeedMoving()
+{
+    return MovementComponent->GetCreepCurrentSpeedMoving();
+}
+
+float ABaseCreepActor::GetCreepCurrentSpeedRotating()
+{
+    return MovementComponent->GetCreepCurrentSpeedRotating();
 }
 
 void ABaseCreepActor::InitSkeletalMesh()
