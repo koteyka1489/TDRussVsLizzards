@@ -63,5 +63,13 @@ void USquadMovementComponent::RotatingCreeps(float DeltaTime)
 
 void USquadMovementComponent::MovingCreeps(float DeltaTime)
 {
+    for (const auto& Creep : *CreepsArray)
+    {
+        // Get speeds and vec dest
+        // calculate
+        // check creeps end moving and count
+        // set moving
+    }
 
+    // check count and end task
 }

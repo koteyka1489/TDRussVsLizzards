@@ -18,6 +18,7 @@ void UCreepMovementComponent::BeginPlay()
 void UCreepMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
 }
 
 void UCreepMovementComponent::SetCreepSpeeds(float SpeedRotatingIn, float SpeedMovingIn)
