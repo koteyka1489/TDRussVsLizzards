@@ -29,7 +29,7 @@ public:
 
     void SetCreepIsClicked();
     void SetCreepIsChoisen(bool ChoisenStatus);
-
+    void SetCreepMovingDestination(FVector Destiantion);
     void SetCreepMaxSpeeds(float SpeedRotatingIn, float SpeedMovingIn);
 
     bool TickCreepMoving(float& DeltaTime);

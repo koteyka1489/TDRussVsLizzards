@@ -42,6 +42,12 @@ void USquadMovementComponent::SetSquadMovement()
     bMovingSquadIsContinue   = true;
 }
 
+void USquadMovementComponent::StopAllMovings() 
+{
+    bRotatingSquadIsContinue = false;
+    bMovingSquadIsContinue   = false;
+}
+
 void USquadMovementComponent::RotatingCreeps(float DeltaTime)
 {
     int32 CreepEndRotatingCounter = 0;

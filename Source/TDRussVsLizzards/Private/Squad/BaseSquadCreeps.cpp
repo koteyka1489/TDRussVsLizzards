@@ -5,7 +5,6 @@
 #include "Creeps/OrcCreepActor.h"
 #include "Creeps/TrollCreepActor.h"
 #include "Creeps/BarbarianCreepActor.h"
-#include "Components/ActorMovementComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Components/SceneComponent.h"
 #include "Components/BoxComponent.h"
@@ -13,11 +12,12 @@
 #include "Squad/Task/RotateCreepsTask.h"
 #include "Squad/Task/RotateFrontSquadTask.h"
 #include "Squad/Task/SquadBaseTask.h"
-#include "Components/ActorMovementComponent.h"
 #include "Camera/CameraPawn.h"
 #include "Kismet/GameplayStatics.h"
 #include "Team/TeamController.h"
 #include "Components/InstancedStaticMeshComponent.h"
+#include "Components/SquadCalcMovementTargetComponent.h"
+#include "Components/SquadMovementComponent.h"
 
 ABaseSquadCreeps::ABaseSquadCreeps()
 {
@@ -35,7 +35,8 @@ ABaseSquadCreeps::ABaseSquadCreeps()
     SquadSizesBox->bHiddenInGame = false;
     SquadSizesBox->SetupAttachment(GetRootComponent());
 
-    MovementComponent = CreateDefaultSubobject<UActorMovementComponent>("UActorMovementComponent");
+    SquadMovementComponent   = CreateDefaultSubobject<USquadMovementComponent>("USquadMovementComponent");
+    SquadCalcTargetComponent = CreateDefaultSubobject<USquadCalcMovementTargetComponent>("USquadCalcMovementTargetComponent");
 
     InstancedNewLocationMesh                    = CreateDefaultSubobject<UInstancedStaticMeshComponent>("InstancedNewLocationMesh");
     InstancedNewLocationMesh->bDisableCollision = true;
@@ -54,15 +55,9 @@ void ABaseSquadCreeps::BeginPlay()
     Super::BeginPlay();
 
     Creeps.Reserve(CreepsNum);
-
     SpawnCreeps();
     UpdateSquadLocationStart();
     SetBoxExtendBySquadSize();
-
-    MovementComponent->OnMovingComplete.BindUObject(this, &ABaseSquadCreeps::OnMovingComplete);
-    MovementComponent->OnRotatingCreepsComplete.BindUObject(this, &ABaseSquadCreeps::OnRotatingCreepsComplete);
-    MovementComponent->OnRotatingFrontSquadComplete.BindUObject(this, &ABaseSquadCreeps::OnRotatingFrontSquadComplete);
-    MovementComponent->OnRebuildingSquadComplete.BindUObject(this, &ABaseSquadCreeps::OnRebuildingSquadComplete);
 
     auto TeamController = Cast<ATeamController>(UGameplayStatics::GetActorOfClass(GetWorld(), ATeamController::StaticClass()));
     if (TeamController)
@@ -72,10 +67,8 @@ void ABaseSquadCreeps::BeginPlay()
 
     for (auto& Creep : Creeps)
     {
-
         float RotatingMove = CreepsSpeed.SpeedRotating + FMath::RandRange(-CreepsSpeed.RotatingRandom, CreepsSpeed.RotatingRandom);
         float SpeedMove    = CreepsSpeed.SpeedMoving + FMath::RandRange(-CreepsSpeed.MovingRandom, CreepsSpeed.MovingRandom);
-
         Creep->SetCreepMaxSpeeds(RotatingMove, SpeedMove);
     }
 }
@@ -182,59 +175,17 @@ FQuat ABaseSquadCreeps::CalculateQuatBeetwenBaseSquadVec(FVector VectorIn)
     return Result.GetNormalized();
 }
 
-void ABaseSquadCreeps::RebuildSquad(int32 NewWidth, FVector NewStartCreepSpawnLocation, FVector NewSquadForwardVerctor)
+void ABaseSquadCreeps::UpdateRebuildngSquad(int32 NewWidth, FVector NewStartCreepSpawnLocation, FVector NewSquadForwardVerctor)
 {
-    RebuildSquadNewForwardVector = NewSquadForwardVerctor;
-    CurrentSquadSizes.Width      = NewWidth;
-    CurrentSquadSizes.Heigth     = CreepsNum / CurrentSquadSizes.Width;
-    FRotator NewSquadRotation    = NewSquadForwardVerctor.Rotation();
-
-    InstancedNewLocationMesh->SetVisibility(true);
-    InstancedNewLocationMesh->bHiddenInGame = false;
-
-    RebuildCreepsNewLocations = CalculateCreepsPositions(
-        0, CurrentSquadSizes.Heigth, 0, CurrentSquadSizes.Width, NewStartCreepSpawnLocation, NewSquadForwardVerctor, false);
-
-    int32 CreepsShortage = CreepsNum - CurrentSquadSizes.Heigth * CurrentSquadSizes.Width;
-    if (CreepsShortage > 0)
-    {
-        int32 StartSpawnRemainderCreeps = CurrentSquadSizes.Width / 2 - CreepsShortage / 2;
-        RebuildCreepsNewLocations.Append(
-            CalculateCreepsPositions(CurrentSquadSizes.Heigth, CurrentSquadSizes.Heigth + 1, StartSpawnRemainderCreeps,
-                StartSpawnRemainderCreeps + CreepsShortage, NewStartCreepSpawnLocation, NewSquadForwardVerctor, false));
-    }
-
-    RebuildCreepsNewLocations.Add(CalculateNewSquadCenterOnRebuild());
-
-    if (!InstancedMeshNewLocIsSet)
-    {
-        for (const auto& CreepLocation : RebuildCreepsNewLocations)
-        {
-            FTransform NewTransform(NewSquadRotation, CreepLocation, FVector(1.0, 1.0, 1.0));
-            InstancedNewLocationMesh->AddInstance(NewTransform);
-        }
-
-        InstancedMeshNewLocIsSet = true;
-    }
-    else
-    {
-        int32 IndexInstancedMesh = 0;
-        for (const auto& CreepLocation : RebuildCreepsNewLocations)
-        {
-            FTransform NewTransform(NewSquadRotation, CreepLocation, FVector(1.0, 1.0, 1.0));
-            InstancedNewLocationMesh->UpdateInstanceTransform(IndexInstancedMesh, NewTransform, true, true, true);
-            IndexInstancedMesh++;
-        }
-    }
+    SquadCalcTargetComponent->UpdateNewCreepsPositions(NewWidth, NewStartCreepSpawnLocation, NewSquadForwardVerctor);
+    UpdateInstancedNewLocationMesh(SquadCalcTargetComponent->GetNewCreepsLocations(), SquadCalcTargetComponent->GetNewSquadRotation());
 }
 
 void ABaseSquadCreeps::EndRebuildSquad()
 {
-    InstancedNewLocationMesh->SetVisibility(false);
-    InstancedNewLocationMesh->bHiddenInGame = true;
-    InstancedNewLocationMesh->ClearInstances();
-    InstancedMeshNewLocIsSet = false;
-    MovementComponent->RebuildSquad(RebuildCreepsNewLocations);
+    DeleteInstancedNewLocationMesh();
+    SquadCalcTargetComponent->SetCreepsMovingDestination();
+    SquadMovementComponent->SetSquadMovement();
 }
 
 void ABaseSquadCreeps::SetSquadIsChoisen()
@@ -257,22 +208,6 @@ FVector ABaseSquadCreeps::GetRightCornerCreepLocation()
 FVector ABaseSquadCreeps::GetLeftCornerCreepLocation()
 {
     return Creeps[CurrentSquadSizes.Width - 1]->GetActorLocation();
-}
-
-void ABaseSquadCreeps::OnMovingComplete()
-{
-    bCurrentSquadTaskIsExecute = false;
-
-}
-
-void ABaseSquadCreeps::OnRotatingCreepsComplete()
-{
-    bCurrentSquadTaskIsExecute = false;
-}
-
-void ABaseSquadCreeps::OnRotatingFrontSquadComplete()
-{
-    bCurrentSquadTaskIsExecute = false;
 }
 
 void ABaseSquadCreeps::OnRebuildingSquadComplete()
@@ -323,51 +258,14 @@ void ABaseSquadCreeps::SquadUnChoisenBySelectBox()
 
 void ABaseSquadCreeps::MoveAndRotatingSquadToLocation(FVector Destination)
 {
-    StopAllTasks();
-
-    double DotSquadToDestination = CalculateDotFrontSquadToLocation(Destination);
-    if (DotSquadToDestination >= 0.0)
-    {
-        auto RotateFrontTask = NewObject<URotateFrontSquadTask>();
-        RotateFrontTask->InitDestinationTask(Destination, this);
-        RotateFrontTask->InitSideRotating(ERotateFrontSquadBySide::Center);
-        SquadTasksQueue.Enqueue(RotateFrontTask);
-
-        auto RotateCreepsToDestTask = NewObject<URotateCreepsTask>();
-        RotateCreepsToDestTask->InitDestinationTask(Destination, this);
-        SquadTasksQueue.Enqueue(RotateCreepsToDestTask);
-
-        auto MoveToLocationTask = NewObject<UMoveSquadTask>();
-        MoveToLocationTask->InitDestinationTask(Destination, this);
-        SquadTasksQueue.Enqueue(MoveToLocationTask);
-    }
-    else
-    {
-        FVector TurnAroundVector = GetActorLocation() + (-GetActorForwardVector() * 1000);
-        auto TurnAroundTask      = NewObject<URotateCreepsTask>();
-        TurnAroundTask->InitDestinationTask(TurnAroundVector, this);
-        SquadTasksQueue.Enqueue(TurnAroundTask);
-
-        auto RotateFrontTask = NewObject<URotateFrontSquadTask>();
-        RotateFrontTask->InitDestinationTask(Destination, this);
-        RotateFrontTask->InitSideRotating(ERotateFrontSquadBySide::Center);
-        SquadTasksQueue.Enqueue(RotateFrontTask);
-
-        auto RotateCreepsToDestTask = NewObject<URotateCreepsTask>();
-        RotateCreepsToDestTask->InitDestinationTask(Destination, this);
-        SquadTasksQueue.Enqueue(RotateCreepsToDestTask);
-
-        auto MoveToLocationTask = NewObject<UMoveSquadTask>();
-        MoveToLocationTask->InitDestinationTask(Destination, this);
-        SquadTasksQueue.Enqueue(MoveToLocationTask);
-    }
+    SquadCalcTargetComponent->UpdateNewCreepsPositions(CurrentSquadSizes.Width, Destination, (Destination - GetActorLocation()).GetSafeNormal2D());
+    SquadCalcTargetComponent->SetCreepsMovingDestination();
+    SquadMovementComponent->SetSquadMovement();
 }
-
-
 
 void ABaseSquadCreeps::StopAllTasks()
 {
-    MovementComponent->StopAllMovings();
+    SquadMovementComponent->StopAllMovings();
     CurrentSquadTask           = nullptr;
     bCurrentSquadTaskIsExecute = false;
     SquadTasksQueue.Empty();
@@ -387,21 +285,7 @@ double ABaseSquadCreeps::CalculateDotRightVectorSquadToLocation(FVector Location
     return SquadRightVector.Dot(SquadToLocationNormalizeVector);
 }
 
-ERotateFrontSquadBySide ABaseSquadCreeps::GetSideToFrontSquadRotating(FVector Location)
-{
-    ERotateFrontSquadBySide Result;
-    double DotRightVectorToLocation = CalculateDotRightVectorSquadToLocation(Location);
-    if (DotRightVectorToLocation >= 0.0)
-    {
-        Result = ERotateFrontSquadBySide::RightCorner;
-    }
-    else
-    {
-        Result = ERotateFrontSquadBySide::LeftCorner;
-    }
 
-    return Result;
-}
 
 void ABaseSquadCreeps::ExecuteCurrentTaskQueue()
 {
@@ -435,4 +319,38 @@ FVector ABaseSquadCreeps::CalculateNewSquadCenterOnRebuild()
     FVector FrontToBackInterp = (RightBackCorner - RightCornerFrontNewPos) / 2;
 
     return RebuildCreepsNewLocations[0] + RightToLeftInterp + FrontToBackInterp;
+}
+
+void ABaseSquadCreeps::UpdateInstancedNewLocationMesh(const TArray<FVector>& NewPositions, const FRotator& NewSquadRotation)
+{
+    if (!InstancedMeshNewLocIsSet)
+    {
+        InstancedNewLocationMesh->SetVisibility(true);
+        InstancedNewLocationMesh->bHiddenInGame = false;
+
+        for (const auto& CreepLocation : NewPositions)
+        {
+            FTransform NewTransform(NewSquadRotation, CreepLocation, FVector(1.0, 1.0, 1.0));
+            InstancedNewLocationMesh->AddInstance(NewTransform);
+        }
+        InstancedMeshNewLocIsSet = true;
+    }
+    else
+    {
+        int32 IndexInstancedMesh = 0;
+        for (const auto& CreepLocation : NewPositions)
+        {
+            FTransform NewTransform(NewSquadRotation, CreepLocation, FVector(1.0, 1.0, 1.0));
+            InstancedNewLocationMesh->UpdateInstanceTransform(IndexInstancedMesh, NewTransform, true, true, true);
+            IndexInstancedMesh++;
+        }
+    }
+}
+
+void ABaseSquadCreeps::DeleteInstancedNewLocationMesh()
+{
+    InstancedNewLocationMesh->SetVisibility(false);
+    InstancedNewLocationMesh->bHiddenInGame = true;
+    InstancedNewLocationMesh->ClearInstances();
+    InstancedMeshNewLocIsSet = false;
 }

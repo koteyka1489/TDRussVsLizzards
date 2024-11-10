@@ -19,13 +19,35 @@ void USquadCalcMovementTargetComponent::BeginPlay()
     CreepsArray = OwnerSquad->GetCreeps();
 }
 
-void USquadCalcMovementTargetComponent::MoveToLocation(FVector Destination) 
+void USquadCalcMovementTargetComponent::UpdateNewCreepsPositions(
+    int32 NewWidth, FVector NewStartCreepSpawnLocation, FVector NewSquadForwardVerctor)
 {
-    
-    // set rotate task movement component
+   // FVector RebuildSquadNewForwardVector = NewSquadForwardVerctor;
+    int32 Width                          = NewWidth;
+    int32 Heigth                         = OwnerSquad->GetCreepsNum() / Width;
+    NewSquadRotation            = NewSquadForwardVerctor.Rotation();
 
-    // set dest vectors creeps array
+    NewCreepsLocations = OwnerSquad->CalculateCreepsPositions(
+        0, Heigth, 0, Width, NewStartCreepSpawnLocation, NewSquadForwardVerctor, false);
+
+    int32 CreepsShortage = OwnerSquad->GetCreepsNum() - Heigth * Width;
+    if (CreepsShortage > 0)
+    {
+        int32 StartSpawnRemainderCreeps = Width / 2 - CreepsShortage / 2;
+        NewCreepsLocations.Append(
+            OwnerSquad->CalculateCreepsPositions(Heigth, Heigth + 1, StartSpawnRemainderCreeps,
+                StartSpawnRemainderCreeps + CreepsShortage, NewStartCreepSpawnLocation, NewSquadForwardVerctor, false));
+    }
 
 }
 
+void USquadCalcMovementTargetComponent::SetCreepsMovingDestination() 
+{
+    int32 Index = 0;
+    for (const auto& Creep : *CreepsArray)
+    {
+        Creep->SetCreepMovingDestination(NewCreepsLocations[Index]);
+        Index++;
+    }
+}
 

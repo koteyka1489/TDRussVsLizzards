@@ -7,7 +7,7 @@
 
 void URotateFrontSquadTask::ExecuteTask() 
 {
-    SquadOwner->GetSquadMovementComponent()->RotateFrontSquadToLocationFromSide(Destination, Side);
+    
     
 }
 

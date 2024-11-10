@@ -18,14 +18,17 @@ public:
     USquadCalcMovementTargetComponent();
     virtual void BeginPlay() override;
 
-    void MoveToLocation(FVector Destination);
+    void UpdateNewCreepsPositions(int32 NewWidth, FVector NewStartCreepSpawnLocation, FVector NewSquadForwardVerctor);
+    void SetCreepsMovingDestination();
+    
+
+    TArray<FVector>& GetNewCreepsLocations() { return NewCreepsLocations; }
+    FRotator& GetNewSquadRotation() { return NewSquadRotation; }
 
 protected:
 private:
-    // Fields
     TObjectPtr<ABaseSquadCreeps> OwnerSquad;
     TArray<TObjectPtr<ABaseCreepActor>>* CreepsArray;
-
-    // Methods
-
+    TArray<FVector> NewCreepsLocations;
+    FRotator NewSquadRotation;
 };

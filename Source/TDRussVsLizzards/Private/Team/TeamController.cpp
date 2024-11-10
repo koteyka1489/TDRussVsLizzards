@@ -238,7 +238,7 @@ void ATeamController::UpdateRebuildSquad()
         double RebuildVectorLength = RebuildVector.Size();
         int32 NewWidth             = CalculateNewWidthSquad(RebuildVectorLength, ChoisenSquads[0]);
 
-        ChoisenSquads[0]->RebuildSquad(NewWidth, EndPoint,  RebuildForwardVector);
+        ChoisenSquads[0]->UpdateRebuildngSquad(NewWidth, EndPoint, RebuildForwardVector);
     }
     else
     {
@@ -246,7 +246,7 @@ void ATeamController::UpdateRebuildSquad()
     }
 }
 
-int32 ATeamController::CalculateNewWidthSquad(double LengthRebuildVector, TObjectPtr<ABaseSquadCreeps> RebuildSquad)
+int32 ATeamController::CalculateNewWidthSquad(double LengthRebuildVector, const TObjectPtr<ABaseSquadCreeps> RebuildSquad)
 {
     int32 Result{};
 

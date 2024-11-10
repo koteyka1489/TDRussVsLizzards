@@ -10,10 +10,8 @@ DECLARE_DELEGATE_OneParam(FOnSquadIsUnChoisenBySelectionBox, ABaseSquadCreeps*);
 
 class ABaseCreepActor;
 class UBoxComponent;
-class UActorMovementComponent;
 class USceneComponent;
 class USquadBaseTask;
-enum class ERotateFrontSquadBySide;
 class UInstancedStaticMeshComponent;
 class USquadMovementComponent;
 class USquadCalcMovementTargetComponent;
@@ -74,7 +72,7 @@ public:
     void MoveAndRotatingSquadToLocation(FVector Destination);
     void UpdateSquadLocationStart();
 
-    void RebuildSquad(int32 NewWidth, FVector NewStartCreepSpawnLocation, FVector NewSquadForwardVerctor);
+    void UpdateRebuildngSquad(int32 NewWidth, FVector NewStartCreepSpawnLocation, FVector NewSquadForwardVerctor);
     void EndRebuildSquad();
 
     void SetSquadIsChoisen();
@@ -83,11 +81,13 @@ public:
     FCreepsOffsetInSquad GetCreepsOffsetInSquad() { return CreepsOffsetInSquad; }
     double GetCreepPositionRandom() { return CreepPositionRandom; }
 
-    UActorMovementComponent* GetSquadMovementComponent() { return MovementComponent; }
 
     TArray<TObjectPtr<ABaseCreepActor>>* GetCreeps() { return &Creeps; }
     FVector GetRightCornerCreepLocation();
     FVector GetLeftCornerCreepLocation();
+
+    TArray<FVector> CalculateCreepsPositions(int32 HeightStart, int32 HeightEnd, int32 WidthStart, int32 WidthEnd,
+        FVector SquadBaseSpawnLocation, FVector ForwarVectorToNewLocation, bool UseLocationRandom = true);
 
     FOnSquadIsUnChoisenBySelectionBox OnSquadIsUnChoisenBySelectionBox;
 
@@ -96,10 +96,16 @@ protected:
     USceneComponent* SceneComponent;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
-    UActorMovementComponent* MovementComponent;
+    USquadMovementComponent* SquadMovementComponent;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+    USquadCalcMovementTargetComponent* SquadCalcTargetComponent;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
     UBoxComponent* SquadSizesBox;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+    TObjectPtr<UInstancedStaticMeshComponent> InstancedNewLocationMesh;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad")
     int32 CreepsNum = 50;
@@ -116,8 +122,7 @@ protected:
      UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad")
     FVector SquadBaseForwardVector = FVector(1.0, 0.0, 0.0);
 
-    UPROPERTY()
-    TObjectPtr<UInstancedStaticMeshComponent> InstancedNewLocationMesh;
+    
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad|CreepSpeed")
     FSquadCreepsSpeed CreepsSpeed;
@@ -140,18 +145,17 @@ private:
     void SetBoxExtendBySquadSize();
 
     void SpawnCreeps();
-    TArray<FVector> CalculateCreepsPositions(int32 HeightStart, int32 HeightEnd, int32 WidthStart, int32 WidthEnd, FVector SquadBaseSpawnLocation, FVector ForwarVectorToNewLocation, bool UseLocationRandom = true);
+    
     FQuat CalculateQuatBeetwenBaseSquadVec(FVector VectorIn);
 
-    void OnMovingComplete();
-    void OnRotatingCreepsComplete();
-    void OnRotatingFrontSquadComplete();
+
     void OnRebuildingSquadComplete();
 
     double CalculateDotFrontSquadToLocation(FVector Location);
     double CalculateDotRightVectorSquadToLocation(FVector Location);
-    ERotateFrontSquadBySide GetSideToFrontSquadRotating(FVector Location);
     void ExecuteCurrentTaskQueue();
 
     FVector CalculateNewSquadCenterOnRebuild();
+    void UpdateInstancedNewLocationMesh(const TArray<FVector>& NewPositions,  const FRotator& NewSquadRotation);
+    void DeleteInstancedNewLocationMesh();
 };

@@ -79,6 +79,11 @@ void ABaseCreepActor::SetCreepIsChoisen(bool ChoisenStatus)
     StaticMeshComponent->SetVisibility(ChoisenStatus);
 }
 
+void ABaseCreepActor::SetCreepMovingDestination(FVector Destiantion) 
+{
+    MovementComponent->SetMovingDestination(Destiantion);
+}
+
 void ABaseCreepActor::SetCreepMaxSpeeds(float SpeedRotatingIn, float SpeedMovingIn)
 {
     MovementComponent->SetCreepMaxSpeeds(SpeedRotatingIn, SpeedMovingIn);

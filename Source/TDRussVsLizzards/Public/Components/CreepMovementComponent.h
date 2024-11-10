@@ -57,10 +57,10 @@ private:
     FVector MovingDestination              = FVector::Zero();
     TObjectPtr<ABaseCreepActor> OwnerCreep;
 
-    float MoveInterpSpeed     = 20.0f;
-    float MoveInterpSpeedRand = 5.0f;
-    float RotateInterpSpeed     = 20.0f;
-    float RotateInterpSpeedRand = 5.0f;
+    float MoveInterpSpeed     = 200.0f;
+    float MoveInterpSpeedRand = 25.0f;
+    float RotateInterpSpeed     = 200.0f;
+    float RotateInterpSpeedRand = 25.0f;
 
 
     float DistSquaredEndMove       = 20.0f;

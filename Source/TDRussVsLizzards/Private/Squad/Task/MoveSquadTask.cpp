@@ -7,6 +7,6 @@
 
 void UMoveSquadTask::ExecuteTask() 
 {
-    SquadOwner->GetSquadMovementComponent()->MoveToLocation(Destination);
+    
     
 }
