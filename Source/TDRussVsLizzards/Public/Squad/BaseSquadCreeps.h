@@ -15,6 +15,8 @@ class USceneComponent;
 class USquadBaseTask;
 enum class ERotateFrontSquadBySide;
 class UInstancedStaticMeshComponent;
+class USquadMovementComponent;
+class USquadCalcMovementTargetComponent;
 
 struct FSquadSizes
 {
@@ -36,10 +38,10 @@ struct FSquadCreepsSpeed
     float SpeedRotating = 300.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad|CreepSpeed")
-    float MovingRandom  = 50.0f;
+    float MovingRandom  = 100.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad|CreepSpeed")
-    float RotatingRandom = 50.0f;
+    float RotatingRandom = 100.0f;
 };
 
 

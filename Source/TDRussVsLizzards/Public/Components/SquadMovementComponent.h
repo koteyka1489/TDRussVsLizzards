@@ -8,13 +8,6 @@
 
 class ABaseCreepActor;
 
-enum class ESquadState
-{
-    Idle,
-    Rotating,
-    Movement
-};
-
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class TDRUSSVSLIZZARDS_API USquadMovementComponent : public UActorComponent
 {
@@ -29,13 +22,10 @@ public:
 
 protected:
 private:
-    // Fields
     TArray<TObjectPtr<ABaseCreepActor>>* CreepsArray;
+    bool bRotatingSquadIsContinue = false;
+    bool bMovingSquadIsContinue   = false;
 
-    ESquadState CurrentState = ESquadState::Idle;
-    TQueue<ESquadState> TasksQueue;
-
-    // Methods
     void RotatingCreeps(float DeltaTime);
     void MovingCreeps(float DeltaTime);
 };

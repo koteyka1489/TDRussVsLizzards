@@ -13,10 +13,13 @@ void UCreepMovementComponent::BeginPlay()
     Super::BeginPlay();
 
     CreepCurrentSpeeds.SpeedMoving   = 0.0f;
-    CreepCurrentSpeeds.SpeedRotating = 0.0f;
+    CreepCurrentSpeeds.SpeedRotating = CreepMaxSpeeds.SpeedRotating;
 
     OwnerCreep = Cast<ABaseCreepActor>(GetOwner());
     check(IsValid(OwnerCreep));
+
+    MoveInterpSpeed   = MoveInterpSpeed + FMath::FRandRange(-MoveInterpSpeedRand, MoveInterpSpeedRand);
+    RotateInterpSpeed = RotateInterpSpeed + FMath::FRandRange(-RotateInterpSpeedRand, RotateInterpSpeedRand);
 }
 
 bool UCreepMovementComponent::TickCreepMoving(float& DeltaTime)
@@ -31,12 +34,30 @@ bool UCreepMovementComponent::TickCreepMoving(float& DeltaTime)
     FVector Offset = VecToDestination.GetSafeNormal2D() * CreepCurrentSpeeds.SpeedMoving * DeltaTime;
     OwnerCreep->SetActorLocation(OwnerCreep->GetActorLocation() + Offset);
 
-
     if (VecToDestination.SizeSquared() <= DistSquaredStopingMoving)
     {
         CreepMovementState = ECreepMovementState::StopingMoving;
     }
     UpdateMovingSpeed(DeltaTime);
+
+    return false;
+}
+
+bool UCreepMovementComponent::TickCreepRotating(float& DeltaTime)
+{
+    FQuat SquadQuat   = OwnerCreep->GetActorQuat();
+    FVector Direction = (MovingDestination - OwnerCreep->GetActorLocation()).GetSafeNormal2D();
+
+    FRotator TargetRotator   = FRotationMatrix::MakeFromX(Direction).Rotator();
+    FQuat TargetRotationQuat = TargetRotator.Quaternion();
+
+    if (SquadQuat.Equals(TargetRotationQuat, KINDA_SMALL_NUMBER))
+    {
+        return true;
+    }
+
+    FQuat NewRotation = FMath::QInterpConstantTo(SquadQuat, TargetRotationQuat, DeltaTime, CreepCurrentSpeeds.SpeedRotating);
+    OwnerCreep->SetActorRotation(NewRotation);
 
     return false;
 }
@@ -70,8 +91,6 @@ void UCreepMovementComponent::UpdateMovingSpeed(float& DeltaTime)
 
     if (CreepMovementState == ECreepMovementState::StopingMoving)
     {
-        CreepCurrentSpeeds.SpeedMoving =
-            FMath::FInterpConstantTo(CreepCurrentSpeeds.SpeedMoving, 10.0, DeltaTime, MoveInterpSpeed);
+        CreepCurrentSpeeds.SpeedMoving = FMath::FInterpConstantTo(CreepCurrentSpeeds.SpeedMoving, 10.0, DeltaTime, MoveInterpSpeed);
     }
-   
 }

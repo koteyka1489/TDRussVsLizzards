@@ -89,6 +89,11 @@ bool ABaseCreepActor::TickCreepMoving(float& DeltaTime)
     return MovementComponent->TickCreepMoving(DeltaTime);
 }
 
+bool ABaseCreepActor::TickCreepRotating(float& DeltaTime)
+{
+    return MovementComponent->TickCreepRotating(DeltaTime);
+}
+
 float ABaseCreepActor::GetCreepCurrentSpeedMoving()
 {
     return MovementComponent->GetCreepCurrentSpeedMoving();

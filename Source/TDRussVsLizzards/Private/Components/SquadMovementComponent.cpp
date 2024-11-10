@@ -4,7 +4,6 @@
 #include "Creeps/BaseCreepActor.h"
 #include "Squad/BaseSquadCreeps.h"
 
-
 class ABaseSquadCreeps;
 
 USquadMovementComponent::USquadMovementComponent()
@@ -20,56 +19,59 @@ void USquadMovementComponent::BeginPlay()
     auto OwnerSquad = Cast<ABaseSquadCreeps>(GetOwner());
     checkf(IsValid(OwnerSquad), TEXT("Get Owner Squad is Failed"));
     CreepsArray = OwnerSquad->GetCreeps();
-
 }
 
 void USquadMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-    if (CurrentState == ESquadState::Idle) return;
-
-    if (CurrentState == ESquadState::Rotating)
+    if (bRotatingSquadIsContinue)
     {
         RotatingCreeps(DeltaTime);
     }
 
-    if (CurrentState == ESquadState::Movement)
+    if (bMovingSquadIsContinue && !bRotatingSquadIsContinue)
     {
         MovingCreeps(DeltaTime);
     }
-    
 }
 
-void USquadMovementComponent::SetSquadMovement() 
+void USquadMovementComponent::SetSquadMovement()
 {
-    CurrentState = ESquadState::Rotating;
-    TasksQueue.Enqueue(ESquadState::Movement);
+    bRotatingSquadIsContinue = true;
+    bMovingSquadIsContinue   = true;
 }
 
 void USquadMovementComponent::RotatingCreeps(float DeltaTime)
 {
-
+    int32 CreepEndRotatingCounter = 0;
     for (const auto& Creep : *CreepsArray)
     {
-        // Get speeds and vec dest
-        // calculate
-        // check creeps end rotaring and count
-        //set rotating
+        if (Creep->TickCreepRotating(DeltaTime))
+        {
+            CreepEndRotatingCounter++;
+        }
     }
-    
-    // check count and end task
+
+    if (CreepEndRotatingCounter == CreepsArray->Num())
+    {
+        bRotatingSquadIsContinue = false;
+    }
 }
 
 void USquadMovementComponent::MovingCreeps(float DeltaTime)
 {
+    int32 CreepEndMovingCounter = 0;
     for (const auto& Creep : *CreepsArray)
     {
-        // Get speeds and vec dest
-        // calculate
-        // check creeps end moving and count
-        // set moving
+        if (Creep->TickCreepMoving(DeltaTime))
+        {
+            CreepEndMovingCounter++;
+        }
     }
 
-    // check count and end task
+    if (CreepEndMovingCounter == CreepsArray->Num())
+    {
+        bMovingSquadIsContinue = false;
+    }
 }
