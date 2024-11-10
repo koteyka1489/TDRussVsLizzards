@@ -79,9 +79,14 @@ void ABaseCreepActor::SetCreepIsChoisen(bool ChoisenStatus)
     StaticMeshComponent->SetVisibility(ChoisenStatus);
 }
 
-void ABaseCreepActor::SetCreepSpeeds(float SpeedRotatingIn, float SpeedMovingIn)
+void ABaseCreepActor::SetCreepMaxSpeeds(float SpeedRotatingIn, float SpeedMovingIn)
 {
-    MovementComponent->SetCreepSpeeds(SpeedRotatingIn, SpeedMovingIn);
+    MovementComponent->SetCreepMaxSpeeds(SpeedRotatingIn, SpeedMovingIn);
+}
+
+bool ABaseCreepActor::TickCreepMoving(float& DeltaTime)
+{
+    return MovementComponent->TickCreepMoving(DeltaTime);
 }
 
 float ABaseCreepActor::GetCreepCurrentSpeedMoving()

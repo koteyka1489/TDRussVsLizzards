@@ -30,7 +30,8 @@ public:
     void SetCreepIsClicked();
     void SetCreepIsChoisen(bool ChoisenStatus);
 
-    void SetCreepSpeeds(float SpeedRotatingIn, float SpeedMovingIn);
+    void SetCreepMaxSpeeds(float SpeedRotatingIn, float SpeedMovingIn);
+    bool TickCreepMoving(float& DeltaTime);
 
     UFUNCTION(BlueprintCallable, Category = "Speed")
     float GetCreepCurrentSpeedMoving();

@@ -76,7 +76,7 @@ void ABaseSquadCreeps::BeginPlay()
         float RotatingMove = CreepsSpeed.SpeedRotating + FMath::RandRange(-CreepsSpeed.RotatingRandom, CreepsSpeed.RotatingRandom);
         float SpeedMove    = CreepsSpeed.SpeedMoving + FMath::RandRange(-CreepsSpeed.MovingRandom, CreepsSpeed.MovingRandom);
 
-        Creep->SetCreepSpeeds(RotatingMove, SpeedMove);
+        Creep->SetCreepMaxSpeeds(RotatingMove, SpeedMove);
     }
 }
 

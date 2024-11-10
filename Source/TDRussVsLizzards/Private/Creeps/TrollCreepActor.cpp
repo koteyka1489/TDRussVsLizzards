@@ -30,27 +30,5 @@ void ATrollCreepActor::InitSkeletalMesh()
 
 void ATrollCreepActor::InitAnimations()
 {
-    // IDLE
-    static ConstructorHelpers::FObjectFinder<UAnimSequence> CreepIdleAnimationRef(
-        TEXT("/Script/Engine.AnimSequence'/Game/Fantasy_Pack/Characters/Troll/Animations/Anim_Troll_Idle.Anim_Troll_Idle'"));
 
-    checkf(CreepIdleAnimationRef.Succeeded(), TEXT("Find Creep Idle Animation is not Succeeded "));
-
-    CreepIdleAnimation = CreepIdleAnimationRef.Object;
-
-    // WALK
-    static ConstructorHelpers::FObjectFinder<UAnimSequence> CreepWalkAnimationRef(
-        TEXT("/Script/Engine.AnimSequence'/Game/Fantasy_Pack/Characters/Troll/Animations/Anim_Troll_Walk.Anim_Troll_Walk'"));
-
-    checkf(CreepWalkAnimationRef.Succeeded(), TEXT("Find Creep Walk Animation is not Succeeded "));
-
-    CreepWalkAnimation = CreepWalkAnimationRef.Object;
-
-    // RUN
-    static ConstructorHelpers::FObjectFinder<UAnimSequence> CreepRunAnimRef(
-        TEXT("/Script/Engine.AnimSequence'/Game/Fantasy_Pack/Characters/Troll/Animations/Anim_Troll_Run.Anim_Troll_Run'"));
-
-    checkf(CreepRunAnimRef.Succeeded(), TEXT("Find Creep Walk Animation is not Succeeded "));
-
-    CreepRunAnimation = CreepRunAnimRef.Object;
 }
