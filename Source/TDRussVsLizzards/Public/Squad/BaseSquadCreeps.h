@@ -156,6 +156,8 @@ private:
     void ExecuteCurrentTaskQueue();
 
     FVector CalculateNewSquadCenterOnRebuild();
+    FVector CalculateNewRightCorner();
+    
     void UpdateInstancedNewLocationMesh(const TArray<FVector>& NewPositions,  const FRotator& NewSquadRotation);
     void DeleteInstancedNewLocationMesh();
 };
