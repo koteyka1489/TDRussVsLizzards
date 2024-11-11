@@ -50,7 +50,7 @@ public:
     void StopAllTasks();
 
     void MoveAndRotatingSquadToLocation(FVector Destination);
-    void UpdateSquadLocationStart();
+    
 
     void UpdateRebuildngSquad(int32 NewWidth, FVector NewStartCreepSpawnLocation, FVector NewSquadForwardVerctor);
     void EndRebuildSquad();
@@ -63,9 +63,7 @@ public:
 
 
     TArray<TObjectPtr<ABaseCreepActor>>* GetCreeps() { return &Creeps; }
-    FVector GetRightCornerCreepLocation();
-    FVector GetLeftCornerCreepLocation();
-    FVector GetRightBackCornerCreepLocation();
+    
 
     TArray<FVector> CalculateCreepsPositions(int32 HeightStart, int32 HeightEnd, int32 WidthStart, int32 WidthEnd,
         FVector SquadBaseSpawnLocation, FVector ForwarVectorToNewLocation, bool UseLocationRandom = true);
@@ -118,9 +116,20 @@ private:
     bool bSquadIsChosen                         = false;
     bool InstancedMeshNewLocIsSet                = false;
 
-   
-    void SetBoxExtendBySquadSize();
+    FVector GetRightCornerCreepLocation();
+    FVector GetLeftCornerCreepLocation();
+    FVector GetRightBackCornerCreepLocation();
+    FVector GetLeftBackCornerCreepLocation();
+    FRotator GetRightCornerCreepRotation();
+    FRotator GetLeftCornerCreepRotation();
+    FRotator GetRightBackCornerCreepRotation();
+    FRotator GetLeftBackCornerCreepRotation();
 
+
+    void SetBoxExtendBySquadSize();
+    void UpdateSquadLocationStart();
+    void UpdateSquadLocation();
+    void UpdateSquadRotation();
     void SpawnCreeps();
     
     FQuat CalculateQuatBeetwenBaseSquadVec(FVector VectorIn);

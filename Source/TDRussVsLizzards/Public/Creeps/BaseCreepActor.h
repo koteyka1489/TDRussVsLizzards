@@ -30,6 +30,7 @@ public:
     void SetCreepIsClicked();
     void SetCreepIsChoisen(bool ChoisenStatus);
     void SetCreepMovingDestination(FVector Destiantion);
+    void SetCreepPostMovingRotation(FRotator NewSquadRotation);
 
     bool TickCreepMoving(float& DeltaTime);
     bool TickCreepRotating(float& DeltaTime);

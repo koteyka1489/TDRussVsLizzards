@@ -2,6 +2,7 @@
 
 #include "Components/CreepMovementComponent.h"
 #include "Creeps/BaseCreepActor.h"
+#include "TimerManager.h"
 
 UCreepMovementComponent::UCreepMovementComponent()
 {
@@ -26,6 +27,7 @@ void UCreepMovementComponent::BeginPlay()
 
     CreepSpeedRandoms.MoveInterpSpeed = CreepSpeedRandoms.MoveInterpSpeed +
                                         FMath::FRandRange(-CreepSpeedRandoms.MoveInterpSpeedRand, CreepSpeedRandoms.MoveInterpSpeedRand);
+    
 }
 
 bool UCreepMovementComponent::TickCreepMoving(float& DeltaTime)
@@ -35,6 +37,8 @@ bool UCreepMovementComponent::TickCreepMoving(float& DeltaTime)
     {
         CreepMovementState             = ECreepMovementState::idle;
         CreepCurrentSpeeds.SpeedMoving = 0.0f;
+        PostMovingRotation();
+        //GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UCreepMovementComponent::PostMovingRotation, 0.1f, true);
         return true;
     }
 
@@ -76,6 +80,11 @@ void UCreepMovementComponent::SetMovingDestination(FVector MovingDestinationIn)
     CreepMovementState             = ECreepMovementState::StartingMoving;
 }
 
+void UCreepMovementComponent::SetCreepPostMovingRotation(FRotator NewSquadRotationIn)
+{
+    NewSquadRotation = NewSquadRotationIn;
+}
+
 void UCreepMovementComponent::UpdateMovingSpeed(float& DeltaTime)
 {
     if (CreepMovementState == ECreepMovementState::idle || CreepMovementState == ECreepMovementState::Moving) return;
@@ -95,4 +104,9 @@ void UCreepMovementComponent::UpdateMovingSpeed(float& DeltaTime)
         CreepCurrentSpeeds.SpeedMoving =
             FMath::FInterpConstantTo(CreepCurrentSpeeds.SpeedMoving, 100.0, DeltaTime, CreepSpeedRandoms.MoveInterpSpeed);
     }
+}
+
+void UCreepMovementComponent::PostMovingRotation() 
+{
+    OwnerCreep->SetActorRotation(NewSquadRotation);
 }

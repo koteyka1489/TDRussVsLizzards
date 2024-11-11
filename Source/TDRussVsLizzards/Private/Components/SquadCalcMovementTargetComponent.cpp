@@ -22,7 +22,6 @@ void USquadCalcMovementTargetComponent::BeginPlay()
 void USquadCalcMovementTargetComponent::UpdateNewCreepsPositions(
     int32 NewWidth, FVector NewStartCreepSpawnLocation, FVector NewSquadForwardVerctor)
 {
-    // FVector RebuildSquadNewForwardVector = NewSquadForwardVerctor;
     int32 Width      = NewWidth;
     int32 Heigth     = OwnerSquad->GetCreepsNum() / Width;
     NewSquadRotation = NewSquadForwardVerctor.Rotation();
@@ -44,6 +43,7 @@ void USquadCalcMovementTargetComponent::SetCreepsMovingDestination()
     for (const auto& Creep : *CreepsArray)
     {
         Creep->SetCreepMovingDestination(NewCreepsLocations[Index]);
+        Creep->SetCreepPostMovingRotation(NewSquadRotation);
         Index++;
     }
 }

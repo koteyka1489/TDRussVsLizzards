@@ -50,6 +50,7 @@ public:
 
     FVector& GetMovingDestination() { return MovingDestination; }
     void SetMovingDestination(FVector MovingDestinationIn);
+    void SetCreepPostMovingRotation(FRotator NewSquadRotationIn);
 
 protected:
     FCreepSpeeds CreepMaxSpeeds;
@@ -57,14 +58,16 @@ protected:
     FCreepSpeeds CreepCurrentSpeeds;
 
 private:
+    TObjectPtr<ABaseCreepActor> OwnerCreep;
     ECreepMovementState CreepMovementState = ECreepMovementState::idle;
     FVector MovingDestination              = FVector::Zero();
-    TObjectPtr<ABaseCreepActor> OwnerCreep;
-
+    FRotator NewSquadRotation{};
     FCreepSpeedRandoms CreepSpeedRandoms;
+    FTimerHandle TimerHandle;
 
     float DistSquaredEndMove       = 20.0f;
     float DistSquaredStopingMoving = 500.0f;
 
     void UpdateMovingSpeed(float& DeltaTime);
+    void PostMovingRotation();
 };

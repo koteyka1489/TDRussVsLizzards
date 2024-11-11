@@ -299,29 +299,29 @@ void UActorMovementComponent::CalculateDestinationCreepsToRotateFrontSquadBySide
     FVector BaseRotatingLocation               = FVector::Zero();
     TArray<FVector>& CreepsLocationFromSidePtr = CreepsLocationFromCenterSquad;
 
-    switch (Side)
-    {
-        case ERotateFrontSquadBySide::LeftCorner:
-        {
-            BaseRotatingLocation      = OwnerSquad->GetLeftCornerCreepLocation();
-            CreepsLocationFromSidePtr = CreepsLocationFromLeftCornerSquad;
-            break;
-        }
-        case ERotateFrontSquadBySide::RightCorner:
-        {
-            BaseRotatingLocation      = OwnerSquad->GetRightCornerCreepLocation();
-            CreepsLocationFromSidePtr = CreepsLocationFromRightCornerSquad;
-            break;
-        }
-        case ERotateFrontSquadBySide::Center:
-        {
-            BaseRotatingLocation      = OwnerSquad->GetActorLocation();
-            CreepsLocationFromSidePtr = CreepsLocationFromCenterSquad;
-            break;
-        }
+    //switch (Side)
+    //{
+    //    case ERotateFrontSquadBySide::LeftCorner:
+    //    {
+    //        BaseRotatingLocation      = OwnerSquad->GetLeftCornerCreepLocation();
+    //        CreepsLocationFromSidePtr = CreepsLocationFromLeftCornerSquad;
+    //        break;
+    //    }
+    //    case ERotateFrontSquadBySide::RightCorner:
+    //    {
+    //        BaseRotatingLocation      = OwnerSquad->GetRightCornerCreepLocation();
+    //        CreepsLocationFromSidePtr = CreepsLocationFromRightCornerSquad;
+    //        break;
+    //    }
+    //    case ERotateFrontSquadBySide::Center:
+    //    {
+    //        BaseRotatingLocation      = OwnerSquad->GetActorLocation();
+    //        CreepsLocationFromSidePtr = CreepsLocationFromCenterSquad;
+    //        break;
+    //    }
 
-        default: break;
-    }
+    //    default: break;
+    //}
 
     int32 CreepIndex = 0;
 
@@ -347,23 +347,23 @@ void UActorMovementComponent::CalculateDestinationCreepsToRotateFrontSquadBySide
 
 void UActorMovementComponent::UpdateCreepsLocationFromSidesSquad()
 {
-    if (CreepsArray->Num() == 0) return;
-    FVector SquadLocation = OwnerSquad->GetActorLocation();
+    //if (CreepsArray->Num() == 0) return;
+    //FVector SquadLocation = OwnerSquad->GetActorLocation();
 
-    CreepsLocationFromCenterSquad.Empty();
-    CreepsLocationFromRightCornerSquad.Empty();
-    CreepsLocationFromLeftCornerSquad.Empty();
+    //CreepsLocationFromCenterSquad.Empty();
+    //CreepsLocationFromRightCornerSquad.Empty();
+    //CreepsLocationFromLeftCornerSquad.Empty();
 
-    FVector RightCornerCreepLocation = OwnerSquad->GetRightCornerCreepLocation();
-    FVector LeftCornerCreepLocation  = OwnerSquad->GetLeftCornerCreepLocation();
+    ///*FVector RightCornerCreepLocation = OwnerSquad->GetRightCornerCreepLocation();
+    //FVector LeftCornerCreepLocation  = OwnerSquad->GetLeftCornerCreepLocation();*/
 
-    for (const auto& Creep : *CreepsArray)
-    {
-        CreepsLocationFromCenterSquad.Add(Creep->GetActorLocation() - SquadLocation);
-        CreepsLocationFromRightCornerSquad.Add(Creep->GetActorLocation() - RightCornerCreepLocation);
-        CreepsLocationFromLeftCornerSquad.Add(Creep->GetActorLocation() - LeftCornerCreepLocation);
-    }
-    CreepsLocationFromCenterSquad.Add(OwnerSquad->GetActorLocation() - SquadLocation);
-    CreepsLocationFromRightCornerSquad.Add(OwnerSquad->GetActorLocation() - RightCornerCreepLocation);
-    CreepsLocationFromLeftCornerSquad.Add(OwnerSquad->GetActorLocation() - LeftCornerCreepLocation);
+    //for (const auto& Creep : *CreepsArray)
+    //{
+    //    CreepsLocationFromCenterSquad.Add(Creep->GetActorLocation() - SquadLocation);
+    //    CreepsLocationFromRightCornerSquad.Add(Creep->GetActorLocation() - RightCornerCreepLocation);
+    //    CreepsLocationFromLeftCornerSquad.Add(Creep->GetActorLocation() - LeftCornerCreepLocation);
+    //}
+    //CreepsLocationFromCenterSquad.Add(OwnerSquad->GetActorLocation() - SquadLocation);
+    //CreepsLocationFromRightCornerSquad.Add(OwnerSquad->GetActorLocation() - RightCornerCreepLocation);
+    //CreepsLocationFromLeftCornerSquad.Add(OwnerSquad->GetActorLocation() - LeftCornerCreepLocation);
 }

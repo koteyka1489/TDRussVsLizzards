@@ -84,6 +84,11 @@ void ABaseCreepActor::SetCreepMovingDestination(FVector Destiantion)
     MovementComponent->SetMovingDestination(Destiantion);
 }
 
+void ABaseCreepActor::SetCreepPostMovingRotation(FRotator NewSquadRotation)
+{
+    MovementComponent->SetCreepPostMovingRotation(NewSquadRotation);
+}
+
 bool ABaseCreepActor::TickCreepMoving(float& DeltaTime)
 {
     return MovementComponent->TickCreepMoving(DeltaTime);
