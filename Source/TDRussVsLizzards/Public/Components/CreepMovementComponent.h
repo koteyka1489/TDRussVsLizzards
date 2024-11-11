@@ -22,7 +22,7 @@ struct FCreepSpeeds
     GENERATED_BODY()
 
     float SpeedMoving   = 500.0f;
-    float SpeedRotating = 100.0f;
+    float SpeedRotating = 5.0f;
 };
 
 struct FCreepSpeedRandoms
@@ -30,7 +30,7 @@ struct FCreepSpeedRandoms
     float MoveInterpSpeed       = 600.0f;
     float MoveInterpSpeedRand   = 50.0f;
     float MovingRandom          = 40.0f;
-    float RotatingRandom        = 50.0f;
+    float RotatingRandom        = 1.5f;
 };
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))

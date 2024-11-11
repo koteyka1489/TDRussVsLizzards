@@ -63,7 +63,7 @@ bool UCreepMovementComponent::TickCreepRotating(float& DeltaTime)
         return true;
     }
 
-    FQuat NewRotation = FMath::QInterpConstantTo(SquadQuat, TargetRotationQuat, DeltaTime, CreepCurrentSpeeds.SpeedRotating);
+    FQuat NewRotation = FMath::QInterpConstantTo(SquadQuat, TargetRotationQuat, DeltaTime, CreepMaxSpeeds.SpeedRotating);
     OwnerCreep->SetActorRotation(NewRotation);
 
     return false;
