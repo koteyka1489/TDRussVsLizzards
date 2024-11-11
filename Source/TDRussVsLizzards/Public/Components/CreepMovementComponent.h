@@ -21,8 +21,16 @@ struct FCreepSpeeds
 {
     GENERATED_BODY()
 
-    float SpeedMoving   = 100.0f;
-    float SpeedRotating = 20.0f;
+    float SpeedMoving   = 500.0f;
+    float SpeedRotating = 100.0f;
+};
+
+struct FCreepSpeedRandoms
+{
+    float MoveInterpSpeed       = 600.0f;
+    float MoveInterpSpeedRand   = 50.0f;
+    float MovingRandom          = 40.0f;
+    float RotatingRandom        = 50.0f;
 };
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
@@ -43,13 +51,9 @@ public:
     FVector& GetMovingDestination() { return MovingDestination; }
     void SetMovingDestination(FVector MovingDestinationIn);
 
-    void SetCreepMaxSpeeds(float SpeedRotatingIn, float SpeedMovingIn);
-
 protected:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Speed")
     FCreepSpeeds CreepMaxSpeeds;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Speed")
     FCreepSpeeds CreepCurrentSpeeds;
 
 private:
@@ -57,11 +61,7 @@ private:
     FVector MovingDestination              = FVector::Zero();
     TObjectPtr<ABaseCreepActor> OwnerCreep;
 
-    float MoveInterpSpeed     = 600.0f;
-    float MoveInterpSpeedRand = 50.0f;
-    float RotateInterpSpeed     = 100.0f;
-    float RotateInterpSpeedRand = 25.0f;
-
+    FCreepSpeedRandoms CreepSpeedRandoms;
 
     float DistSquaredEndMove       = 20.0f;
     float DistSquaredStopingMoving = 500.0f;

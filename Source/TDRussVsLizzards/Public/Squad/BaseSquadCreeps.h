@@ -23,26 +23,6 @@ struct FSquadSizes
 };
 
 
-
-USTRUCT(BlueprintType)
-struct FSquadCreepsSpeed
-{
-    GENERATED_BODY()
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad|CreepSpeed")
-    float SpeedMoving   = 600.0f;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad|CreepSpeed")
-    float SpeedRotating = 100.0f;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad|CreepSpeed")
-    float MovingRandom  = 50.0f;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad|CreepSpeed")
-    float RotatingRandom = 20.0f;
-};
-
-
 USTRUCT(BlueprintType)
 struct FCreepsOffsetInSquad
 {
@@ -123,10 +103,6 @@ protected:
      UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad")
     FVector SquadBaseForwardVector = FVector(1.0, 0.0, 0.0);
 
-    
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad|CreepSpeed")
-    FSquadCreepsSpeed CreepsSpeed;
 
 
 private:

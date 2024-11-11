@@ -18,8 +18,15 @@ void UCreepMovementComponent::BeginPlay()
     OwnerCreep = Cast<ABaseCreepActor>(GetOwner());
     check(IsValid(OwnerCreep));
 
-    MoveInterpSpeed   = MoveInterpSpeed + FMath::FRandRange(-MoveInterpSpeedRand, MoveInterpSpeedRand);
-    RotateInterpSpeed = RotateInterpSpeed + FMath::FRandRange(-RotateInterpSpeedRand, RotateInterpSpeedRand);
+    CreepMaxSpeeds.SpeedMoving =
+        CreepMaxSpeeds.SpeedMoving + FMath::FRandRange(-CreepSpeedRandoms.MovingRandom, CreepSpeedRandoms.MovingRandom);
+
+    CreepMaxSpeeds.SpeedRotating =
+        CreepMaxSpeeds.SpeedRotating + FMath::FRandRange(-CreepSpeedRandoms.RotatingRandom, CreepSpeedRandoms.RotatingRandom);
+
+    CreepSpeedRandoms.MoveInterpSpeed =
+        CreepSpeedRandoms.MoveInterpSpeed + FMath::FRandRange(-CreepSpeedRandoms.MoveInterpSpeedRand, CreepSpeedRandoms.MoveInterpSpeedRand);
+
 }
 
 bool UCreepMovementComponent::TickCreepMoving(float& DeltaTime)
@@ -70,11 +77,6 @@ void UCreepMovementComponent::SetMovingDestination(FVector MovingDestinationIn)
     CreepMovementState             = ECreepMovementState::StartingMoving;
 }
 
-void UCreepMovementComponent::SetCreepMaxSpeeds(float SpeedRotatingIn, float SpeedMovingIn)
-{
-    CreepMaxSpeeds.SpeedMoving   = SpeedMovingIn;
-    CreepMaxSpeeds.SpeedRotating = SpeedRotatingIn;
-}
 
 void UCreepMovementComponent::UpdateMovingSpeed(float& DeltaTime)
 {
@@ -82,8 +84,8 @@ void UCreepMovementComponent::UpdateMovingSpeed(float& DeltaTime)
 
     if (CreepMovementState == ECreepMovementState::StartingMoving)
     {
-        CreepCurrentSpeeds.SpeedMoving =
-            FMath::FInterpConstantTo(CreepCurrentSpeeds.SpeedMoving, CreepMaxSpeeds.SpeedMoving, DeltaTime, MoveInterpSpeed);
+        CreepCurrentSpeeds.SpeedMoving = FMath::FInterpConstantTo(
+            CreepCurrentSpeeds.SpeedMoving, CreepMaxSpeeds.SpeedMoving, DeltaTime, CreepSpeedRandoms.MoveInterpSpeed);
         if (FMath::IsNearlyEqual(CreepCurrentSpeeds.SpeedMoving, CreepMaxSpeeds.SpeedMoving, 3.0f))
         {
             CreepMovementState = ECreepMovementState::Moving;
@@ -92,7 +94,8 @@ void UCreepMovementComponent::UpdateMovingSpeed(float& DeltaTime)
 
     if (CreepMovementState == ECreepMovementState::StopingMoving)
     {
-        CreepCurrentSpeeds.SpeedMoving = FMath::FInterpConstantTo(CreepCurrentSpeeds.SpeedMoving, 100.0, DeltaTime, MoveInterpSpeed);
+        CreepCurrentSpeeds.SpeedMoving =
+            FMath::FInterpConstantTo(CreepCurrentSpeeds.SpeedMoving, 100.0, DeltaTime, CreepSpeedRandoms.MoveInterpSpeed);
         
     }
 }

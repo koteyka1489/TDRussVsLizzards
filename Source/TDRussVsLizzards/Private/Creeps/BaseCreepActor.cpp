@@ -84,11 +84,6 @@ void ABaseCreepActor::SetCreepMovingDestination(FVector Destiantion)
     MovementComponent->SetMovingDestination(Destiantion);
 }
 
-void ABaseCreepActor::SetCreepMaxSpeeds(float SpeedRotatingIn, float SpeedMovingIn)
-{
-    MovementComponent->SetCreepMaxSpeeds(SpeedRotatingIn, SpeedMovingIn);
-}
-
 bool ABaseCreepActor::TickCreepMoving(float& DeltaTime)
 {
     return MovementComponent->TickCreepMoving(DeltaTime);

@@ -65,12 +65,6 @@ void ABaseSquadCreeps::BeginPlay()
         SetOwner(TeamController);
     }
 
-    for (auto& Creep : Creeps)
-    {
-        float RotatingMove = CreepsSpeed.SpeedRotating + FMath::RandRange(-CreepsSpeed.RotatingRandom, CreepsSpeed.RotatingRandom);
-        float SpeedMove    = CreepsSpeed.SpeedMoving + FMath::RandRange(-CreepsSpeed.MovingRandom, CreepsSpeed.MovingRandom);
-        Creep->SetCreepMaxSpeeds(RotatingMove, SpeedMove);
-    }
 }
 
 void ABaseSquadCreeps::Tick(float DeltaTime)
@@ -334,7 +328,12 @@ FVector ABaseSquadCreeps::CalculateNewRightCorner(FVector Destination)
 {
     float lenghtCenterToForward = (GetRightCornerCreepLocation() - GetRightBackCornerCreepLocation()).Size() / 2;
     float LenghCenterRight = (GetRightCornerCreepLocation() - GetLeftCornerCreepLocation()).Size() / 2;
-    FVector NewRightCorner = Destination + GetActorRightVector() * LenghCenterRight + GetActorForwardVector() * lenghtCenterToForward;
+
+    FQuat QuatBetween        = FQuat::FindBetweenNormals(GetActorForwardVector(), (Destination - GetActorLocation()).GetSafeNormal2D() );
+    FVector NewRightVector = QuatBetween.RotateVector(GetActorRightVector());
+    FVector NewForwardVector = QuatBetween.RotateVector(GetActorForwardVector());
+
+    FVector NewRightCorner = Destination + NewRightVector * LenghCenterRight + NewForwardVector * lenghtCenterToForward;
     
     return NewRightCorner;
 }
