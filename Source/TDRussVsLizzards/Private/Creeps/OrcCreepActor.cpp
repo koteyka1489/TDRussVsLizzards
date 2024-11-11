@@ -16,18 +16,7 @@ AOrcCreepActor::AOrcCreepActor()
     InitSkeletalMesh();
 
     InitAnimations();
-
-    // load the animation blueprint
-    const ConstructorHelpers::FObjectFinder<UAnimBlueprint> AnimObj(
-        TEXT("/Script/Engine.AnimBlueprint'/Game/Animations/ABP_Orc.ABP_Orc'"));
-
-    // generated class is important here :)
-    SkeletalMeshComponent->SetAnimInstanceClass(AnimObj.Object->GeneratedClass);
-
-    
-    
 }
-
 
 void AOrcCreepActor::InitSkeletalMesh()
 {
@@ -41,5 +30,7 @@ void AOrcCreepActor::InitSkeletalMesh()
 
 void AOrcCreepActor::InitAnimations()
 {
-
+    const ConstructorHelpers::FObjectFinder<UAnimBlueprint> AnimBP(TEXT("/Script/Engine.AnimBlueprint'/Game/Animations/ABP_Orc.ABP_Orc'"));
+    checkf(AnimBP.Succeeded(), TEXT("Find Creep ABP is not Succeeded "));
+    SkeletalMeshComponent->SetAnimInstanceClass(AnimBP.Object->GeneratedClass);
 }
