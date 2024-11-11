@@ -66,7 +66,7 @@ private:
     FTimerHandle TimerHandle;
 
     float DistSquaredEndMove       = 20.0f;
-    float DistSquaredStopingMoving = 500.0f;
+    float DistSquaredStopingMoving = 3000.0f;
 
     void UpdateMovingSpeed(float& DeltaTime);
     void PostMovingRotation();

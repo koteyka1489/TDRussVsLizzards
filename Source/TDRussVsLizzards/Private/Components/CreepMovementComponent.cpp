@@ -3,6 +3,7 @@
 #include "Components/CreepMovementComponent.h"
 #include "Creeps/BaseCreepActor.h"
 #include "TimerManager.h"
+#include "Kismet/GameplayStatics.h"
 
 UCreepMovementComponent::UCreepMovementComponent()
 {
@@ -27,7 +28,6 @@ void UCreepMovementComponent::BeginPlay()
 
     CreepSpeedRandoms.MoveInterpSpeed = CreepSpeedRandoms.MoveInterpSpeed +
                                         FMath::FRandRange(-CreepSpeedRandoms.MoveInterpSpeedRand, CreepSpeedRandoms.MoveInterpSpeedRand);
-    
 }
 
 bool UCreepMovementComponent::TickCreepMoving(float& DeltaTime)
@@ -37,18 +37,21 @@ bool UCreepMovementComponent::TickCreepMoving(float& DeltaTime)
     {
         CreepMovementState             = ECreepMovementState::idle;
         CreepCurrentSpeeds.SpeedMoving = 0.0f;
-        PostMovingRotation();
-        //GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UCreepMovementComponent::PostMovingRotation, 0.1f, true);
+        TimerHandle = GetWorld()->GetTimerManager().SetTimerForNextTick(this, &UCreepMovementComponent::PostMovingRotation);
         return true;
+    }
+
+    if (VecToDestination.SizeSquared() <= DistSquaredStopingMoving)
+    {
+        if (CreepMovementState != ECreepMovementState::StopingMoving)
+        {
+            CreepMovementState = ECreepMovementState::StopingMoving;
+        }
     }
 
     FVector Offset = VecToDestination.GetSafeNormal2D() * CreepCurrentSpeeds.SpeedMoving * DeltaTime;
     OwnerCreep->SetActorLocation(OwnerCreep->GetActorLocation() + Offset);
 
-    if (VecToDestination.SizeSquared() <= DistSquaredStopingMoving)
-    {
-        CreepMovementState = ECreepMovementState::StopingMoving;
-    }
     UpdateMovingSpeed(DeltaTime);
 
     return false;
@@ -106,7 +109,14 @@ void UCreepMovementComponent::UpdateMovingSpeed(float& DeltaTime)
     }
 }
 
-void UCreepMovementComponent::PostMovingRotation() 
+void UCreepMovementComponent::PostMovingRotation()
 {
-    OwnerCreep->SetActorRotation(NewSquadRotation);
+    double DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
+
+    if (FMath::Abs((OwnerCreep->GetActorRotation().Yaw - NewSquadRotation.Yaw)) < 1.0)
+    {
+        GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+    }
+    FRotator NewRotation = FMath::RInterpConstantTo(OwnerCreep->GetActorRotation(), NewSquadRotation, DeltaTime, 200.0);
+    OwnerCreep->SetActorRotation(NewRotation);
 }
