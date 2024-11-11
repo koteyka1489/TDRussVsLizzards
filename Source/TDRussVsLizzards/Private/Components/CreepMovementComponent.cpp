@@ -54,7 +54,6 @@ bool UCreepMovementComponent::TickCreepRotating(float& DeltaTime)
 
     if (SquadQuat.Equals(TargetRotationQuat, KINDA_SMALL_NUMBER))
     {
-
         return true;
     }
 
@@ -67,6 +66,7 @@ bool UCreepMovementComponent::TickCreepRotating(float& DeltaTime)
 void UCreepMovementComponent::SetMovingDestination(FVector MovingDestinationIn)
 {
     MovingDestination              = MovingDestinationIn;
+    CreepCurrentSpeeds.SpeedMoving = 100.0f;
     CreepMovementState             = ECreepMovementState::StartingMoving;
 }
 
@@ -93,5 +93,6 @@ void UCreepMovementComponent::UpdateMovingSpeed(float& DeltaTime)
     if (CreepMovementState == ECreepMovementState::StopingMoving)
     {
         CreepCurrentSpeeds.SpeedMoving = FMath::FInterpConstantTo(CreepCurrentSpeeds.SpeedMoving, 100.0, DeltaTime, MoveInterpSpeed);
+        
     }
 }

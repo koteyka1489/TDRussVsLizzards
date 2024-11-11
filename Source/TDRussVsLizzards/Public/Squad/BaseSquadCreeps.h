@@ -33,13 +33,13 @@ struct FSquadCreepsSpeed
     float SpeedMoving   = 600.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad|CreepSpeed")
-    float SpeedRotating = 300.0f;
+    float SpeedRotating = 100.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad|CreepSpeed")
-    float MovingRandom  = 100.0f;
+    float MovingRandom  = 50.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Squad|CreepSpeed")
-    float RotatingRandom = 100.0f;
+    float RotatingRandom = 20.0f;
 };
 
 
@@ -85,6 +85,7 @@ public:
     TArray<TObjectPtr<ABaseCreepActor>>* GetCreeps() { return &Creeps; }
     FVector GetRightCornerCreepLocation();
     FVector GetLeftCornerCreepLocation();
+    FVector GetRightBackCornerCreepLocation();
 
     TArray<FVector> CalculateCreepsPositions(int32 HeightStart, int32 HeightEnd, int32 WidthStart, int32 WidthEnd,
         FVector SquadBaseSpawnLocation, FVector ForwarVectorToNewLocation, bool UseLocationRandom = true);
@@ -156,7 +157,7 @@ private:
     void ExecuteCurrentTaskQueue();
 
     FVector CalculateNewSquadCenterOnRebuild();
-    FVector CalculateNewRightCorner();
+    FVector CalculateNewRightCorner(FVector Destination);
     
     void UpdateInstancedNewLocationMesh(const TArray<FVector>& NewPositions,  const FRotator& NewSquadRotation);
     void DeleteInstancedNewLocationMesh();

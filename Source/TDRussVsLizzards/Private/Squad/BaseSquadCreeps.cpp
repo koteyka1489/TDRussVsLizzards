@@ -210,6 +210,12 @@ FVector ABaseSquadCreeps::GetLeftCornerCreepLocation()
     return Creeps[CurrentSquadSizes.Width - 1]->GetActorLocation();
 }
 
+FVector ABaseSquadCreeps::GetRightBackCornerCreepLocation()
+{
+    return Creeps[(CurrentSquadSizes.Heigth - 1) * CurrentSquadSizes.Width]->GetActorLocation();
+    
+}
+
 void ABaseSquadCreeps::OnRebuildingSquadComplete()
 {
     FVector VectorRebuildRotation = GetActorLocation() + RebuildSquadNewForwardVector * 1000;
@@ -258,7 +264,7 @@ void ABaseSquadCreeps::SquadUnChoisenBySelectBox()
 
 void ABaseSquadCreeps::MoveAndRotatingSquadToLocation(FVector Destination)
 {
-    FVector NewRightCorner = CalculateNewRightCorner();
+    FVector NewRightCorner = CalculateNewRightCorner(Destination);
     
     SquadCalcTargetComponent->UpdateNewCreepsPositions(
         CurrentSquadSizes.Width, NewRightCorner, (Destination - GetActorLocation()).GetSafeNormal2D());
@@ -324,11 +330,13 @@ FVector ABaseSquadCreeps::CalculateNewSquadCenterOnRebuild()
     return RebuildCreepsNewLocations[0] + RightToLeftInterp + FrontToBackInterp;
 }
 
-FVector ABaseSquadCreeps::CalculateNewRightCorner()
+FVector ABaseSquadCreeps::CalculateNewRightCorner(FVector Destination)
 {
-
-    // need calculate new right cornenr suqad on moving
-    return FVector();
+    float lenghtCenterToForward = (GetRightCornerCreepLocation() - GetRightBackCornerCreepLocation()).Size() / 2;
+    float LenghCenterRight = (GetRightCornerCreepLocation() - GetLeftCornerCreepLocation()).Size() / 2;
+    FVector NewRightCorner = Destination + GetActorRightVector() * LenghCenterRight + GetActorForwardVector() * lenghtCenterToForward;
+    
+    return NewRightCorner;
 }
 
 void ABaseSquadCreeps::UpdateInstancedNewLocationMesh(const TArray<FVector>& NewPositions, const FRotator& NewSquadRotation)
