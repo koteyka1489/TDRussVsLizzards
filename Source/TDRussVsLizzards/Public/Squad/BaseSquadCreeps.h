@@ -116,6 +116,10 @@ private:
     bool bSquadIsChosen                         = false;
     bool InstancedMeshNewLocIsSet                = false;
 
+    FVector NewSquadForwardVector = FVector::Zero();
+    int32 NewSquadWidth;
+
+
     FVector GetRightCornerCreepLocation();
     FVector GetLeftCornerCreepLocation();
     FVector GetRightBackCornerCreepLocation();
@@ -126,16 +130,17 @@ private:
     FRotator GetLeftBackCornerCreepRotation();
 
 
-    void SetBoxExtendBySquadSize();
+    void UpdateBoxExtendBySquadSize();
     void UpdateSquadLocationStart();
     void UpdateSquadLocation();
-    void UpdateSquadRotation();
+    void UpdateSquadRotation(FVector NewSquadForwardVector);
+    void UpdateSquadNewSizes(int32 NewWidth);
     void SpawnCreeps();
     
     FQuat CalculateQuatBeetwenBaseSquadVec(FVector VectorIn);
 
 
-    void OnRebuildingSquadComplete();
+    
 
     double CalculateDotFrontSquadToLocation(FVector Location);
     double CalculateDotRightVectorSquadToLocation(FVector Location);
