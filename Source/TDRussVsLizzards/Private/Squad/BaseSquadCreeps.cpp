@@ -193,7 +193,7 @@ void ABaseSquadCreeps::UpdateRebuildngSquad(int32 NewWidth, FVector NewStartCree
     NewSquadForwardVector = NewSquadForwardVerctor;
     NewSquadWidth         = NewWidth;
     SquadCalcTargetComponent->UpdateNewCreepsPositions(NewWidth, NewStartCreepSpawnLocation, NewSquadForwardVerctor);
-    UpdateInstancedNewLocationMesh(SquadCalcTargetComponent->GetNewCreepsLocations(), SquadCalcTargetComponent->GetNewSquadRotation());
+    UpdateInstancedNewLocationMesh(SquadCalcTargetComponent->GetNewCreepsLocationsNoRandom(), SquadCalcTargetComponent->GetNewSquadRotation());
 }
 
 void ABaseSquadCreeps::EndRebuildSquad()

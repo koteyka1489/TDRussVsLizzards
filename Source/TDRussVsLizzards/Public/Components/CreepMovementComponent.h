@@ -21,16 +21,16 @@ struct FCreepSpeeds
 {
     GENERATED_BODY()
 
-    float SpeedMoving   = 500.0f;
-    float SpeedRotating = 5.0f;
+    float SpeedMoving   = 600.0f;
+    float SpeedRotating = 4.0f;
 };
 
 struct FCreepSpeedRandoms
 {
     float MoveInterpSpeed       = 600.0f;
     float MoveInterpSpeedRand   = 50.0f;
-    float MovingRandom          = 40.0f;
-    float RotatingRandom        = 1.5f;
+    float MovingRandom          = 30.0f;
+    float RotatingRandom        = 1.0f;
 };
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))

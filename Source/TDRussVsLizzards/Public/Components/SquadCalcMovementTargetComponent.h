@@ -23,6 +23,7 @@ public:
     
 
     TArray<FVector>& GetNewCreepsLocations() { return NewCreepsLocations; }
+    TArray<FVector>& GetNewCreepsLocationsNoRandom() { return NewCreepsLocationsNoRandom; }
     FRotator& GetNewSquadRotation() { return NewSquadRotation; }
 
 protected:
@@ -30,5 +31,6 @@ private:
     TObjectPtr<ABaseSquadCreeps> OwnerSquad;
     TArray<TObjectPtr<ABaseCreepActor>>* CreepsArray;
     TArray<FVector> NewCreepsLocations;
+    TArray<FVector> NewCreepsLocationsNoRandom;
     FRotator NewSquadRotation;
 };

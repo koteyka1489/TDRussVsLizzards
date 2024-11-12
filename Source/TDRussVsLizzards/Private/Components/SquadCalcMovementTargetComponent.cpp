@@ -28,12 +28,18 @@ void USquadCalcMovementTargetComponent::UpdateNewCreepsPositions(
 
     NewCreepsLocations = OwnerSquad->CalculateCreepsPositions(0, Heigth, 0, Width, NewStartCreepSpawnLocation, NewSquadForwardVerctor);
 
+    NewCreepsLocationsNoRandom =
+        OwnerSquad->CalculateCreepsPositions(0, Heigth, 0, Width, NewStartCreepSpawnLocation, NewSquadForwardVerctor, false);
+
     int32 CreepsShortage = OwnerSquad->GetCreepsNum() - Heigth * Width;
     if (CreepsShortage > 0)
     {
         int32 StartSpawnRemainderCreeps = Width / 2 - CreepsShortage / 2;
         NewCreepsLocations.Append(OwnerSquad->CalculateCreepsPositions(Heigth, Heigth + 1, StartSpawnRemainderCreeps,
             StartSpawnRemainderCreeps + CreepsShortage, NewStartCreepSpawnLocation, NewSquadForwardVerctor));
+
+        NewCreepsLocationsNoRandom.Append(OwnerSquad->CalculateCreepsPositions(Heigth, Heigth + 1, StartSpawnRemainderCreeps,
+            StartSpawnRemainderCreeps + CreepsShortage, NewStartCreepSpawnLocation, NewSquadForwardVerctor, false));
     }
 }
 
