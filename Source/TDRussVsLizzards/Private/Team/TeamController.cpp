@@ -123,7 +123,7 @@ void ATeamController::OnRightMouseHoldCompleted()
 
         if (ChoisenSquads.Num() == 1)
         {
-            ChoisenSquads[0]->EndRebuildSquad();
+            ChoisenSquads[0]->EndUpdateRebuildingSquad();
         }
     }
 }
@@ -161,7 +161,7 @@ void ATeamController::OnStopSquad()
 
     for (auto& Squad : ChoisenSquads)
     {
-        Squad->StopAllTasks();
+        Squad->StopAllMovement();
     }
 }
 

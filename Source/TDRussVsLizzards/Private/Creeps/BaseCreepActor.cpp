@@ -89,6 +89,11 @@ void ABaseCreepActor::SetCreepPostMovingRotation(FRotator NewSquadRotation)
     MovementComponent->SetCreepPostMovingRotation(NewSquadRotation);
 }
 
+void ABaseCreepActor::StopMoving() 
+{
+    MovementComponent->StopMoving();
+}
+
 bool ABaseCreepActor::TickCreepMoving(float& DeltaTime)
 {
     return MovementComponent->TickCreepMoving(DeltaTime);

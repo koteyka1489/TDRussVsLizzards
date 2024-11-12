@@ -47,14 +47,6 @@ bool UCreepMovementComponent::TickCreepMoving(float& DeltaTime)
         return true;
     }
 
-    if (VecToDestination.SizeSquared() <= DistSquaredStopingMoving)
-    {
-        if (CreepMovementState != ECreepMovementState::StopingMoving)
-        {
-            CreepMovementState = ECreepMovementState::StopingMoving;
-        }
-    }
-
     FVector Offset = VecToDestination.GetSafeNormal2D() * CreepCurrentSpeeds.SpeedMoving * DeltaTime;
     OwnerCreep->SetActorLocation(OwnerCreep->GetActorLocation() + Offset);
 
@@ -80,6 +72,12 @@ bool UCreepMovementComponent::TickCreepRotating(float& DeltaTime)
     OwnerCreep->SetActorRotation(NewRotation);
 
     return false;
+}
+
+void UCreepMovementComponent::StopMoving() 
+{
+    CreepMovementState             = ECreepMovementState::idle;
+    CreepCurrentSpeeds.SpeedMoving = 0.0f;
 }
 
 void UCreepMovementComponent::SetMovingDestination(FVector MovingDestinationIn)
@@ -108,11 +106,6 @@ void UCreepMovementComponent::UpdateMovingSpeed(float& DeltaTime)
         }
     }
 
-    if (CreepMovementState == ECreepMovementState::StopingMoving)
-    {
-        CreepCurrentSpeeds.SpeedMoving =
-            FMath::FInterpConstantTo(CreepCurrentSpeeds.SpeedMoving, 100.0, DeltaTime, CreepSpeedRandoms.MoveInterpSpeed);
-    }
 }
 
 void UCreepMovementComponent::PostMovingRotation()

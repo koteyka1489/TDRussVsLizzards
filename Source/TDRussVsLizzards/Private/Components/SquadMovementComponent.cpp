@@ -46,6 +46,13 @@ void USquadMovementComponent::StopAllMovings()
 {
     bRotatingSquadIsContinue = false;
     bMovingSquadIsContinue   = false;
+
+     for (const auto& Creep : *CreepsArray)
+    {
+         Creep->StopMoving();
+        
+    }
+
 }
 
 void USquadMovementComponent::RotatingCreeps(float DeltaTime)

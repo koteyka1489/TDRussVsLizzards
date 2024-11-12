@@ -8,10 +8,6 @@
 #include "DrawDebugHelpers.h"
 #include "Components/SceneComponent.h"
 #include "Components/BoxComponent.h"
-#include "Squad/Task/MoveSquadTask.h"
-#include "Squad/Task/RotateCreepsTask.h"
-#include "Squad/Task/RotateFrontSquadTask.h"
-#include "Squad/Task/SquadBaseTask.h"
 #include "Camera/CameraPawn.h"
 #include "Kismet/GameplayStatics.h"
 #include "Team/TeamController.h"
@@ -193,10 +189,11 @@ void ABaseSquadCreeps::UpdateRebuildngSquad(int32 NewWidth, FVector NewStartCree
     NewSquadForwardVector = NewSquadForwardVerctor;
     NewSquadWidth         = NewWidth;
     SquadCalcTargetComponent->UpdateNewCreepsPositions(NewWidth, NewStartCreepSpawnLocation, NewSquadForwardVerctor);
-    UpdateInstancedNewLocationMesh(SquadCalcTargetComponent->GetNewCreepsLocationsNoRandom(), SquadCalcTargetComponent->GetNewSquadRotation());
+    UpdateInstancedNewLocationMesh(
+        SquadCalcTargetComponent->GetNewCreepsLocationsNoRandom(), SquadCalcTargetComponent->GetNewSquadRotation());
 }
 
-void ABaseSquadCreeps::EndRebuildSquad()
+void ABaseSquadCreeps::EndUpdateRebuildingSquad()
 {
     UpdateSquadRotation(NewSquadForwardVector);
     UpdateSquadNewSizes(NewSquadWidth);
@@ -236,27 +233,6 @@ FVector ABaseSquadCreeps::GetLeftBackCornerCreepLocation()
 {
     int32 Index = ((CurrentSquadSizes.Heigth - 1) * CurrentSquadSizes.Width) + CurrentSquadSizes.Width - 1;
     return Creeps[Index]->GetActorLocation();
-}
-
-FRotator ABaseSquadCreeps::GetRightCornerCreepRotation()
-{
-    return Creeps[0]->GetActorRotation();
-}
-
-FRotator ABaseSquadCreeps::GetLeftCornerCreepRotation()
-{
-    return Creeps[CurrentSquadSizes.Width - 1]->GetActorRotation();
-}
-
-FRotator ABaseSquadCreeps::GetRightBackCornerCreepRotation()
-{
-    return Creeps[(CurrentSquadSizes.Heigth - 1) * CurrentSquadSizes.Width]->GetActorRotation();
-}
-
-FRotator ABaseSquadCreeps::GetLeftBackCornerCreepRotation()
-{
-    int32 Index = ((CurrentSquadSizes.Heigth - 1) * CurrentSquadSizes.Width) + CurrentSquadSizes.Width - 1;
-    return Creeps[Index]->GetActorRotation();
 }
 
 void ABaseSquadCreeps::SquadUnChoisen()
@@ -302,12 +278,9 @@ void ABaseSquadCreeps::MoveAndRotatingSquadToLocation(FVector Destination)
     UpdateSquadRotation((Destination - GetActorLocation()).GetSafeNormal2D());
 }
 
-void ABaseSquadCreeps::StopAllTasks()
+void ABaseSquadCreeps::StopAllMovement()
 {
     SquadMovementComponent->StopAllMovings();
-    CurrentSquadTask           = nullptr;
-    bCurrentSquadTaskIsExecute = false;
-    SquadTasksQueue.Empty();
 }
 
 double ABaseSquadCreeps::CalculateDotFrontSquadToLocation(FVector Location)
@@ -322,40 +295,6 @@ double ABaseSquadCreeps::CalculateDotRightVectorSquadToLocation(FVector Location
     FVector SquadRightVector               = GetActorRightVector();
     FVector SquadToLocationNormalizeVector = (Location - GetActorLocation()).GetSafeNormal2D();
     return SquadRightVector.Dot(SquadToLocationNormalizeVector);
-}
-
-void ABaseSquadCreeps::ExecuteCurrentTaskQueue()
-{
-
-    TObjectPtr<USquadBaseTask> FirstQueueTask;
-    if (!SquadTasksQueue.Peek(FirstQueueTask) || bCurrentSquadTaskIsExecute || SquadTasksQueue.IsEmpty()) return;
-
-    if (CurrentSquadTask == FirstQueueTask)
-    {
-        return;
-    }
-    else
-    {
-        TObjectPtr<USquadBaseTask> NewCurrenWueueTask;
-        if (SquadTasksQueue.Dequeue(NewCurrenWueueTask))
-        {
-            bCurrentSquadTaskIsExecute = true;
-            CurrentSquadTask           = NewCurrenWueueTask;
-            CurrentSquadTask->ExecuteTask();
-        }
-    }
-}
-
-FVector ABaseSquadCreeps::CalculateNewSquadCenterOnRebuild()
-{
-    FVector RightCornerFrontNewPos = RebuildCreepsNewLocations[0];
-    FVector LeftCornerForntNewPos  = RebuildCreepsNewLocations[CurrentSquadSizes.Width - 1];
-    FVector RightBackCorner        = RebuildCreepsNewLocations[(CurrentSquadSizes.Heigth - 1) * CurrentSquadSizes.Width];
-
-    FVector RightToLeftInterp = (LeftCornerForntNewPos - RightCornerFrontNewPos) / 2;
-    FVector FrontToBackInterp = (RightBackCorner - RightCornerFrontNewPos) / 2;
-
-    return RebuildCreepsNewLocations[0] + RightToLeftInterp + FrontToBackInterp;
 }
 
 FVector ABaseSquadCreeps::CalculateNewRightCorner(FVector Destination)

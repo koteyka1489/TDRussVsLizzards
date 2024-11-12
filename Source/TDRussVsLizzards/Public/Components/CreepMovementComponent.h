@@ -44,6 +44,7 @@ public:
 
     bool TickCreepMoving(float& DeltaTime);
     bool TickCreepRotating(float& DeltaTime);
+    void StopMoving();
 
     float GetCreepCurrentSpeedMoving() { return CreepCurrentSpeeds.SpeedMoving; }
     float GetCreepCurrentSpeedRotating() { return CreepCurrentSpeeds.SpeedRotating; }
