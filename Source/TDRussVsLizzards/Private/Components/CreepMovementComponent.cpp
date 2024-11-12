@@ -35,9 +35,15 @@ bool UCreepMovementComponent::TickCreepMoving(float& DeltaTime)
     FVector VecToDestination = MovingDestination - OwnerCreep->GetActorLocation();
     if (VecToDestination.SizeSquared() <= DistSquaredEndMove)
     {
-        CreepMovementState             = ECreepMovementState::idle;
-        CreepCurrentSpeeds.SpeedMoving = 0.0f;
-        TimerHandle = GetWorld()->GetTimerManager().SetTimerForNextTick(this, &UCreepMovementComponent::PostMovingRotation);
+        if (CreepMovementState != ECreepMovementState::idle)
+        {
+            CreepMovementState             = ECreepMovementState::idle;
+            CreepCurrentSpeeds.SpeedMoving = 0.0f;
+
+            GetWorld()->GetTimerManager().SetTimer(
+                TimerHandle, this, &UCreepMovementComponent::PostMovingRotation, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), true);
+        }
+
         return true;
     }
 
@@ -117,6 +123,6 @@ void UCreepMovementComponent::PostMovingRotation()
     {
         GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
     }
-    FRotator NewRotation = FMath::RInterpConstantTo(OwnerCreep->GetActorRotation(), NewSquadRotation, DeltaTime, 200.0);
+    FRotator NewRotation = FMath::RInterpConstantTo(OwnerCreep->GetActorRotation(), NewSquadRotation, DeltaTime, 250.0);
     OwnerCreep->SetActorRotation(NewRotation);
 }
