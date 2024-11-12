@@ -66,8 +66,7 @@ private:
     FCreepSpeedRandoms CreepSpeedRandoms;
     FTimerHandle TimerHandle;
 
-    float DistSquaredEndMove       = 20.0f;
-    float DistSquaredStopingMoving = 3000.0f;
+    float DistSquaredEndMove       = 30.0f;
 
     void UpdateMovingSpeed(float& DeltaTime);
     void PostMovingRotation();
