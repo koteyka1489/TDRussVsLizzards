@@ -30,21 +30,13 @@ void ABarbarianCreepActor::InitSkeletalMesh()
 
 void ABarbarianCreepActor::InitAnimations()
 {
-    static ConstructorHelpers::FObjectFinder<UAnimBlueprint> AnimBP(
-        TEXT("/Script/Engine.AnimBlueprint'/Game/Animations/ABP_UE4Skeleton.ABP_UE4Skeleton'"));
+    static ConstructorHelpers::FClassFinder<UAnimInstance> AnimBP(
+        TEXT("/Script/Engine.AnimBlueprint'/Game/Animations/ABP_UE4Skeleton.ABP_UE4Skeleton_C'"));
+
     checkf(AnimBP.Succeeded(), TEXT("Find Creep ABP is not Succeeded "));
-    if (AnimBP.Object)
+    if (AnimBP.Succeeded())
     {
-        SkeletalMeshComponent->SetAnimInstanceClass(AnimBP.Object->GeneratedClass);
+        SkeletalMeshComponent->SetAnimInstanceClass(AnimBP.Class);
     }
-    
-    //AnimationBP =
-    //    TSoftClassPtr<UAnimInstance>(FSoftClassPath("/Script/Engine.AnimBlueprint'/Game/Animations/ABP_UE4Skeleton.ABP_UE4Skeleton'"));
-    //check(AnimationBP);
-    //if (AnimationBP)
-    //{
-
-    //}
-
     
 }

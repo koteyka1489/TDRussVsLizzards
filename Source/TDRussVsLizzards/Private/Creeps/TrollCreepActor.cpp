@@ -8,7 +8,7 @@
 ATrollCreepActor::ATrollCreepActor()
 {
     PrimaryActorTick.bCanEverTick = false;
-    WeaponComponent = CreateDefaultSubobject<UWeaponComponent>("WeaponComponent");
+    WeaponComponent               = CreateDefaultSubobject<UWeaponComponent>("WeaponComponent");
     check(IsValid(WeaponComponent));
     WeaponComponent->InitWeaponType(ACudgelWeapon::StaticClass());
 
@@ -16,7 +16,6 @@ ATrollCreepActor::ATrollCreepActor()
 
     InitAnimations();
 }
-
 
 void ATrollCreepActor::InitSkeletalMesh()
 {
@@ -30,10 +29,11 @@ void ATrollCreepActor::InitSkeletalMesh()
 
 void ATrollCreepActor::InitAnimations()
 {
-    static ConstructorHelpers::FObjectFinder<UAnimBlueprint> AnimBP(TEXT("/Script/Engine.AnimBlueprint'/Game/Animations/ABP_Troll.ABP_Troll'"));
+    static ConstructorHelpers::FClassFinder<UAnimInstance> AnimBP(
+        TEXT("/Script/Engine.AnimBlueprint'/Game/Animations/ABP_Troll.ABP_Troll_C'"));
     checkf(AnimBP.Succeeded(), TEXT("Find Creep ABP is not Succeeded "));
-    if (AnimBP.Object)
+    if (AnimBP.Succeeded())
     {
-        SkeletalMeshComponent->SetAnimInstanceClass(AnimBP.Object->GeneratedClass);
+        SkeletalMeshComponent->SetAnimInstanceClass(AnimBP.Class);
     }
 }
