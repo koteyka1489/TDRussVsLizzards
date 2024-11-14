@@ -30,8 +30,10 @@ void ATrollCreepActor::InitSkeletalMesh()
 
 void ATrollCreepActor::InitAnimations()
 {
-    const ConstructorHelpers::FObjectFinder<UAnimBlueprint> AnimBP(TEXT("/Script/Engine.AnimBlueprint'/Game/Animations/ABP_Troll.ABP_Troll'"));
+    static ConstructorHelpers::FObjectFinder<UAnimBlueprint> AnimBP(TEXT("/Script/Engine.AnimBlueprint'/Game/Animations/ABP_Troll.ABP_Troll'"));
     checkf(AnimBP.Succeeded(), TEXT("Find Creep ABP is not Succeeded "));
-    SkeletalMeshComponent->SetAnimInstanceClass(AnimBP.Object->GeneratedClass);
-    
+    if (AnimBP.Object)
+    {
+        SkeletalMeshComponent->SetAnimInstanceClass(AnimBP.Object->GeneratedClass);
+    }
 }

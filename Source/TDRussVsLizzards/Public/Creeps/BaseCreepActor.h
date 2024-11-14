@@ -57,6 +57,8 @@ protected:
     UPROPERTY()
     TObjectPtr<UCreepMovementComponent> MovementComponent;
 
+
+
     virtual void InitSkeletalMesh();
     virtual void InitAnimations();
 
