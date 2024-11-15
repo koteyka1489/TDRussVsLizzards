@@ -5,27 +5,25 @@
 #include "Creeps/BaseCreepActor.h"
 #include "SkeletalMeshComponentBudgeted.h"
 
-
 UWeaponComponent::UWeaponComponent()
 {
     PrimaryComponentTick.bCanEverTick = false;
-
-    
 }
 
 void UWeaponComponent::BeginPlay()
 {
     Super::BeginPlay();
 
-    checkf(AttachWeaponToSocket(), TEXT("Attach Weapon to is failed"));
+    if (!AttachWeaponToSocket())
+    {
+        UE_LOG(LogTemp, Error, TEXT("Attach Weapon to Socket is failed"));
+    }
 }
 
-void UWeaponComponent::InitWeaponType(TSubclassOf<ABaseWeapon> WeaponTypeIn) 
+void UWeaponComponent::InitWeaponType(TSubclassOf<ABaseWeapon> WeaponTypeIn)
 {
     WeaponType = WeaponTypeIn;
 }
-
-
 
 bool UWeaponComponent::AttachWeaponToSocket()
 {
