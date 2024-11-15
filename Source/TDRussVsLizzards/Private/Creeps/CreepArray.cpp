@@ -41,12 +41,6 @@ TArray<TObjectPtr<ABaseCreepActor>> UCreepArray::GetRowCreeps(int32 Row)
         Result.Add(CreepsMap[GenerateKey(Row, Column)]);
         Column++;
     }
-
+    
     return Result;
-}
-
-
-TObjectPtr<ABaseCreepActor> UCreepArray::GetValue(int32 Key)
-{
-    return CreepsMap[Key];
 }

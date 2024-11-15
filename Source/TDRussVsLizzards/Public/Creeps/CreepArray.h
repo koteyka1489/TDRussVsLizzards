@@ -21,8 +21,10 @@ public:
     TArray<TObjectPtr<ABaseCreepActor>> GetColumnCreeps(int32 Column);
     TArray<TObjectPtr<ABaseCreepActor>> GetRowCreeps(int32 Row);
 
-    TObjectPtr<ABaseCreepActor> GetValue(int32 Key);
+    TObjectPtr<ABaseCreepActor> GetValue(int32 Key) { return CreepsMap[Key]; }
     int32 Num() { return CreepsMap.Num(); }
+    bool Contains(int32 Key) { return CreepsMap.Contains(Key); }
+    int32 Remove(int32 Key) { return CreepsMap.Remove(Key); }
 
    // auto begin() { return CreepsMap.CreateIterator(); }
     auto begin() { return CreepsMap.begin(); }

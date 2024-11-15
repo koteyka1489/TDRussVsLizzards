@@ -116,6 +116,8 @@ private:
     void UpdateSquadLocation();
     void UpdateSquadRotation(FVector NewSquadForwardVector);
     void UpdateSquadNewSizes(int32 NewWidth);
+    void UpdateSquadPostionKeys(const TMap<int32, FVector>& NewPositions);
+
     void SpawnCreeps();
     FQuat CalculateQuatBeetwenBaseSquadVec(FVector VectorIn);
     double CalculateDotFrontSquadToLocation(FVector Location);
