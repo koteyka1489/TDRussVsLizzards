@@ -23,10 +23,13 @@ void USquadCalcMovementTargetComponent::BeginPlay()
 void USquadCalcMovementTargetComponent::UpdateNewCreepsPositions(
     int32 NewWidth, FVector NewStartCreepSpawnLocation, FVector NewSquadForwardVerctor)
 {
+    NewCreepsLocations.Empty();
+    NewCreepsLocationsNoRandom.Empty();
+
     int32 Width      = NewWidth;
     int32 Heigth     = OwnerSquad->GetCreepsNum() / Width;
     NewSquadRotation = NewSquadForwardVerctor.Rotation();
-
+    
     NewCreepsLocations = OwnerSquad->CalculateCreepsPositions(0, Heigth, 0, Width, NewStartCreepSpawnLocation, NewSquadForwardVerctor);
 
     NewCreepsLocationsNoRandom =
@@ -46,7 +49,6 @@ void USquadCalcMovementTargetComponent::UpdateNewCreepsPositions(
 
 void USquadCalcMovementTargetComponent::SetCreepsMovingDestination()
 {
-    
     for (auto& Creep : *CreepsArray)
     {
         Creep.Value->SetCreepMovingDestination(NewCreepsLocations[Creep.Key]);
