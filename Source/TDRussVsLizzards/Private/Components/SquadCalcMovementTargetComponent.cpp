@@ -3,6 +3,7 @@
 #include "Components/SquadCalcMovementTargetComponent.h"
 #include "Creeps/BaseCreepActor.h"
 #include "Squad/BaseSquadCreeps.h"
+#include "Creeps/CreepArray.h"
 
 USquadCalcMovementTargetComponent::USquadCalcMovementTargetComponent()
 {
@@ -45,11 +46,10 @@ void USquadCalcMovementTargetComponent::UpdateNewCreepsPositions(
 
 void USquadCalcMovementTargetComponent::SetCreepsMovingDestination()
 {
-    int32 Index = 0;
-    for (const auto& Creep : *CreepsArray)
+    
+    for (auto& Creep : *CreepsArray)
     {
-        Creep->SetCreepMovingDestination(NewCreepsLocations[Index]);
-        Creep->SetCreepPostMovingRotation(NewSquadRotation);
-        Index++;
+        Creep.Value->SetCreepMovingDestination(NewCreepsLocations[Creep.Key]);
+        Creep.Value->SetCreepPostMovingRotation(NewSquadRotation);
     }
 }

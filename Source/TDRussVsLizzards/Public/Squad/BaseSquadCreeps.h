@@ -14,6 +14,7 @@ class USceneComponent;
 class UInstancedStaticMeshComponent;
 class USquadMovementComponent;
 class USquadCalcMovementTargetComponent;
+class UCreepArray;
 
 struct FSquadSizes
 {
@@ -56,9 +57,9 @@ public:
     int32 GetCreepsNum() { return CreepsNum; }
     FCreepsOffsetInSquad GetCreepsOffsetInSquad() { return CreepsOffsetInSquad; }
     double GetCreepPositionRandom() { return CreepPositionRandom; }
-    TArray<TObjectPtr<ABaseCreepActor>>* GetCreeps() { return &Creeps; }
+    TObjectPtr<UCreepArray> GetCreeps() { return Creeps; }
 
-    TArray<FVector> CalculateCreepsPositions(int32 HeightStart, int32 HeightEnd, int32 WidthStart, int32 WidthEnd,
+    TMap<int32, FVector> CalculateCreepsPositions(int32 HeightStart, int32 HeightEnd, int32 WidthStart, int32 WidthEnd,
         FVector SquadBaseSpawnLocation, FVector ForwarVectorToNewLocation, bool UseLocationRandom = true);
 
     FOnSquadIsUnChoisenBySelectionBox OnSquadIsUnChoisenBySelectionBox;
@@ -95,7 +96,9 @@ protected:
     FVector SquadBaseForwardVector = FVector(1.0, 0.0, 0.0);
 
 private:
-    TArray<TObjectPtr<ABaseCreepActor>> Creeps;
+    UPROPERTY()
+    TObjectPtr<UCreepArray> Creeps;
+
     FSquadSizes CurrentSquadSizes;
     FVector NewSquadForwardVector = FVector::Zero();
     int32 NewSquadWidth;
@@ -118,6 +121,6 @@ private:
     double CalculateDotFrontSquadToLocation(FVector Location);
     double CalculateDotRightVectorSquadToLocation(FVector Location);
     FVector CalculateNewRightCorner(FVector Destination);
-    void UpdateInstancedNewLocationMesh(const TArray<FVector>& NewPositions, const FRotator& NewSquadRotation);
+    void UpdateInstancedNewLocationMesh(const TMap<int32, FVector>& NewPositions, const FRotator& NewSquadRotation);
     void DeleteInstancedNewLocationMesh();
 };

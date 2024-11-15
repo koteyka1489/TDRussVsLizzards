@@ -8,6 +8,16 @@ void UCreepArray::Add(int32 Row, int32 Column, TObjectPtr<ABaseCreepActor> Creep
     CreepsMap.Add(Key, Creep);
 }
 
+void UCreepArray::Add(int32 Key, TObjectPtr<ABaseCreepActor> Creep) 
+{
+    CreepsMap.Add(Key, Creep);
+}
+
+int32 UCreepArray::GenerateKey(int32 Row, int32 Column)
+{
+    return Row * 100 + Column;
+}
+
 TArray<TObjectPtr<ABaseCreepActor>> UCreepArray::GetColumnCreeps(int32 Column)
 {
     TArray<TObjectPtr<ABaseCreepActor>> Result;
@@ -17,7 +27,7 @@ TArray<TObjectPtr<ABaseCreepActor>> UCreepArray::GetColumnCreeps(int32 Column)
         Result.Add(CreepsMap[GenerateKey(Row, Column)]);
         Row++;
     }
-
+    
     return Result;
 }
 
@@ -35,7 +45,8 @@ TArray<TObjectPtr<ABaseCreepActor>> UCreepArray::GetRowCreeps(int32 Row)
     return Result;
 }
 
-int32 UCreepArray::GenerateKey(int32 Row, int32 Column)
+
+TObjectPtr<ABaseCreepActor> UCreepArray::GetValue(int32 Key)
 {
-    return Row * 100 + Column;
+    return CreepsMap[Key];
 }

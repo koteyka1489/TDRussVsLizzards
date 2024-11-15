@@ -3,6 +3,7 @@
 #include "Components/SquadMovementComponent.h"
 #include "Creeps/BaseCreepActor.h"
 #include "Squad/BaseSquadCreeps.h"
+#include "Creeps/CreepArray.h"
 
 class ABaseSquadCreeps;
 
@@ -42,17 +43,15 @@ void USquadMovementComponent::SetSquadMovement()
     bMovingSquadIsContinue   = true;
 }
 
-void USquadMovementComponent::StopAllMovings() 
+void USquadMovementComponent::StopAllMovings()
 {
     bRotatingSquadIsContinue = false;
     bMovingSquadIsContinue   = false;
 
-     for (const auto& Creep : *CreepsArray)
+    for (const auto& Creep : *CreepsArray)
     {
-         Creep->StopMoving();
-        
+        Creep.Value->StopMoving();
     }
-
 }
 
 void USquadMovementComponent::RotatingCreeps(float DeltaTime)
@@ -60,7 +59,7 @@ void USquadMovementComponent::RotatingCreeps(float DeltaTime)
     int32 CreepEndRotatingCounter = 0;
     for (const auto& Creep : *CreepsArray)
     {
-        if (Creep->TickCreepRotating(DeltaTime))
+        if (Creep.Value->TickCreepRotating(DeltaTime))
         {
             CreepEndRotatingCounter++;
         }
@@ -77,7 +76,7 @@ void USquadMovementComponent::MovingCreeps(float DeltaTime)
     int32 CreepEndMovingCounter = 0;
     for (const auto& Creep : *CreepsArray)
     {
-        if (Creep->TickCreepMoving(DeltaTime))
+        if (Creep.Value->TickCreepMoving(DeltaTime))
         {
             CreepEndMovingCounter++;
         }

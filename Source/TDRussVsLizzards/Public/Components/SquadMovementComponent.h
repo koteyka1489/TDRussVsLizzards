@@ -7,6 +7,7 @@
 #include "SquadMovementComponent.generated.h"
 
 class ABaseCreepActor;
+class UCreepArray;
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class TDRUSSVSLIZZARDS_API USquadMovementComponent : public UActorComponent
@@ -23,7 +24,7 @@ public:
 
 protected:
 private:
-    TArray<TObjectPtr<ABaseCreepActor>>* CreepsArray;
+    TObjectPtr<UCreepArray> CreepsArray;
     bool bRotatingSquadIsContinue = false;
     bool bMovingSquadIsContinue   = false;
 

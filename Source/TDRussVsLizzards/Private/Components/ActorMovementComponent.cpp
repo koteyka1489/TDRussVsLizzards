@@ -18,7 +18,7 @@ void UActorMovementComponent::BeginPlay()
 
     OwnerSquad = Cast<ABaseSquadCreeps>(GetOwner());
     checkf(IsValid(OwnerSquad), TEXT("Get Owner Squad is Failed"));
-    CreepsArray = OwnerSquad->GetCreeps();
+   // CreepsArray = OwnerSquad->GetCreeps();
 }
 
 void UActorMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)

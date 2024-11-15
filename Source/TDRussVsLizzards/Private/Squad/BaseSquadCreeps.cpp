@@ -14,6 +14,7 @@
 #include "Components/InstancedStaticMeshComponent.h"
 #include "Components/SquadCalcMovementTargetComponent.h"
 #include "Components/SquadMovementComponent.h"
+#include "Creeps/CreepArray.h"
 
 ABaseSquadCreeps::ABaseSquadCreeps()
 {
@@ -44,15 +45,18 @@ ABaseSquadCreeps::ABaseSquadCreeps()
         TEXT("/Script/Engine.StaticMesh'/Game/Squads/SM_SelectCircle.SM_SelectCircle'"));
     checkf(SelectCircleMesh.Succeeded(), TEXT("Find SelectCircleMesh is not Succeeded "));
     InstancedNewLocationMesh->SetStaticMesh(SelectCircleMesh.Object);
+
+    Creeps = CreateDefaultSubobject<UCreepArray>("CreepArray");
+
+    
 }
 
 void ABaseSquadCreeps::BeginPlay()
 {
     Super::BeginPlay();
-
-    Creeps.Reserve(CreepsNum);
     SpawnCreeps();
     UpdateSquadLocation();
+    
 
     auto TeamController = Cast<ATeamController>(UGameplayStatics::GetActorOfClass(GetWorld(), ATeamController::StaticClass()));
     if (TeamController)
@@ -77,9 +81,9 @@ void ABaseSquadCreeps::UpdateSquadLocationStart()
     FVector SquadRightToLeftCornerHalfVec = (SquadLeftCorner - SquadRightCorner) / 2;
 
     int32 IndexCreepBackRightCorner = (CurrentSquadSizes.Heigth - 1) * CurrentSquadSizes.Width;
-    checkf(Creeps.IsValidIndex(IndexCreepBackRightCorner), TEXT("Invalid Index"));
+    
 
-    FVector BackCorner         = Creeps[IndexCreepBackRightCorner]->GetActorLocation();
+    FVector BackCorner         = GetRightBackCornerCreepLocation();
     FVector FrontToBackHalfVec = (BackCorner - SquadRightCorner) / 2;
 
     SetActorLocation(GetActorLocation() + SquadRightToLeftCornerHalfVec + FrontToBackHalfVec);
@@ -135,24 +139,25 @@ void ABaseSquadCreeps::SpawnCreeps()
     SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
     SpawnInfo.Owner                          = this;
 
-    TArray<FVector> SpawnLocations =
+    TMap<int32, FVector> SpawnLocations =
         CalculateCreepsPositions(0, CurrentSquadSizes.Heigth, 0, CurrentSquadSizes.Width, Squadlocation, SquadBaseForwardVector);
 
     int32 StartSpawnRemainderCreeps = CurrentSquadSizes.Width / 2 - CreepsShortage / 2;
     SpawnLocations.Append(CalculateCreepsPositions(CurrentSquadSizes.Heigth, CurrentSquadSizes.Heigth + 1, StartSpawnRemainderCreeps,
         StartSpawnRemainderCreeps + CreepsShortage, Squadlocation, SquadBaseForwardVector));
-
+    
     for (const auto& SpawnLocation : SpawnLocations)
     {
-        ABaseCreepActor* SpawnedCreep = GetWorld()->SpawnActor<ABaseCreepActor>(CreepsType, SpawnLocation, SpawnRotation, SpawnInfo);
-        Creeps.Add(SpawnedCreep);
+        TObjectPtr<ABaseCreepActor> SpawnedCreep = GetWorld()->SpawnActor<ABaseCreepActor>(CreepsType, SpawnLocation.Value, SpawnRotation, SpawnInfo);
+        Creeps->Add(SpawnLocation.Key, SpawnedCreep);
     }
 }
 
-TArray<FVector> ABaseSquadCreeps::CalculateCreepsPositions(int32 HeightStart, int32 HeightEnd, int32 WidthStart, int32 WidthEnd,
+TMap<int32, FVector> ABaseSquadCreeps::CalculateCreepsPositions(int32 HeightStart, int32 HeightEnd, int32 WidthStart, int32 WidthEnd,
     FVector SquadBaseSpawnLocation, FVector ForwarVectorToNewLocation, bool UseLocationRandom)
 {
-    TArray<FVector> Result;
+    
+    TMap<int32, FVector> Result;
 
     for (int32 HeightPos = HeightStart; HeightPos < HeightEnd; HeightPos++)
     {
@@ -169,8 +174,8 @@ TArray<FVector> ABaseSquadCreeps::CalculateCreepsPositions(int32 HeightStart, in
 
             const FVector SpawnLocation =
                 FVector(SquadBaseSpawnLocation.X, SquadBaseSpawnLocation.Y, SquadBaseSpawnLocation.Z + 90.0) + VecFromBaseSpawnLocRotated;
-
-            Result.Add(SpawnLocation);
+            int32 Key = UCreepArray::GenerateKey(HeightPos, WidthPos);
+            Result.Add(Key, SpawnLocation);
         }
     }
 
@@ -208,31 +213,34 @@ void ABaseSquadCreeps::SetSquadIsChoisen()
 
     bSquadIsChosen = true;
 
-    for (auto& Creep : Creeps)
+    for (auto& Creep : *Creeps)
     {
-        Creep->SetCreepIsChoisen(true);
+        Creep.Value->SetCreepIsChoisen(true);
     }
 }
 
 FVector ABaseSquadCreeps::GetRightCornerCreepLocation()
 {
-    return Creeps[0]->GetActorLocation();
+    int32 Key = UCreepArray::GenerateKey(0, 0);
+    return Creeps->GetValue(Key)->GetActorLocation();
 }
 
 FVector ABaseSquadCreeps::GetLeftCornerCreepLocation()
 {
-    return Creeps[CurrentSquadSizes.Width - 1]->GetActorLocation();
+    int32 Key = UCreepArray::GenerateKey(0, CurrentSquadSizes.Width - 1);
+    return Creeps->GetValue(Key)->GetActorLocation();
 }
 
 FVector ABaseSquadCreeps::GetRightBackCornerCreepLocation()
 {
-    return Creeps[(CurrentSquadSizes.Heigth - 1) * CurrentSquadSizes.Width]->GetActorLocation();
+    int32 Key = UCreepArray::GenerateKey(CurrentSquadSizes.Heigth - 1, 0);
+    return Creeps->GetValue(Key)->GetActorLocation();
 }
 
 FVector ABaseSquadCreeps::GetLeftBackCornerCreepLocation()
 {
-    int32 Index = ((CurrentSquadSizes.Heigth - 1) * CurrentSquadSizes.Width) + CurrentSquadSizes.Width - 1;
-    return Creeps[Index]->GetActorLocation();
+    int32 Key   = UCreepArray::GenerateKey(CurrentSquadSizes.Heigth - 1, CurrentSquadSizes.Width - 1);
+    return Creeps->GetValue(Key)->GetActorLocation();
 }
 
 void ABaseSquadCreeps::SquadUnChoisen()
@@ -241,9 +249,9 @@ void ABaseSquadCreeps::SquadUnChoisen()
 
     bSquadIsChosen = false;
 
-    for (auto& Creep : Creeps)
+    for (auto& Creep : *Creeps)
     {
-        Creep->SetCreepIsChoisen(false);
+        Creep.Value->SetCreepIsChoisen(false);
     }
 }
 
@@ -255,9 +263,9 @@ void ABaseSquadCreeps::SquadUnChoisenBySelectBox()
 
     if (OnSquadIsUnChoisenBySelectionBox.ExecuteIfBound(this))
     {
-        for (auto& Creep : Creeps)
+        for (auto& Creep : *Creeps)
         {
-            Creep->SetCreepIsChoisen(false);
+            Creep.Value->SetCreepIsChoisen(false);
         }
     }
     else
@@ -311,7 +319,7 @@ FVector ABaseSquadCreeps::CalculateNewRightCorner(FVector Destination)
     return NewRightCorner;
 }
 
-void ABaseSquadCreeps::UpdateInstancedNewLocationMesh(const TArray<FVector>& NewPositions, const FRotator& NewSquadRotation)
+void ABaseSquadCreeps::UpdateInstancedNewLocationMesh(const TMap<int32, FVector>& NewPositions, const FRotator& NewSquadRotation)
 {
     if (!InstancedMeshNewLocIsSet)
     {
@@ -320,7 +328,7 @@ void ABaseSquadCreeps::UpdateInstancedNewLocationMesh(const TArray<FVector>& New
 
         for (const auto& CreepLocation : NewPositions)
         {
-            FTransform NewTransform(NewSquadRotation, CreepLocation, FVector(1.0, 1.0, 1.0));
+            FTransform NewTransform(NewSquadRotation, CreepLocation.Value, FVector(1.0, 1.0, 1.0));
             InstancedNewLocationMesh->AddInstance(NewTransform);
         }
         InstancedMeshNewLocIsSet = true;
@@ -330,7 +338,7 @@ void ABaseSquadCreeps::UpdateInstancedNewLocationMesh(const TArray<FVector>& New
         int32 IndexInstancedMesh = 0;
         for (const auto& CreepLocation : NewPositions)
         {
-            FTransform NewTransform(NewSquadRotation, CreepLocation, FVector(1.0, 1.0, 1.0));
+            FTransform NewTransform(NewSquadRotation, CreepLocation.Value, FVector(1.0, 1.0, 1.0));
             InstancedNewLocationMesh->UpdateInstanceTransform(IndexInstancedMesh, NewTransform, true, true, true);
             IndexInstancedMesh++;
         }

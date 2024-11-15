@@ -8,6 +8,7 @@
 
 class ABaseSquadCreeps;
 class ABaseCreepActor;
+class UCreepArray;
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class TDRUSSVSLIZZARDS_API USquadCalcMovementTargetComponent : public UActorComponent
@@ -22,15 +23,17 @@ public:
     void SetCreepsMovingDestination();
     
 
-    TArray<FVector>& GetNewCreepsLocations() { return NewCreepsLocations; }
-    TArray<FVector>& GetNewCreepsLocationsNoRandom() { return NewCreepsLocationsNoRandom; }
+    TMap<int32, FVector>& GetNewCreepsLocations() { return NewCreepsLocations; }
+    TMap<int32, FVector>& GetNewCreepsLocationsNoRandom() { return NewCreepsLocationsNoRandom; }
     FRotator& GetNewSquadRotation() { return NewSquadRotation; }
 
 protected:
 private:
     TObjectPtr<ABaseSquadCreeps> OwnerSquad;
-    TArray<TObjectPtr<ABaseCreepActor>>* CreepsArray;
-    TArray<FVector> NewCreepsLocations;
-    TArray<FVector> NewCreepsLocationsNoRandom;
+    TObjectPtr<UCreepArray> CreepsArray;
+
+    TMap<int32, FVector> NewCreepsLocations;
+    TMap<int32, FVector> NewCreepsLocationsNoRandom;
+
     FRotator NewSquadRotation;
 };
