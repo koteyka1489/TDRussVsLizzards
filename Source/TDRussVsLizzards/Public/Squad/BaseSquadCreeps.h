@@ -53,9 +53,9 @@ public:
     void UpdateRebuildngSquad(int32 NewWidth, FVector NewStartCreepSpawnLocation, FVector NewSquadForwardVerctor);
     void EndUpdateRebuildingSquad();
 
-    int32 GetCreepsNum() { return CreepsNum; }
-    FCreepsOffsetInSquad GetCreepsOffsetInSquad() { return CreepsOffsetInSquad; }
-    double GetCreepPositionRandom() { return CreepPositionRandom; }
+    int32 GetCreepsNum() const { return CreepsNum; }
+    FCreepsOffsetInSquad GetCreepsOffsetInSquad() const { return CreepsOffsetInSquad; }
+    double GetCreepPositionRandom() const { return CreepPositionRandom; }
     TObjectPtr<UCreepArray> GetCreeps() { return Creeps; }
 
     TMap<int32, FVector> CalculateCreepsPositions(int32 HeightStart, int32 HeightEnd, int32 WidthStart, int32 WidthEnd,
@@ -114,7 +114,7 @@ private:
     void UpdateBoxExtendBySquadSize();
     void UpdateSquadLocationStart();
     void UpdateSquadLocation();
-    void UpdateSquadRotation(FVector NewSquadForwarVec);
+    void UpdateSquadRotation(const FVector& NewSquadForwarVec);
     void UpdateSquadNewSizes();
     void UpdateNewCreepsPositions(int32 NewWidth, FVector NewStartCreepSpawnLocation, FVector NewSquadForwardVerctor);
     void UpdateSquadPostionKeys();

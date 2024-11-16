@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
 #include "CreepArray.generated.h"
 
 class ABaseCreepActor;
@@ -22,9 +21,9 @@ public:
     TArray<TObjectPtr<ABaseCreepActor>> GetRowCreeps(int32 Row);
 
     TObjectPtr<ABaseCreepActor> GetValue(int32 Key) { return CreepsMap[Key]; }
-    int32 Num() { return CreepsMap.Num(); }
-    bool Contains(int32 Key) { return CreepsMap.Contains(Key); }
-    int32 Remove(int32 Key) { return CreepsMap.Remove(Key); }
+    int32 Num() const { return CreepsMap.Num(); }
+    bool Contains(int32 Key) const { return CreepsMap.Contains(Key); }
+    int32 Remove(int32 Key)  { return CreepsMap.Remove(Key); }
 
    // auto begin() { return CreepsMap.CreateIterator(); }
     auto begin() { return CreepsMap.begin(); }
