@@ -13,7 +13,6 @@ class UBoxComponent;
 class USceneComponent;
 class UInstancedStaticMeshComponent;
 class USquadMovementComponent;
-class USquadCalcMovementTargetComponent;
 class UCreepArray;
 
 struct FSquadSizes
@@ -71,8 +70,6 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
     USquadMovementComponent* SquadMovementComponent;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
-    USquadCalcMovementTargetComponent* SquadCalcTargetComponent;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
     UBoxComponent* SquadSizesBox;
@@ -102,6 +99,9 @@ private:
     FSquadSizes CurrentSquadSizes;
     FVector NewSquadForwardVector = FVector::Zero();
     int32 NewSquadWidth;
+    TMap<int32, FVector> NewCreepsLocations;
+    TMap<int32, FVector> NewCreepsLocationsNoRandom;
+    FRotator NewSquadRotation;
 
     bool bSquadIsChosen                         = false;
     bool InstancedMeshNewLocIsSet               = false;
@@ -114,15 +114,17 @@ private:
     void UpdateBoxExtendBySquadSize();
     void UpdateSquadLocationStart();
     void UpdateSquadLocation();
-    void UpdateSquadRotation(FVector NewSquadForwardVector);
-    void UpdateSquadNewSizes(int32 NewWidth);
-    void UpdateSquadPostionKeys(const TMap<int32, FVector>& NewPositions);
+    void UpdateSquadRotation(FVector NewSquadForwarVec);
+    void UpdateSquadNewSizes();
+    void UpdateNewCreepsPositions(int32 NewWidth, FVector NewStartCreepSpawnLocation, FVector NewSquadForwardVerctor);
+    void UpdateSquadPostionKeys();
+    void SetCreepsMovingDestination();
 
     void SpawnCreeps();
     FQuat CalculateQuatBeetwenBaseSquadVec(FVector VectorIn);
     double CalculateDotFrontSquadToLocation(FVector Location);
     double CalculateDotRightVectorSquadToLocation(FVector Location);
     FVector CalculateNewRightCorner(FVector Destination);
-    void UpdateInstancedNewLocationMesh(const TMap<int32, FVector>& NewPositions, const FRotator& NewSquadRotation);
+    void UpdateInstancedNewLocationMesh();
     void DeleteInstancedNewLocationMesh();
 };
