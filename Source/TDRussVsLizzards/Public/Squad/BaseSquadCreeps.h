@@ -106,10 +106,10 @@ private:
     bool bSquadIsChosen                         = false;
     bool InstancedMeshNewLocIsSet               = false;
 
-    FVector GetRightCornerCreepLocation();
-    FVector GetLeftCornerCreepLocation();
-    FVector GetRightBackCornerCreepLocation();
-    FVector GetLeftBackCornerCreepLocation();
+    FVector GetRightCornerCreepLocation() const;
+    FVector GetLeftCornerCreepLocation() const;
+    FVector GetRightBackCornerCreepLocation() const;
+    FVector GetLeftBackCornerCreepLocation() const;
 
     void UpdateBoxExtendBySquadSize();
     void UpdateSquadLocationStart();

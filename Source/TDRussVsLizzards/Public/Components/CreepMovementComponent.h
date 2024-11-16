@@ -22,15 +22,15 @@ struct FCreepSpeeds
     GENERATED_BODY()
 
     float SpeedMoving   = 600.0f;
-    float SpeedRotating = 4.0f;
+    float SpeedRotating = 6.0f;
 };
 
 struct FCreepSpeedRandoms
 {
-    float MoveInterpSpeed       = 600.0f;
-    float MoveInterpSpeedRand   = 50.0f;
+    float MoveInterpSpeed       = 1000.0f;
+    float MoveInterpSpeedRand   = 100.0f;
     float MovingRandom          = 30.0f;
-    float RotatingRandom        = 1.0f;
+    float RotatingRandom        = 2.0f;
 };
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
@@ -46,8 +46,8 @@ public:
     bool TickCreepRotating(float& DeltaTime);
     void StopMoving();
 
-    float GetCreepCurrentSpeedMoving() { return CreepCurrentSpeeds.SpeedMoving; }
-    float GetCreepCurrentSpeedRotating() { return CreepCurrentSpeeds.SpeedRotating; }
+    float GetCreepCurrentSpeedMoving() const { return CreepCurrentSpeeds.SpeedMoving; }
+    float GetCreepCurrentSpeedRotating() const { return CreepCurrentSpeeds.SpeedRotating; }
 
     FVector& GetMovingDestination() { return MovingDestination; }
     void SetMovingDestination(FVector MovingDestinationIn);

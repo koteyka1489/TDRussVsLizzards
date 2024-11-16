@@ -277,25 +277,25 @@ void ABaseSquadCreeps::SetSquadIsChoisen()
     }
 }
 
-FVector ABaseSquadCreeps::GetRightCornerCreepLocation()
+FVector ABaseSquadCreeps::GetRightCornerCreepLocation() const
 {
     int32 Key = UCreepArray::GenerateKey(0, 0);
     return Creeps->GetValue(Key)->GetActorLocation();
 }
 
-FVector ABaseSquadCreeps::GetLeftCornerCreepLocation()
+FVector ABaseSquadCreeps::GetLeftCornerCreepLocation() const
 {
     int32 Key = UCreepArray::GenerateKey(0, CurrentSquadSizes.Width - 1);
     return Creeps->GetValue(Key)->GetActorLocation();
 }
 
-FVector ABaseSquadCreeps::GetRightBackCornerCreepLocation()
+FVector ABaseSquadCreeps::GetRightBackCornerCreepLocation() const
 {
     int32 Key = UCreepArray::GenerateKey(CurrentSquadSizes.Heigth - 1, 0);
     return Creeps->GetValue(Key)->GetActorLocation();
 }
 
-FVector ABaseSquadCreeps::GetLeftBackCornerCreepLocation()
+FVector ABaseSquadCreeps::GetLeftBackCornerCreepLocation() const
 {
     int32 Key = UCreepArray::GenerateKey(CurrentSquadSizes.Heigth - 1, CurrentSquadSizes.Width - 1);
     return Creeps->GetValue(Key)->GetActorLocation();

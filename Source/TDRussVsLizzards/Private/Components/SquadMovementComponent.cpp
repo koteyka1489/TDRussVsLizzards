@@ -31,7 +31,7 @@ void USquadMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType
         RotatingCreeps(DeltaTime);
     }
 
-    if (bMovingSquadIsContinue && !bRotatingSquadIsContinue)
+    if (bMovingSquadIsContinue)
     {
         MovingCreeps(DeltaTime);
     }

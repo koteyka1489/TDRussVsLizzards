@@ -83,8 +83,12 @@ void UCreepMovementComponent::StopMoving()
 void UCreepMovementComponent::SetMovingDestination(FVector MovingDestinationIn)
 {
     MovingDestination              = MovingDestinationIn;
-    CreepCurrentSpeeds.SpeedMoving = 100.0f;
-    CreepMovementState             = ECreepMovementState::StartingMoving;
+    if (CreepMovementState == ECreepMovementState::idle)
+    {
+        CreepCurrentSpeeds.SpeedMoving = 100.0f;
+        CreepMovementState             = ECreepMovementState::StartingMoving;
+    }
+    
 }
 
 void UCreepMovementComponent::SetCreepPostMovingRotation(FRotator NewSquadRotationIn)
