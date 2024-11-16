@@ -13,6 +13,7 @@ void UCreepArray::Add(int32 Key, TObjectPtr<ABaseCreepActor> Creep)
     CreepsMap.Add(Key, Creep);
 }
 
+
 int32 UCreepArray::GenerateKey(int32 Row, int32 Column)
 {
     return Row * 100 + Column;

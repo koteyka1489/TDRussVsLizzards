@@ -117,7 +117,9 @@ private:
     void UpdateSquadRotation(const FVector& NewSquadForwarVec);
     void UpdateSquadNewSizes();
     void UpdateNewCreepsPositions(int32 NewWidth, FVector NewStartCreepSpawnLocation, FVector NewSquadForwardVerctor);
-    void UpdateSquadPostionKeys();
+    void UpdateSquadPositionKeys();
+    void UpdateSquadPositionKeysSmart();
+    
     void SetCreepsMovingDestination();
 
     void SpawnCreeps();

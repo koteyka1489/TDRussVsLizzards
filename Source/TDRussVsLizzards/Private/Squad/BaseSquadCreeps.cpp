@@ -123,7 +123,7 @@ void ABaseSquadCreeps::UpdateNewCreepsPositions(int32 NewWidth, FVector NewStart
     }
 }
 
-void ABaseSquadCreeps::UpdateSquadPostionKeys()
+void ABaseSquadCreeps::UpdateSquadPositionKeys()
 {
     TArray<int32> NewKeys;
     TArray<int32> OldKeysToChange;
@@ -156,6 +156,47 @@ void ABaseSquadCreeps::UpdateSquadPostionKeys()
             Creeps->Add(NewKeys[Index], CreepPtr);
             Index++;
         }
+    }
+}
+
+void ABaseSquadCreeps::UpdateSquadPositionKeysSmart()
+{
+    auto NewCreepsArray = Creeps->Array();
+    TMap<int, bool> NewCreepPositionReserve;
+    for (const auto& Position : NewCreepsLocations)
+    {
+        NewCreepPositionReserve.Add(Position.Key, false);
+    }
+
+    for (auto Index = NewCreepsArray.Num() - 1; Index >= 0; Index--)
+    {
+        TTuple<int32, UE::Math::TVector<double>> BestNewPosition(0, FVector::Zero());
+        for (const auto& Position : NewCreepsLocations)
+        {
+            if (NewCreepPositionReserve[Position.Key]) continue;
+            
+            if (BestNewPosition.Key == 0)
+            {
+                BestNewPosition = Position;
+            }
+            else
+            {
+                double CurrentBestLength = (BestNewPosition.Value - NewCreepsArray[Index].Value->GetActorLocation()).Size();
+                double NewBestLength = (Position.Value - NewCreepsArray[Index].Value->GetActorLocation()).Size();
+                if (NewBestLength < CurrentBestLength)
+                {
+                    BestNewPosition = Position;
+                }
+            }
+        }
+        NewCreepsArray[Index].Key = BestNewPosition.Key;
+        NewCreepPositionReserve[BestNewPosition.Key] = true;
+    }
+
+    Creeps->Empty();
+    for (const auto& NewCreepKeys : NewCreepsArray)
+    {
+        Creeps->Add(NewCreepKeys.Key, NewCreepKeys.Value);
     }
 }
 
@@ -257,7 +298,8 @@ void ABaseSquadCreeps::UpdateRebuildngSquad(int32 NewWidth, FVector NewStartCree
 
 void ABaseSquadCreeps::EndUpdateRebuildingSquad()
 {
-    UpdateSquadPostionKeys();
+    //UpdateSquadPositionKeys();
+    UpdateSquadPositionKeysSmart();
     UpdateSquadRotation(NewSquadForwardVector);
     UpdateSquadNewSizes();
     DeleteInstancedNewLocationMesh();
