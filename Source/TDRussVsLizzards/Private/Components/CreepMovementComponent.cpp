@@ -114,12 +114,35 @@ void UCreepMovementComponent::UpdateMovingSpeed(float& DeltaTime)
 
 void UCreepMovementComponent::PostMovingRotation()
 {
-    double DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
+    // const double DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
+    //
+    // if (FMath::Abs((OwnerCreep->GetActorRotation().Yaw - NewSquadRotation.Yaw)) < 5.0)
+    // {
+    //     GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+    // }
+    // FRotator NewRotation = FMath::RInterpConstantTo(OwnerCreep->GetActorRotation(), NewSquadRotation, DeltaTime, 200.0);
+    // OwnerCreep->SetActorRotation(NewRotation);
+    
+    const double DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());  
+    const FRotator CurrentRotation = OwnerCreep->GetActorRotation();  
+    
+    // Оптимизированная проверка близости углов  
+    float AngleDifference = FMath::Abs(FMath::FindDeltaAngleDegrees(CurrentRotation.Yaw, NewSquadRotation.Yaw));  
+    
+    // Более точная интерполяция  
+    FRotator NewRotation = FMath::RInterpTo(  
+        CurrentRotation,   
+        NewSquadRotation,   
+        DeltaTime,   
+        10.0f  // Плавность поворота  
+    );  
 
-    if (FMath::Abs((OwnerCreep->GetActorRotation().Yaw - NewSquadRotation.Yaw)) < 1.0)
-    {
-        GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
-    }
-    FRotator NewRotation = FMath::RInterpConstantTo(OwnerCreep->GetActorRotation(), NewSquadRotation, DeltaTime, 250.0);
-    OwnerCreep->SetActorRotation(NewRotation);
+    // Точная остановка при достижении цели  
+    if (AngleDifference < 5.0f)  
+    {  
+        NewRotation = NewSquadRotation;  
+        GetWorld()->GetTimerManager().ClearTimer(TimerHandle);  
+    }  
+
+    OwnerCreep->SetActorRotation(NewRotation);  
 }
