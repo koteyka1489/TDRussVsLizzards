@@ -9,7 +9,6 @@ class ABaseSquadCreeps;
 
 USquadMovementComponent::USquadMovementComponent()
 {
-
     PrimaryComponentTick.bCanEverTick = true;
 }
 
@@ -31,7 +30,7 @@ void USquadMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType
         RotatingCreeps(DeltaTime);
     }
 
-    if (bMovingSquadIsContinue)
+    if (bMovingSquadIsContinue && !bRotatingSquadIsContinue)
     {
         MovingCreeps(DeltaTime);
     }

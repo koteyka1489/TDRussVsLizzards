@@ -98,11 +98,11 @@ private:
 
     FSquadSizes CurrentSquadSizes;
     FVector NewSquadForwardVector = FVector::Zero();
+    FRotator NewSquadRotation;
     int32 NewSquadWidth;
     TMap<int32, FVector> NewCreepsLocations;
     TMap<int32, FVector> NewCreepsLocationsNoRandom;
-    FRotator NewSquadRotation;
-
+    
     bool bSquadIsChosen                         = false;
     bool InstancedMeshNewLocIsSet               = false;
 

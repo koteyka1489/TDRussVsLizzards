@@ -21,16 +21,16 @@ struct FCreepSpeeds
 {
     GENERATED_BODY()
 
-    float SpeedMoving   = 600.0f;
-    float SpeedRotating = 4.0f;
+    float SpeedMoving = 600.0f;
+    float SpeedRotating = 6.0f;
 };
 
 struct FCreepSpeedRandoms
 {
-    float MoveInterpSpeed       = 1000.0f;
-    float MoveInterpSpeedRand   = 100.0f;
-    float MovingRandom          = 30.0f;
-    float RotatingRandom        = 1.0f;
+    float MoveInterpSpeed = 1000.0f;
+    float MoveInterpSpeedRand = 100.0f;
+    float MovingRandom = 30.0f;
+    float RotatingRandom = 2.0f;
 };
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
@@ -42,8 +42,8 @@ public:
     UCreepMovementComponent();
     virtual void BeginPlay() override;
 
-    bool TickCreepMoving(float& DeltaTime);
-    bool TickCreepRotating(float& DeltaTime);
+    bool TickCreepMoving(float DeltaTime);
+    bool TickCreepRotating(float DeltaTime, bool PostMoveRotation);
     void StopMoving();
 
     float GetCreepCurrentSpeedMoving() const { return CreepCurrentSpeeds.SpeedMoving; }
@@ -51,7 +51,7 @@ public:
 
     FVector& GetMovingDestination() { return MovingDestination; }
     void SetMovingDestination(FVector MovingDestinationIn);
-    void SetCreepPostMovingRotation(FRotator NewSquadRotationIn);
+    void SetCreepPostMovingRotation(FVector NewSquadForwardVectorIn);
 
 protected:
     FCreepSpeeds CreepMaxSpeeds;
@@ -61,13 +61,14 @@ protected:
 private:
     TObjectPtr<ABaseCreepActor> OwnerCreep;
     ECreepMovementState CreepMovementState = ECreepMovementState::idle;
-    FVector MovingDestination              = FVector::Zero();
-    FRotator NewSquadRotation{};
+    FVector MovingDestination = FVector::Zero();
+    FVector NewSquadForwardVector = FVector::Zero();
+    FQuat NewRotationQuat = FQuat::Identity;
     FCreepSpeedRandoms CreepSpeedRandoms;
     FTimerHandle TimerHandle;
 
-    float DistSquaredEndMove       = 30.0f;
+    float DistSquaredEndMove = 50.0f;
 
-    void UpdateMovingSpeed(float& DeltaTime);
+    void UpdateMovingSpeed(float DeltaTime);
     void PostMovingRotation();
 };

@@ -105,8 +105,8 @@ void ABaseSquadCreeps::UpdateNewCreepsPositions(int32 NewWidth, FVector NewStart
 
     int32 Width = NewWidth;
     int32 Heigth = CreepsNum / NewWidth;
+    NewSquadForwardVector = NewSquadForwardVerctor.GetSafeNormal2D();
     NewSquadRotation = NewSquadForwardVerctor.Rotation();
-
     NewCreepsLocations = CalculateCreepsPositions(0, Heigth, 0, Width, NewStartCreepSpawnLocation, NewSquadForwardVerctor);
 
     NewCreepsLocationsNoRandom = CalculateCreepsPositions(0, Heigth, 0, Width, NewStartCreepSpawnLocation, NewSquadForwardVerctor, false);
@@ -205,7 +205,7 @@ void ABaseSquadCreeps::SetCreepsMovingDestination()
     for (auto& Creep : *Creeps)
     {
         Creep.Value->SetCreepMovingDestination(NewCreepsLocations[Creep.Key]);
-        Creep.Value->SetCreepPostMovingRotation(NewSquadRotation);
+        Creep.Value->SetCreepPostMovingRotation(NewSquadForwardVector);
     }
 }
 

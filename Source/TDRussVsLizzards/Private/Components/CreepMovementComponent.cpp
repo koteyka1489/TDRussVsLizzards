@@ -4,6 +4,7 @@
 #include "Creeps/BaseCreepActor.h"
 #include "TimerManager.h"
 #include "Kismet/GameplayStatics.h"
+#include "DrawDebugHelpers.h"
 
 UCreepMovementComponent::UCreepMovementComponent()
 {
@@ -14,7 +15,7 @@ void UCreepMovementComponent::BeginPlay()
 {
     Super::BeginPlay();
 
-    CreepCurrentSpeeds.SpeedMoving   = 0.0f;
+    CreepCurrentSpeeds.SpeedMoving = 0.0f;
     CreepCurrentSpeeds.SpeedRotating = CreepMaxSpeeds.SpeedRotating;
 
     OwnerCreep = Cast<ABaseCreepActor>(GetOwner());
@@ -30,14 +31,14 @@ void UCreepMovementComponent::BeginPlay()
                                         FMath::FRandRange(-CreepSpeedRandoms.MoveInterpSpeedRand, CreepSpeedRandoms.MoveInterpSpeedRand);
 }
 
-bool UCreepMovementComponent::TickCreepMoving(float& DeltaTime)
+bool UCreepMovementComponent::TickCreepMoving(float DeltaTime)
 {
     FVector VecToDestination = MovingDestination - OwnerCreep->GetActorLocation();
     if (VecToDestination.SizeSquared() <= DistSquaredEndMove)
     {
         if (CreepMovementState != ECreepMovementState::idle)
         {
-            CreepMovementState             = ECreepMovementState::idle;
+            CreepMovementState = ECreepMovementState::idle;
             CreepCurrentSpeeds.SpeedMoving = 0.0f;
 
             GetWorld()->GetTimerManager().SetTimer(
@@ -55,48 +56,49 @@ bool UCreepMovementComponent::TickCreepMoving(float& DeltaTime)
     return false;
 }
 
-bool UCreepMovementComponent::TickCreepRotating(float& DeltaTime)
+bool UCreepMovementComponent::TickCreepRotating(float DeltaTime, bool PostMoveRotation)
 {
-    FQuat SquadQuat   = OwnerCreep->GetActorQuat();
+    FQuat CreepQuat = OwnerCreep->GetActorQuat();
     FVector Direction = (MovingDestination - OwnerCreep->GetActorLocation()).GetSafeNormal2D();
+    //FRotator TargetRotator = FRotationMatrix::MakeFromX(Direction).Rotator();
+    FQuat TargetRotationQuat = PostMoveRotation ? NewRotationQuat : Direction.Rotation().Quaternion();
 
-    FRotator TargetRotator   = FRotationMatrix::MakeFromX(Direction).Rotator();
-    FQuat TargetRotationQuat = TargetRotator.Quaternion();
-
-    if (SquadQuat.Equals(TargetRotationQuat, KINDA_SMALL_NUMBER))
+    if (CreepQuat.Equals(TargetRotationQuat))
     {
+        if (PostMoveRotation) GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
         return true;
     }
 
-    FQuat NewRotation = FMath::QInterpConstantTo(SquadQuat, TargetRotationQuat, DeltaTime, CreepMaxSpeeds.SpeedRotating);
+    FQuat NewRotation = FMath::QInterpConstantTo(CreepQuat, TargetRotationQuat, DeltaTime, CreepMaxSpeeds.SpeedRotating);
     OwnerCreep->SetActorRotation(NewRotation);
 
     return false;
 }
 
-void UCreepMovementComponent::StopMoving() 
+void UCreepMovementComponent::StopMoving()
 {
-    CreepMovementState             = ECreepMovementState::idle;
+    CreepMovementState = ECreepMovementState::idle;
     CreepCurrentSpeeds.SpeedMoving = 0.0f;
 }
 
 void UCreepMovementComponent::SetMovingDestination(FVector MovingDestinationIn)
 {
-    MovingDestination              = MovingDestinationIn;
+    MovingDestination = MovingDestinationIn;
     if (CreepMovementState == ECreepMovementState::idle)
     {
         CreepCurrentSpeeds.SpeedMoving = 100.0f;
-        CreepMovementState             = ECreepMovementState::StartingMoving;
+        CreepMovementState = ECreepMovementState::StartingMoving;
     }
-    
+
 }
 
-void UCreepMovementComponent::SetCreepPostMovingRotation(FRotator NewSquadRotationIn)
+void UCreepMovementComponent::SetCreepPostMovingRotation(FVector NewSquadForwardVectorIn)
 {
-    NewSquadRotation = NewSquadRotationIn;
+    NewSquadForwardVector = NewSquadForwardVectorIn;
+    NewRotationQuat = NewSquadForwardVectorIn.Rotation().Quaternion();
 }
 
-void UCreepMovementComponent::UpdateMovingSpeed(float& DeltaTime)
+void UCreepMovementComponent::UpdateMovingSpeed(float DeltaTime)
 {
     if (CreepMovementState == ECreepMovementState::idle || CreepMovementState == ECreepMovementState::Moving) return;
 
@@ -109,40 +111,10 @@ void UCreepMovementComponent::UpdateMovingSpeed(float& DeltaTime)
             CreepMovementState = ECreepMovementState::Moving;
         }
     }
-
 }
 
 void UCreepMovementComponent::PostMovingRotation()
 {
-    // const double DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
-    //
-    // if (FMath::Abs((OwnerCreep->GetActorRotation().Yaw - NewSquadRotation.Yaw)) < 5.0)
-    // {
-    //     GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
-    // }
-    // FRotator NewRotation = FMath::RInterpConstantTo(OwnerCreep->GetActorRotation(), NewSquadRotation, DeltaTime, 200.0);
-    // OwnerCreep->SetActorRotation(NewRotation);
-    
-    const double DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());  
-    const FRotator CurrentRotation = OwnerCreep->GetActorRotation();  
-    
-    // Оптимизированная проверка близости углов  
-    float AngleDifference = FMath::Abs(FMath::FindDeltaAngleDegrees(CurrentRotation.Yaw, NewSquadRotation.Yaw));  
-    
-    // Более точная интерполяция  
-    FRotator NewRotation = FMath::RInterpTo(  
-        CurrentRotation,   
-        NewSquadRotation,   
-        DeltaTime,   
-        10.0f  // Плавность поворота  
-    );  
-
-    // Точная остановка при достижении цели  
-    if (AngleDifference < 5.0f)  
-    {  
-        NewRotation = NewSquadRotation;  
-        GetWorld()->GetTimerManager().ClearTimer(TimerHandle);  
-    }  
-
-    OwnerCreep->SetActorRotation(NewRotation);  
+    double DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
+    TickCreepRotating(DeltaTime, true);
 }

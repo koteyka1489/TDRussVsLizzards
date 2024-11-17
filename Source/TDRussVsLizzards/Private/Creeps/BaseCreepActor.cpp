@@ -79,14 +79,14 @@ void ABaseCreepActor::SetCreepIsChoisen(bool ChoisenStatus)
     StaticMeshComponent->SetVisibility(ChoisenStatus);
 }
 
-void ABaseCreepActor::SetCreepMovingDestination(FVector Destiantion) 
+void ABaseCreepActor::SetCreepMovingDestination(FVector Destination) 
 {
-    MovementComponent->SetMovingDestination(Destiantion);
+    MovementComponent->SetMovingDestination(Destination);
 }
 
-void ABaseCreepActor::SetCreepPostMovingRotation(FRotator NewSquadRotation)
+void ABaseCreepActor::SetCreepPostMovingRotation(FVector NewSquadForwardVector)
 {
-    MovementComponent->SetCreepPostMovingRotation(NewSquadRotation);
+    MovementComponent->SetCreepPostMovingRotation(NewSquadForwardVector);
 }
 
 void ABaseCreepActor::StopMoving() 
@@ -101,7 +101,7 @@ bool ABaseCreepActor::TickCreepMoving(float& DeltaTime)
 
 bool ABaseCreepActor::TickCreepRotating(float& DeltaTime)
 {
-    return MovementComponent->TickCreepRotating(DeltaTime);
+    return MovementComponent->TickCreepRotating(DeltaTime, false);
 }
 
 float ABaseCreepActor::GetCreepCurrentSpeedMoving()
