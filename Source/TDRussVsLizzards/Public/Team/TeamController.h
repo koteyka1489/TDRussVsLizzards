@@ -54,6 +54,7 @@ private:
 
     FVector RebuildSquadStartLocation = FVector::Zero();
     bool bRebuildSquadIsContinue      = false;
+    static constexpr float WidthOffsetsOnMultSquadRebuild = 200.0f;
 
     void OnLeftMouseClickChois(FHitResult Hit);
     void OnLeftMouseHold();
@@ -76,6 +77,11 @@ private:
     void CreateSelectionBox();
 
     void UpdateRebuildSquad();
-    int32 CalculateNewWidthSquad(double LengthRebuildVector, const TObjectPtr<ABaseSquadCreeps> RebuildSquad);
+    int32 CalculateNewWidthSquad(double LengthRebuildVector);
+    TArray<int32> CalculateMultiplySquadWidth(double LengthRebuildVector) const;
     FVector CalculateRebuildForwardVector( FVector EndPoint) const;
+    TArray<TObjectPtr<ABaseSquadCreeps>> CalculateSquadsFromEndPoint(FVector EndPoint) const;
 };
+
+
+

@@ -231,14 +231,15 @@ void ATeamController::UpdateRebuildSquad()
     {
         FVector EndPoint = CameraController->GetMouseLocationOnTerrain();
         FVector RebuildForwardVector = CalculateRebuildForwardVector(EndPoint);
-        DrawDebugLine(GetWorld(), RebuildSquadStartLocation, CameraController->GetMouseLocationOnTerrain(), FColor::Cyan, false, 0, 0u, 20.f);
-        
+        DrawDebugLine(GetWorld(), RebuildSquadStartLocation, CameraController->GetMouseLocationOnTerrain(), FColor::Cyan, false, 0, 0u,
+            20.f);
+
         FVector StartPerpendicularLine = FMath::Lerp(RebuildSquadStartLocation, EndPoint, 0.5);
         DrawDebugLine(
             GetWorld(), StartPerpendicularLine, StartPerpendicularLine + RebuildForwardVector * 1000.0, FColor::Cyan, false, 0, 0u, 20.f);
 
         double RebuildVectorLength = (EndPoint - RebuildSquadStartLocation).Size();
-        int32 NewWidth = CalculateNewWidthSquad(RebuildVectorLength, ChoisenSquads[0]);
+        int32 NewWidth = CalculateNewWidthSquad(RebuildVectorLength);
 
         ChoisenSquads[0]->UpdateRebuildngSquad(NewWidth, EndPoint, RebuildForwardVector);
     }
@@ -248,14 +249,46 @@ void ATeamController::UpdateRebuildSquad()
     }
 }
 
-int32 ATeamController::CalculateNewWidthSquad(double LengthRebuildVector, const TObjectPtr<ABaseSquadCreeps> RebuildSquad)
+int32 ATeamController::CalculateNewWidthSquad(double LengthRebuildVector)
 {
     int32 Result{};
 
-    FCreepsOffsetInSquad CreepsOffsetInSquad = RebuildSquad->GetCreepsOffsetInSquad();
+    FCreepsOffsetInSquad CreepsOffsetInSquad = ChoisenSquads[0]->GetCreepsOffsetInSquad();
     int32 LengthIntRebuildVector = static_cast<int32>(LengthRebuildVector);
     int32 OffsetWidthIntInSquad = static_cast<int32>(CreepsOffsetInSquad.Y);
-    Result = FMath::Clamp(LengthIntRebuildVector / OffsetWidthIntInSquad + 1, RebuidSquadClampWidth.Min, RebuildSquad->GetCreepsNum() / 2);
+    Result = FMath::Clamp(LengthIntRebuildVector / OffsetWidthIntInSquad + 1, RebuidSquadClampWidth.Min,
+        ChoisenSquads[0]->GetCreepsNum() / 2);
+
+    return Result;
+}
+
+TArray<int32> ATeamController::CalculateMultiplySquadWidth(double LengthRebuildVector) const
+{
+    TArray<int32> Result{};
+    FVector EndPoint = CameraController->GetMouseLocationOnTerrain();
+    FVector RebuildForwardVector = CalculateRebuildForwardVector(EndPoint);
+    double RebuildVectorLength = (EndPoint - RebuildSquadStartLocation).Size();
+
+    TArray<TObjectPtr<ABaseSquadCreeps>> SquadsFromEndPoint = CalculateSquadsFromEndPoint(EndPoint);
+
+    float MinLegthOnRebuildAllSquads = 0.0f;
+    TArray<double> WidthOffsetsCreepsInSquad;
+    for (const auto& Squad : SquadsFromEndPoint)
+    {
+        WidthOffsetsCreepsInSquad.Add(Squad->GetCreepsOffsetInSquad().Y);
+    }
+
+    for (const auto& WidthOffsetCreeps : WidthOffsetsCreepsInSquad)
+    {
+        MinLegthOnRebuildAllSquads += WidthOffsetCreeps * RebuidSquadClampWidth.Min + WidthOffsetsOnMultSquadRebuild;
+    }
+    
+    if (RebuildVectorLength < MinLegthOnRebuildAllSquads)
+    {
+        
+    }
+    
+    
 
     return Result;
 }
@@ -267,4 +300,22 @@ FVector ATeamController::CalculateRebuildForwardVector(FVector EndPoint) const
     FVector PerpendicularRebuildVector(RebuildVectorNormalize.Y * -1.0, RebuildVectorNormalize.X * 1.0, RebuildVectorNormalize.Z);
 
     return PerpendicularRebuildVector * -1.0;
+}
+
+TArray<TObjectPtr<ABaseSquadCreeps>> ATeamController::CalculateSquadsFromEndPoint(FVector EndPoint) const
+{
+    TArray<TObjectPtr<ABaseSquadCreeps>> Result{};
+
+    for (auto& Squad : ChoisenSquads)
+    {
+        Result.Add(Squad);
+    }
+    Result.Sort([&](const TObjectPtr<ABaseSquadCreeps>& Left, const TObjectPtr<ABaseSquadCreeps>& Right)
+    {
+        const double LeftLength = (EndPoint - Left->GetActorLocation()).Size2D();
+        const double RightLength = (EndPoint - Right->GetActorLocation()).Size2D();
+        return LeftLength < RightLength;
+    });
+    
+    return Result;
 }
