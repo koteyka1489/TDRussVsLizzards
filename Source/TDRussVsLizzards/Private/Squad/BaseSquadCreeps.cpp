@@ -298,8 +298,8 @@ void ABaseSquadCreeps::UpdateRebuildngSquad(int32 NewWidth, FVector NewStartCree
 
 void ABaseSquadCreeps::EndUpdateRebuildingSquad()
 {
-    //UpdateSquadPositionKeys();
-    UpdateSquadPositionKeysSmart();
+    UpdateSquadPositionKeys();
+    //UpdateSquadPositionKeysSmart();
     UpdateSquadRotation(NewSquadForwardVector);
     UpdateSquadNewSizes();
     DeleteInstancedNewLocationMesh();

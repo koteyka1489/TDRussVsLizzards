@@ -77,4 +77,5 @@ private:
 
     void UpdateRebuildSquad();
     int32 CalculateNewWidthSquad(double LengthRebuildVector, const TObjectPtr<ABaseSquadCreeps> RebuildSquad);
+    FVector CalculateRebuildForwardVector( FVector EndPoint) const;
 };

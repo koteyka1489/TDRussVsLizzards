@@ -4,7 +4,7 @@
 #include "Creeps/BaseCreepActor.h"
 #include "TimerManager.h"
 #include "Kismet/GameplayStatics.h"
-#include "DrawDebugHelpers.h"
+
 
 UCreepMovementComponent::UCreepMovementComponent()
 {
@@ -60,7 +60,6 @@ bool UCreepMovementComponent::TickCreepRotating(float DeltaTime, bool PostMoveRo
 {
     FQuat CreepQuat = OwnerCreep->GetActorQuat();
     FVector Direction = (MovingDestination - OwnerCreep->GetActorLocation()).GetSafeNormal2D();
-    //FRotator TargetRotator = FRotationMatrix::MakeFromX(Direction).Rotator();
     FQuat TargetRotationQuat = PostMoveRotation ? NewRotationQuat : Direction.Rotation().Quaternion();
 
     if (CreepQuat.Equals(TargetRotationQuat))

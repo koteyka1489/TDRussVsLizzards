@@ -78,7 +78,7 @@ void ATeamController::OnLeftMouseHold()
     if (!bBoxIsSpawned)
     {
         CreateSelectionBox();
-        bBoxIsSpawned                     = true;
+        bBoxIsSpawned = true;
         bMultiplySelectSquadBySelectedBox = true;
     }
 }
@@ -88,8 +88,8 @@ void ATeamController::OnLeftMouseHoldCompleted()
     if (bBoxIsSpawned)
     {
         SelectionBox->SelectionComplete();
-        SelectionBox                      = nullptr;
-        bBoxIsSpawned                     = false;
+        SelectionBox = nullptr;
+        bBoxIsSpawned = false;
         bMultiplySelectSquadBySelectedBox = false;
     }
 }
@@ -109,7 +109,7 @@ void ATeamController::OnRightMouseHold()
     if (!bRebuildSquadIsContinue)
     {
         RebuildSquadStartLocation = CameraController->GetMouseLocationOnTerrain();
-        bRebuildSquadIsContinue   = true;
+        bRebuildSquadIsContinue = true;
     }
 }
 
@@ -124,6 +124,13 @@ void ATeamController::OnRightMouseHoldCompleted()
         if (ChoisenSquads.Num() == 1)
         {
             ChoisenSquads[0]->EndUpdateRebuildingSquad();
+        }
+        else
+        {
+            for (auto& Squad : ChoisenSquads)
+            {
+                Squad->EndUpdateRebuildingSquad();
+            }
         }
     }
 }
@@ -209,8 +216,8 @@ void ATeamController::CreateSelectionBox()
 
     FActorSpawnParameters SpawnInfo;
     SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-    SpawnInfo.Owner                          = this;
-    SelectionBoxStartLocation                = CameraController->GetMouseLocationOnTerrain();
+    SpawnInfo.Owner = this;
+    SelectionBoxStartLocation = CameraController->GetMouseLocationOnTerrain();
 
     SelectionBox =
         GetWorld()->SpawnActor<ASelectionBox>(SelectionBoxDefaultClass, SelectionBoxStartLocation, FRotator::ZeroRotator, SpawnInfo);
@@ -223,20 +230,15 @@ void ATeamController::UpdateRebuildSquad()
     if (ChoisenSquads.Num() == 1)
     {
         FVector EndPoint = CameraController->GetMouseLocationOnTerrain();
-        DrawDebugLine(GetWorld(), RebuildSquadStartLocation, EndPoint, FColor::Cyan, false, 0, 0u, 20.f);
-
-        FVector RebuildVector          = EndPoint - RebuildSquadStartLocation;
-        FVector RebuildVectorNormalize = RebuildVector.GetSafeNormal2D();
-        FVector PerpendicularRebuildVector(RebuildVectorNormalize.Y * -1.0, RebuildVectorNormalize.X * 1.0, RebuildVectorNormalize.Z);
-
-        FVector RebuildForwardVector = PerpendicularRebuildVector * -1.0;
-
+        FVector RebuildForwardVector = CalculateRebuildForwardVector(EndPoint);
+        DrawDebugLine(GetWorld(), RebuildSquadStartLocation, CameraController->GetMouseLocationOnTerrain(), FColor::Cyan, false, 0, 0u, 20.f);
+        
         FVector StartPerpendicularLine = FMath::Lerp(RebuildSquadStartLocation, EndPoint, 0.5);
         DrawDebugLine(
             GetWorld(), StartPerpendicularLine, StartPerpendicularLine + RebuildForwardVector * 1000.0, FColor::Cyan, false, 0, 0u, 20.f);
 
-        double RebuildVectorLength = RebuildVector.Size();
-        int32 NewWidth             = CalculateNewWidthSquad(RebuildVectorLength, ChoisenSquads[0]);
+        double RebuildVectorLength = (EndPoint - RebuildSquadStartLocation).Size();
+        int32 NewWidth = CalculateNewWidthSquad(RebuildVectorLength, ChoisenSquads[0]);
 
         ChoisenSquads[0]->UpdateRebuildngSquad(NewWidth, EndPoint, RebuildForwardVector);
     }
@@ -251,9 +253,18 @@ int32 ATeamController::CalculateNewWidthSquad(double LengthRebuildVector, const 
     int32 Result{};
 
     FCreepsOffsetInSquad CreepsOffsetInSquad = RebuildSquad->GetCreepsOffsetInSquad();
-    int32 LengthIntRebuildVector             = static_cast<int32>(LengthRebuildVector);
-    int32 OffsetWidthIntInSquad              = static_cast<int32>(CreepsOffsetInSquad.Y);
+    int32 LengthIntRebuildVector = static_cast<int32>(LengthRebuildVector);
+    int32 OffsetWidthIntInSquad = static_cast<int32>(CreepsOffsetInSquad.Y);
     Result = FMath::Clamp(LengthIntRebuildVector / OffsetWidthIntInSquad + 1, RebuidSquadClampWidth.Min, RebuildSquad->GetCreepsNum() / 2);
 
     return Result;
+}
+
+FVector ATeamController::CalculateRebuildForwardVector(FVector EndPoint) const
+{
+    FVector RebuildVector = EndPoint - RebuildSquadStartLocation;
+    FVector RebuildVectorNormalize = RebuildVector.GetSafeNormal2D();
+    FVector PerpendicularRebuildVector(RebuildVectorNormalize.Y * -1.0, RebuildVectorNormalize.X * 1.0, RebuildVectorNormalize.Z);
+
+    return PerpendicularRebuildVector * -1.0;
 }
