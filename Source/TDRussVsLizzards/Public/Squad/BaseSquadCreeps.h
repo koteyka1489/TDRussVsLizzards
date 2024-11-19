@@ -129,4 +129,5 @@ private:
     FVector CalculateNewRightCorner(FVector Destination);
     void UpdateInstancedNewLocationMesh();
     void DeleteInstancedNewLocationMesh();
+    bool CalculateSquadIsTurnAround(FVector NewSquadDirection);
 };

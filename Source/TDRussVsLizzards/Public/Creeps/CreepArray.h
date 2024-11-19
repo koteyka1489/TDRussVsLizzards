@@ -16,7 +16,8 @@ class TDRUSSVSLIZZARDS_API UCreepArray : public UObject
 public:
     void Add(int32 Row, int32 Column, TObjectPtr<ABaseCreepActor> Creep);
     void Add(int32 Key, TObjectPtr<ABaseCreepActor> Creep);
-   
+    void ReverseKeysMap();
+    void ReverseValuesMap();
     
     static int32 GenerateKey(int32 Row, int32 Column);
     TArray<TObjectPtr<ABaseCreepActor>> GetColumnCreeps(int32 Column);

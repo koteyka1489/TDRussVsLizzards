@@ -298,6 +298,10 @@ void ABaseSquadCreeps::UpdateRebuildngSquad(int32 NewWidth, FVector NewStartCree
 
 void ABaseSquadCreeps::EndUpdateRebuildingSquad()
 {
+    if (CalculateSquadIsTurnAround(NewSquadForwardVector))
+    {
+        Creeps->ReverseValuesMap();
+    }
     UpdateSquadPositionKeys();
     //UpdateSquadPositionKeysSmart();
     UpdateSquadRotation(NewSquadForwardVector);
@@ -377,8 +381,11 @@ void ABaseSquadCreeps::SquadUnChoisenBySelectBox()
 
 void ABaseSquadCreeps::MoveAndRotatingSquadToLocation(FVector Destination)
 {
+    if (CalculateSquadIsTurnAround(Destination - GetActorLocation()))
+    {
+        Creeps->ReverseValuesMap();
+    }
     FVector NewRightCorner = CalculateNewRightCorner(Destination);
-
     UpdateNewCreepsPositions(CurrentSquadSizes.Width, NewRightCorner, (Destination - GetActorLocation()).GetSafeNormal2D());
     SetCreepsMovingDestination();
     SquadMovementComponent->SetSquadMovement();
@@ -450,4 +457,12 @@ void ABaseSquadCreeps::DeleteInstancedNewLocationMesh()
     InstancedNewLocationMesh->bHiddenInGame = true;
     InstancedNewLocationMesh->ClearInstances();
     InstancedMeshNewLocIsSet = false;
+}
+
+bool ABaseSquadCreeps::CalculateSquadIsTurnAround(FVector NewSquadDirection)
+{
+    FVector SquadForwardVector = GetActorForwardVector();
+    FVector DirectionNormalize = NewSquadDirection.GetSafeNormal2D();
+    double Dot = SquadForwardVector.Dot(DirectionNormalize);
+    return Dot < 0.0;
 }
