@@ -245,7 +245,7 @@ void ATeamController::UpdateRebuildSquad()
     }
     else
     {
-
+        UpdateMultiplySquadsRebuild();
     }
 }
 
@@ -262,35 +262,52 @@ int32 ATeamController::CalculateNewWidthSquad(double LengthRebuildVector)
     return Result;
 }
 
-TArray<int32> ATeamController::CalculateMultiplySquadWidth(double LengthRebuildVector) const
+void ATeamController::UpdateMultiplySquadsRebuild() const
 {
     TArray<int32> Result{};
     FVector EndPoint = CameraController->GetMouseLocationOnTerrain();
     FVector RebuildForwardVector = CalculateRebuildForwardVector(EndPoint);
-    double RebuildVectorLength = (EndPoint - RebuildSquadStartLocation).Size();
+    float RebuildVectorLength = (EndPoint - RebuildSquadStartLocation).Size();
 
     TArray<TObjectPtr<ABaseSquadCreeps>> SquadsFromEndPoint = CalculateSquadsFromEndPoint(EndPoint);
 
-    float MinLegthOnRebuildAllSquads = 0.0f;
+    float MinLengthOnRebuildAllSquads = 0.0f;
     TArray<double> WidthOffsetsCreepsInSquad;
-    for (const auto& Squad : SquadsFromEndPoint)
+    for (auto& Squad : SquadsFromEndPoint)
     {
         WidthOffsetsCreepsInSquad.Add(Squad->GetCreepsOffsetInSquad().Y);
     }
 
-    for (const auto& WidthOffsetCreeps : WidthOffsetsCreepsInSquad)
+    TArray<double> WidthSquad;
+    for (auto& WidthOffsetCreeps : WidthOffsetsCreepsInSquad)
     {
-        MinLegthOnRebuildAllSquads += WidthOffsetCreeps * RebuidSquadClampWidth.Min + WidthOffsetsOnMultSquadRebuild;
+        MinLengthOnRebuildAllSquads += WidthOffsetCreeps * RebuidSquadClampWidth.Min + WidthOffsetsOnMultSquadRebuild;
+        WidthSquad.Add(WidthOffsetCreeps * RebuidSquadClampWidth.Min + WidthOffsetsOnMultSquadRebuild);
     }
+    FString Message0 = FString::Printf(TEXT("RebuildVectorLength = %f"), RebuildVectorLength);
+    FString Message1 = FString::Printf(TEXT("MinLengthOnRebuildAllSquads = %f"), MinLengthOnRebuildAllSquads);
     
-    if (RebuildVectorLength < MinLegthOnRebuildAllSquads)
+    GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, Message0);
+    GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, Message1);
+    
+    if (RebuildVectorLength < MinLengthOnRebuildAllSquads)
     {
+        //no rebuild
+    }
+    else
+    {
+        FVector  RebuildVector = (RebuildSquadStartLocation - EndPoint).GetSafeNormal2D();
+        int32 Index = 0;
+        double RebuildSquadLength = 0.0f;
         
+        for ( auto& Squad : SquadsFromEndPoint)
+        {
+            FVector RebuildStartLocation = EndPoint + RebuildVector * RebuildSquadLength;
+            Squad->UpdateRebuildngSquad(RebuidSquadClampWidth.Min, RebuildStartLocation, RebuildForwardVector);
+            Index++;
+            RebuildSquadLength +=  WidthSquad[0];
+        }
     }
-    
-    
-
-    return Result;
 }
 
 FVector ATeamController::CalculateRebuildForwardVector(FVector EndPoint) const

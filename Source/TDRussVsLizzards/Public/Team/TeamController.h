@@ -78,7 +78,7 @@ private:
 
     void UpdateRebuildSquad();
     int32 CalculateNewWidthSquad(double LengthRebuildVector);
-    TArray<int32> CalculateMultiplySquadWidth(double LengthRebuildVector) const;
+    void UpdateMultiplySquadsRebuild() const;
     FVector CalculateRebuildForwardVector( FVector EndPoint) const;
     TArray<TObjectPtr<ABaseSquadCreeps>> CalculateSquadsFromEndPoint(FVector EndPoint) const;
 };
