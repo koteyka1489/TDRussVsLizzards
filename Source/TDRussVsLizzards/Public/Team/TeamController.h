@@ -81,6 +81,14 @@ private:
     void UpdateMultiplySquadsRebuild() const;
     FVector CalculateRebuildForwardVector( FVector EndPoint) const;
     TArray<TObjectPtr<ABaseSquadCreeps>> CalculateSquadsFromEndPoint(FVector EndPoint) const;
+
+    void DrawDebugRebuildLines(const FVector& EndPoint);
+    void RebuildSingleSquad(const FVector& EndPoint);
+    int32 CalculateNewWidthForSingleSquad(double LengthRebuildVector);
+    void RebuildMultipleSquads(const FVector& EndPoint);
+    float CalculateTotalMinRebuildLength(const TArray<TObjectPtr<ABaseSquadCreeps>>& Squads);
+    int32 CalculateMultiSquadWidth(float RebuildVectorLength, float MinLengthOnRebuildAllSquads);
+    void RebuildSquadsPositions(const TArray<TObjectPtr<ABaseSquadCreeps>>& Squads, const FVector& EndPoint,  const FVector& RebuildForwardVector, int32 RebuildSquadsWidth);
 };
 
 
