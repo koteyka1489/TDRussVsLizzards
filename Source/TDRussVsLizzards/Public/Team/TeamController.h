@@ -54,7 +54,7 @@ private:
 
     FVector RebuildSquadStartLocation = FVector::Zero();
     bool bRebuildSquadIsContinue      = false;
-    static constexpr float WidthOffsetsOnMultSquadRebuild = 200.0f;
+    static constexpr float WidthOffsetsOnMultSquadRebuild = 300.0f;
 
     void OnLeftMouseClickChois(FHitResult Hit);
     void OnLeftMouseHold();

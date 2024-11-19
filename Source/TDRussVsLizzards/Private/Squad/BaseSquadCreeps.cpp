@@ -290,17 +290,6 @@ FQuat ABaseSquadCreeps::CalculateQuatBeetwenBaseSquadVec(FVector VectorIn)
 
 void ABaseSquadCreeps::UpdateRebuildngSquad(int32 NewWidth, FVector NewStartCreepSpawnLocation, FVector NewSquadForwardVerctor)
 {
-    GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Red, TEXT("Updating RebuildingSquad"));
-
-    FString Message = FString::Printf(TEXT("NewWidth = %i"), NewWidth);
-    FString Message1 = FString::Printf(TEXT("NewStartCreepSpawnLocation = %s"), *NewStartCreepSpawnLocation.ToString());
-    FString Message2 = FString::Printf(TEXT("NewSquadForwardVerctor = %s"), *NewSquadForwardVerctor.ToString());
-
-    GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Red, Message);
-    GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Red, Message1);
-    GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Red, Message2);
-
-    
     NewSquadForwardVector = NewSquadForwardVerctor;
     NewSquadWidth = NewWidth;
     UpdateNewCreepsPositions(NewWidth, NewStartCreepSpawnLocation, NewSquadForwardVerctor);
