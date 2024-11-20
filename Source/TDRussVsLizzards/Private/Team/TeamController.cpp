@@ -320,9 +320,15 @@ void ATeamController::RebuildSquadsPositions(const TArray<TObjectPtr<ABaseSquadC
 
 void ATeamController::CalcPositionsMoveMultipleSquads(const FVector& HitLocation)
 {
-    TArray<TObjectPtr<ABaseSquadCreeps>> Squads = CalculateSquadsPositionOrder();
-    FVector CentralSquadsLocation = FMath::Lerp(Squads[Squads.Num() - 1]->GetActorLocation(), Squads[0]->GetActorLocation(), 0.5f);
-    FVector ToNewLocationVectorNorm = (HitLocation - CentralSquadsLocation).GetSafeNormal2D();
+    TArray<TObjectPtr<ABaseSquadCreeps>> Squads = CalculateSquadsPositionOrder(true);
+    FVector CentralLocation = FMath::Lerp(Squads[Squads.Num() - 1]->GetActorLocation(), Squads[0]->GetActorLocation(), 0.5f);
+    FVector ToNewLocationVectorNorm = (HitLocation - CentralLocation).GetSafeNormal2D();
+    
+    if (Squads[0]->GetActorForwardVector().Dot(ToNewLocationVectorNorm)  < 0.0)
+    {
+        Squads.Empty();
+        Squads = CalculateSquadsPositionOrder(false);
+    }
     
     FVector PerpendicularToNewLocationVector(ToNewLocationVectorNorm.Y * -1.0, ToNewLocationVectorNorm.X, ToNewLocationVectorNorm.Z);
     double Length = CalculateMultipleSquadMoveFrontLength(Squads);
@@ -332,8 +338,7 @@ void ATeamController::CalcPositionsMoveMultipleSquads(const FVector& HitLocation
 
 FVector ATeamController::CalculateRebuildForwardVector(FVector EndPoint) const
 {
-    FVector RebuildVector = EndPoint - RebuildSquadStartLocation;
-    FVector RebuildVectorNormalize = RebuildVector.GetSafeNormal2D();
+    FVector RebuildVectorNormalize =  (EndPoint - RebuildSquadStartLocation).GetSafeNormal2D();
     FVector PerpendicularRebuildVector(RebuildVectorNormalize.Y * -1.0, RebuildVectorNormalize.X, RebuildVectorNormalize.Z);
     return PerpendicularRebuildVector * -1.0;
 }
@@ -356,7 +361,7 @@ TArray<TObjectPtr<ABaseSquadCreeps>> ATeamController::CalculateSquadsFromEndPoin
     return Result;
 }
 
-TArray<TObjectPtr<ABaseSquadCreeps>> ATeamController::CalculateSquadsPositionOrder()
+TArray<TObjectPtr<ABaseSquadCreeps>> ATeamController::CalculateSquadsPositionOrder(bool RightToLeft)
 {
     TArray<TObjectPtr<ABaseSquadCreeps>> Result{};
     for (auto& Squad : ChoisenSquads)
@@ -368,17 +373,12 @@ TArray<TObjectPtr<ABaseSquadCreeps>> ATeamController::CalculateSquadsPositionOrd
     {
         FVector FirstRightVector = First->GetActorRightVector();
         FVector FirstToSecondVectorNorm = (Second->GetActorLocation() - First->GetActorLocation()).GetSafeNormal2D();
-        if (FirstRightVector.Dot(FirstToSecondVectorNorm) < 0.0f)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        float DotResult = FirstRightVector.Dot(FirstToSecondVectorNorm);
+        return RightToLeft ? (DotResult < 0.0f) : (DotResult > 0.0f);
     });
     return Result;
 }
+
 
 FVector ATeamController::CalculatePositionCentralSquad(const TArray<TObjectPtr<ABaseSquadCreeps>>& SquadsFromHitLocation)
 {

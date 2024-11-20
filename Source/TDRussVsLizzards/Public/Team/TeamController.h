@@ -79,8 +79,7 @@ private:
     void UpdateRebuildSquad();
     FVector CalculateRebuildForwardVector( FVector EndPoint) const;
     TArray<TObjectPtr<ABaseSquadCreeps>> CalculateSquadsFromEndPoint(FVector EndPoint) const;
-    TArray<TObjectPtr<ABaseSquadCreeps>> CalculateSquadsPositionOrder();
-    
+    TArray<TObjectPtr<ABaseSquadCreeps>> CalculateSquadsPositionOrder(bool RightToLeft);
     void DrawDebugRebuildLines(const FVector& EndPoint);
     void RebuildSingleSquad(const FVector& EndPoint);
     int32 CalculateNewWidthForSingleSquad(double LengthRebuildVector);
