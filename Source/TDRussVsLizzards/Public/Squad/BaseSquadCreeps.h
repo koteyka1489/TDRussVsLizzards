@@ -57,6 +57,7 @@ public:
     FCreepsOffsetInSquad GetCreepsOffsetInSquad() const { return CreepsOffsetInSquad; }
     double GetCreepPositionRandom() const { return CreepPositionRandom; }
     TObjectPtr<UCreepArray> GetCreeps() { return Creeps; }
+    FSquadSizes GetCurrentSquadSizes() const {return CurrentSquadSizes; }
 
     TMap<int32, FVector> CalculateCreepsPositions(int32 HeightStart, int32 HeightEnd, int32 WidthStart, int32 WidthEnd,
         FVector SquadBaseSpawnLocation, FVector ForwarVectorToNewLocation, bool UseLocationRandom = true);

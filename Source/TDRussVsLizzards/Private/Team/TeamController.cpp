@@ -7,7 +7,6 @@
 #include "Components/BoxComponent.h"
 #include "Camera/SelectionBox.h"
 #include "DrawDebugHelpers.h"
-#include "GameFramework/GameStateBase.h"
 
 ATeamController::ATeamController()
 {
@@ -96,11 +95,19 @@ void ATeamController::OnLeftMouseHoldCompleted()
 
 void ATeamController::OnRightMouseClick(FHitResult Hit)
 {
-    if (ChoisenSquads.Num() == 0) return;
+    if (ChoisenSquads.IsEmpty()) return;
 
-    for (auto& Squad : ChoisenSquads)
+    if (ChoisenSquads.Num() == 1)
     {
-        Squad->MoveAndRotatingSquadToLocation(Hit.Location);
+        ChoisenSquads[0]->MoveAndRotatingSquadToLocation(Hit.Location);
+    }
+    else
+    {
+        CalcPositionsMoveMultipleSquads(Hit.Location);
+        for (auto& Squad : ChoisenSquads)
+        {
+            Squad->EndUpdateRebuildingSquad();
+        }
     }
 }
 
@@ -271,11 +278,12 @@ void ATeamController::RebuildMultipleSquads(const FVector& EndPoint)
     FVector RebuildForwardVector = CalculateRebuildForwardVector(EndPoint);  
     float RebuildVectorLength = (EndPoint - RebuildSquadStartLocation).Size();  
     TArray<TObjectPtr<ABaseSquadCreeps>> SquadsFromEndPoint = CalculateSquadsFromEndPoint(EndPoint);  
-    float MinLengthOnRebuildAllSquads = CalculateTotalMinRebuildLength(SquadsFromEndPoint);  
+    float MinLengthOnRebuildAllSquads = CalculateTotalMinRebuildLength(SquadsFromEndPoint);
+    FVector RebuildVector = (RebuildSquadStartLocation - EndPoint).GetSafeNormal2D();  
     if (RebuildVectorLength > MinLengthOnRebuildAllSquads)  
     {  
         int32 RebuildSquadsWidth = CalculateMultiSquadWidth(RebuildVectorLength, MinLengthOnRebuildAllSquads);  
-        RebuildSquadsPositions(SquadsFromEndPoint, EndPoint, RebuildForwardVector, RebuildSquadsWidth);  
+        RebuildSquadsPositions(SquadsFromEndPoint, EndPoint, RebuildForwardVector, RebuildVector, RebuildSquadsWidth, true);  
     }  
 }  
 
@@ -298,23 +306,35 @@ int32 ATeamController::CalculateMultiSquadWidth(float RebuildVectorLength, float
     return FMath::Clamp(RebuildVectorLengthInt / AverageOneColumnWidthRise, RebuidSquadClampWidth.Min,100);  
 }  
 
-void ATeamController::RebuildSquadsPositions(const TArray<TObjectPtr<ABaseSquadCreeps>>& Squads, const FVector& EndPoint, const FVector& RebuildForwardVector, int32 RebuildSquadsWidth)  
+void ATeamController::RebuildSquadsPositions(const TArray<TObjectPtr<ABaseSquadCreeps>>& Squads, const FVector& EndPoint, const FVector& RebuildForwardVector, FVector RebuildVector, int32 RebuildSquadsWidth, bool ChangeSquadWidth)  
 {  
-    FVector RebuildVector = (RebuildSquadStartLocation - EndPoint).GetSafeNormal2D();  
     double RebuildSquadLength = 0.0f;  
     for (auto& Squad : Squads)  
-    {  
+    {
+        int32 SquadWidth = ChangeSquadWidth ? RebuildSquadsWidth : Squad->GetCurrentSquadSizes().Width;
         FVector RebuildStartLocation = EndPoint + RebuildVector * RebuildSquadLength;  
-        Squad->UpdateRebuildngSquad(RebuildSquadsWidth, RebuildStartLocation, RebuildForwardVector);  
-        RebuildSquadLength += Squad->GetCreepsOffsetInSquad().Y * RebuildSquadsWidth + WidthOffsetsOnMultSquadRebuild;  
+        Squad->UpdateRebuildngSquad(SquadWidth, RebuildStartLocation, RebuildForwardVector);  
+        RebuildSquadLength += Squad->GetCreepsOffsetInSquad().Y * SquadWidth + WidthOffsetsOnMultSquadRebuild;  
     }  
+}
+
+void ATeamController::CalcPositionsMoveMultipleSquads(const FVector& HitLocation)
+{
+    TArray<TObjectPtr<ABaseSquadCreeps>> Squads = CalculateSquadsPositionOrder();
+    FVector CentralSquadsLocation = FMath::Lerp(Squads[Squads.Num() - 1]->GetActorLocation(), Squads[0]->GetActorLocation(), 0.5f);
+    FVector ToNewLocationVectorNorm = (HitLocation - CentralSquadsLocation).GetSafeNormal2D();
+    
+    FVector PerpendicularToNewLocationVector(ToNewLocationVectorNorm.Y * -1.0, ToNewLocationVectorNorm.X, ToNewLocationVectorNorm.Z);
+    double Length = CalculateMultipleSquadMoveFrontLength(Squads);
+    FVector StartLocation = HitLocation + PerpendicularToNewLocationVector * (Length / 2.0);
+    RebuildSquadsPositions(Squads, StartLocation, ToNewLocationVectorNorm, PerpendicularToNewLocationVector * -1.0, 0, false);
 }
 
 FVector ATeamController::CalculateRebuildForwardVector(FVector EndPoint) const
 {
     FVector RebuildVector = EndPoint - RebuildSquadStartLocation;
     FVector RebuildVectorNormalize = RebuildVector.GetSafeNormal2D();
-    FVector PerpendicularRebuildVector(RebuildVectorNormalize.Y * -1.0, RebuildVectorNormalize.X * 1.0, RebuildVectorNormalize.Z);
+    FVector PerpendicularRebuildVector(RebuildVectorNormalize.Y * -1.0, RebuildVectorNormalize.X, RebuildVectorNormalize.Z);
     return PerpendicularRebuildVector * -1.0;
 }
 
@@ -333,5 +353,55 @@ TArray<TObjectPtr<ABaseSquadCreeps>> ATeamController::CalculateSquadsFromEndPoin
         return LeftLength < RightLength;
     });
     
+    return Result;
+}
+
+TArray<TObjectPtr<ABaseSquadCreeps>> ATeamController::CalculateSquadsPositionOrder()
+{
+    TArray<TObjectPtr<ABaseSquadCreeps>> Result{};
+    for (auto& Squad : ChoisenSquads)
+    {
+        Result.Add(Squad);
+    }
+    
+    Result.Sort([&](const TObjectPtr<ABaseSquadCreeps>& First, const TObjectPtr<ABaseSquadCreeps>& Second)
+    {
+        FVector FirstRightVector = First->GetActorRightVector();
+        FVector FirstToSecondVectorNorm = (Second->GetActorLocation() - First->GetActorLocation()).GetSafeNormal2D();
+        if (FirstRightVector.Dot(FirstToSecondVectorNorm) < 0.0f)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    });
+    return Result;
+}
+
+FVector ATeamController::CalculatePositionCentralSquad(const TArray<TObjectPtr<ABaseSquadCreeps>>& SquadsFromHitLocation)
+{
+    if (SquadsFromHitLocation.Num() == 0) return FVector::Zero();
+
+    if (SquadsFromHitLocation.Num() == 1)
+    {
+        return SquadsFromHitLocation[0]->GetActorLocation();
+    }
+    else
+    {
+        int32 CentralSquadIndex = SquadsFromHitLocation.Num() / 2;
+        return SquadsFromHitLocation[CentralSquadIndex]->GetActorLocation();
+    }
+}
+
+double ATeamController::CalculateMultipleSquadMoveFrontLength(const TArray<TObjectPtr<ABaseSquadCreeps>>& SquadsFromHitLocation)
+{
+    if (SquadsFromHitLocation.Num() == 0 || SquadsFromHitLocation.Num() == 1 ) return 0.0;
+    double Result = 0.0;
+    for (auto& Squad : SquadsFromHitLocation)
+    {
+        Result += Squad->GetCreepsOffsetInSquad().Y * Squad->GetCurrentSquadSizes().Width + WidthOffsetsOnMultSquadRebuild;
+    }
     return Result;
 }

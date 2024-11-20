@@ -77,19 +77,27 @@ private:
     void CreateSelectionBox();
 
     void UpdateRebuildSquad();
-    int32 CalculateNewWidthSquad(double LengthRebuildVector);
-    void UpdateMultiplySquadsRebuild() const;
     FVector CalculateRebuildForwardVector( FVector EndPoint) const;
     TArray<TObjectPtr<ABaseSquadCreeps>> CalculateSquadsFromEndPoint(FVector EndPoint) const;
-
+    TArray<TObjectPtr<ABaseSquadCreeps>> CalculateSquadsPositionOrder();
+    
     void DrawDebugRebuildLines(const FVector& EndPoint);
     void RebuildSingleSquad(const FVector& EndPoint);
     int32 CalculateNewWidthForSingleSquad(double LengthRebuildVector);
     void RebuildMultipleSquads(const FVector& EndPoint);
     float CalculateTotalMinRebuildLength(const TArray<TObjectPtr<ABaseSquadCreeps>>& Squads);
     int32 CalculateMultiSquadWidth(float RebuildVectorLength, float MinLengthOnRebuildAllSquads);
-    void RebuildSquadsPositions(const TArray<TObjectPtr<ABaseSquadCreeps>>& Squads, const FVector& EndPoint,  const FVector& RebuildForwardVector, int32 RebuildSquadsWidth);
+    void RebuildSquadsPositions(const TArray<TObjectPtr<ABaseSquadCreeps>>& Squads, const FVector& EndPoint,  const FVector& RebuildForwardVector, FVector RebuildVector, int32 RebuildSquadsWidth, bool ChangeSquadWidth);
+
+    void CalcPositionsMoveMultipleSquads(const FVector& HitLocation);
+    FVector CalculatePositionCentralSquad(const TArray<TObjectPtr<ABaseSquadCreeps>>& SquadsFromHitLocation);
+    double CalculateMultipleSquadMoveFrontLength(const TArray<TObjectPtr<ABaseSquadCreeps>>& SquadsFromHitLocation);
 };
+
+
+
+
+
 
 
 
