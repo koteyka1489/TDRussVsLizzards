@@ -96,7 +96,9 @@ void ATeamController::OnLeftMouseHoldCompleted()
 void ATeamController::OnRightMouseClick(FHitResult Hit)
 {
     if (ChoisenSquads.IsEmpty()) return;
-
+    
+    OnStopSquad();
+    
     if (ChoisenSquads.Num() == 1)
     {
         ChoisenSquads[0]->MoveAndRotatingSquadToLocation(Hit.Location);
