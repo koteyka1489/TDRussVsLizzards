@@ -130,6 +130,8 @@ void ATeamController::OnRightMouseHoldCompleted()
 
         if (ChoisenSquads.Num() == 0) return;
 
+        OnStopSquad();
+        
         if (ChoisenSquads.Num() == 1)
         {
             ChoisenSquads[0]->EndUpdateRebuildingSquad();
