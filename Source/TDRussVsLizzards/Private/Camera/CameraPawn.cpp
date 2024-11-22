@@ -5,10 +5,6 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/TDCameraController.h"
 #include "Kismet/GameplayStatics.h"
-#include "Squad/BaseSquadCreeps.h"
-#include "Kismet/GameplayStatics.h"
-#include "Camera/SelectionBox.h"
-#include "Components/BoxComponent.h"
 
 ACameraPawn::ACameraPawn()
 {
@@ -43,7 +39,6 @@ void ACameraPawn::BeginPlay()
 void ACameraPawn::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
-
     MoveCameraByMouse();
 }
 
@@ -54,19 +49,19 @@ void ACameraPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void ACameraPawn::OnZoomChanged(float Direction)
 {
-    float DeltaTime                     = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
-    float ArmLengthOffset               = SpeedZoom * Direction * DeltaTime;
-    SpringArmComponent->TargetArmLength = FMath::Clamp(SpringArmComponent->TargetArmLength += ArmLengthOffset, ZoomMin, ZoomMax);
+    float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());  
+    float NormalizedArmLength = FMath::Clamp((SpringArmComponent->TargetArmLength - ZoomMin) / (ZoomMax - ZoomMin),0.0f,1.0f); 
+    float SpeedMultiplier = FMath::Lerp(0.1f, 3.5f, FMath::Pow(NormalizedArmLength, 1.0f));  
+    float ArmLengthOffset = SpeedZoom * SpeedMultiplier * Direction * DeltaTime;  
+    SpringArmComponent->TargetArmLength = FMath::Clamp(SpringArmComponent->TargetArmLength + ArmLengthOffset,ZoomMin,ZoomMax);  
 }
 
 void ACameraPawn::OnMoveCameraUpDown(float Direction)
 {
     float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
     double Pitch    = GetActorRotation().Pitch;
-
     FQuat QRot                    = FQuat(GetActorRightVector(), FMath::DegreesToRadians(Pitch));
     FVector AdjustedForwardVector = QRot.RotateVector(GetActorForwardVector());
-
     SetActorLocation(GetActorLocation() + AdjustedForwardVector * Direction * SpeedCamera * DeltaTime);
 }
 
@@ -85,7 +80,6 @@ void ACameraPawn::OnRotateCamera(float Direction)
 
 void ACameraPawn::OnChangeAngleCamera(float Direction)
 {
-
     double DeltaTime        = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
     FRotator CameraRotation = GetActorRotation();
 
@@ -98,7 +92,6 @@ void ACameraPawn::OnChangeAngleCamera(float Direction)
 
 void ACameraPawn::MoveCameraByMouse()
 {
-
     if (CameraController)
     {
         int32 XScreenSize;
