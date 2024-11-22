@@ -219,11 +219,10 @@ void ATDCameraController::RightClickCompleted()
 FHitResult ATDCameraController::GetClickHit()
 {
     FHitResult Hit{};
-    bool bHitSuccessful = false;
     FVector MouseWorldLocation{};
     FVector MouseWorldDirection{};
 
-    bHitSuccessful = DeprojectMousePositionToWorld(MouseWorldLocation, MouseWorldDirection);
+    bool bHitSuccessful = DeprojectMousePositionToWorld(MouseWorldLocation, MouseWorldDirection);
     if (!bHitSuccessful)
     {
         UE_LOG(LogCameraController, Error, TEXT("Unable to determine value Mouse Click"));
@@ -243,17 +242,14 @@ FHitResult ATDCameraController::GetClickHit()
 FVector ATDCameraController::GetMouseLocationOnTerrain()
 {
     FHitResult Hit;
-    bool bHitSuccessful = false;
     FVector MouseWorldLocation{};
     FVector MouseWorldDirection{};
-
-    bHitSuccessful = DeprojectMousePositionToWorld(MouseWorldLocation, MouseWorldDirection);
-    if (bHitSuccessful)
+    if (DeprojectMousePositionToWorld(MouseWorldLocation, MouseWorldDirection))
     {
         const float TraceDistance = 1000000.f;
         FVector TraceEnd          = MouseWorldLocation + MouseWorldDirection * TraceDistance;
 
-        bHitSuccessful = GetWorld()->LineTraceSingleByChannel(Hit, MouseWorldLocation, TraceEnd, ECollisionChannel::ECC_GameTraceChannel1);
+        GetWorld()->LineTraceSingleByChannel(Hit, MouseWorldLocation, TraceEnd, ECollisionChannel::ECC_GameTraceChannel1);
 
         return Hit.Location;
     }

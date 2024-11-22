@@ -121,8 +121,7 @@ private:
     void LeftClickStarted();
     void LeftClickTriggered();
     void LeftClickCompleted();
-
-    void RightClickStarted();
+    
     void RightClickTriggered();
     void RightClickCompleted();
 
