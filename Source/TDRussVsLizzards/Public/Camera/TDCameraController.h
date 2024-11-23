@@ -23,7 +23,7 @@ DECLARE_DELEGATE_OneParam(FOnMultiplySelectSquad, bool);
 DECLARE_DELEGATE(FOnLeftMouseHold);
 DECLARE_DELEGATE(FOnLeftMouseHoldCompleted);
 DECLARE_DELEGATE(FOnStopSquad);
-
+DECLARE_DELEGATE(FOnGroupingSquad);
 
 UCLASS()
 class TDRUSSVSLIZZARDS_API ATDCameraController : public APlayerController
@@ -50,6 +50,7 @@ public:
     FOnStopSquad OnStopSquad;
     FOnRightMouseHold OnRightMouseHold;
     FOnRightMouseHoldCompleted OnRightMouseHoldCompleted;
+    FOnGroupingSquad OnGroupingSquad;
 
 protected:
     virtual void BeginPlay() override;
@@ -100,6 +101,9 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
     UInputAction* StopSquadAction;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+    UInputAction* GroupingSquadAction;
+
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Mouse")
     float LeftMouseButtonHoldTreshold = 0.08f;
 
@@ -117,6 +121,7 @@ private:
     void MultiplySelectSquadsOff();
 
     void StopSquad();
+    void GroupingSquad();
 
     void LeftClickStarted();
     void LeftClickTriggered();

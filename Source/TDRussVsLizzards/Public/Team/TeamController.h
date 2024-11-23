@@ -59,23 +59,19 @@ private:
     void OnLeftMouseClickChois(FHitResult Hit);
     void OnLeftMouseHold();
     void OnLeftMouseHoldCompleted();
-
     void OnRightMouseClick(FHitResult Hit);
     void OnRightMouseHold();
     void OnRightMouseHoldCompleted();
-
     void OnSquadIsUnChoisen(ABaseSquadCreeps* SquadIn);
     void OnMultiplySelectSquad(bool Value);
-
     void OnStopSquad();
+    void OnGroupingSquad();
+    
     void AddSquadToChoisenSquadsArray(ABaseSquadCreeps* SquadIn);
-
     void GetSquadsOnLevel();
     void BindOnSquadIsChoisenDelegate();
     void UnchoiseCurrentSquad();
-
     void CreateSelectionBox();
-
     void UpdateRebuildSquad();
     FVector CalculateRebuildForwardVector( FVector EndPoint) const;
     TArray<TObjectPtr<ABaseSquadCreeps>> CalculateSquadsFromEndPoint(FVector EndPoint) const;

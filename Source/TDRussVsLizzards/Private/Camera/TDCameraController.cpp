@@ -55,6 +55,8 @@ void ATDCameraController::SetupInputComponent()
         MultiplySelectSquadsAction, ETriggerEvent::Completed, this, &ATDCameraController::MultiplySelectSquadsOff);
 
     EnhancedInputComponent->BindAction(StopSquadAction, ETriggerEvent::Started, this, &ATDCameraController::StopSquad);
+
+    EnhancedInputComponent->BindAction(GroupingSquadAction, ETriggerEvent::Completed, this, &ATDCameraController::GroupingSquad);
 }
 
 void ATDCameraController::MoveCameraUpDown(const FInputActionValue& Value)
@@ -107,6 +109,15 @@ void ATDCameraController::StopSquad()
     if (!OnStopSquad.ExecuteIfBound())
     {
         UE_LOG(LogCameraController, Error, TEXT("OnStopSquad Delegate is not bound"));
+        checkNoEntry();
+    }
+}
+
+void ATDCameraController::GroupingSquad()
+{
+    if (!OnGroupingSquad.ExecuteIfBound())
+    {
+        UE_LOG(LogCameraController, Error, TEXT("OnGroupingSquad Delegate is not bound"));
         checkNoEntry();
     }
 }

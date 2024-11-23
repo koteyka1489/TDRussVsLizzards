@@ -28,6 +28,7 @@ void ATeamController::BeginPlay()
         CameraController->OnStopSquad.BindUObject(this, &ATeamController::OnStopSquad);
         CameraController->OnRightMouseHold.BindUObject(this, &ATeamController::OnRightMouseHold);
         CameraController->OnRightMouseHoldCompleted.BindUObject(this, &ATeamController::OnRightMouseHoldCompleted);
+        CameraController->OnGroupingSquad.BindUObject(this, &ATeamController::OnGroupingSquad);
     }
 
     GetSquadsOnLevel();
@@ -181,6 +182,14 @@ void ATeamController::OnStopSquad()
     {
         Squad->StopAllMovement();
     }
+}
+
+void ATeamController::OnGroupingSquad()
+{
+    if (ChoisenSquads.IsEmpty() || ChoisenSquads.Num() == 1) return;
+
+    
+    
 }
 
 void ATeamController::GetSquadsOnLevel()
