@@ -188,7 +188,8 @@ void ATeamController::OnGroupingSquad()
 {
     if (ChoisenSquads.IsEmpty() || ChoisenSquads.Num() == 1) return;
 
-    
+    GEngine->AddOnScreenDebugMessage(0, 1.5f, FColor::Red, "Squad Grouping");
+
     
 }
 
