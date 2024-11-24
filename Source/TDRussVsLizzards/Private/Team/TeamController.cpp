@@ -109,7 +109,22 @@ void ATeamController::OnRightMouseClick(FHitResult Hit)
     }
     else
     {
-        CalcPositionsMoveMultipleSquads(Hit.Location);
+        if (SquadGroups.Num() != 0 && ChoisenSquads == SquadGroups[0]->GetSquads())
+        {
+            int32 Index = 0;
+            for (auto& Squad : SquadGroups[0]->GetSquads())
+            {
+                const FVector NewLocation = Hit.Location + SquadGroups[0]->GetSquadGroupRightCornerLocationsFromCenter()[Index];
+                const FVector NewForwardVector = SquadGroups[0]->GetSquadGroupRotationsFromCenter()[Index];
+                Squad->UpdateRebuildngSquad(Squad->GetCurrentSquadSizes().Width, NewLocation, NewForwardVector);
+                Index++;
+            }
+        }
+        else
+        {
+            CalcPositionsMoveMultipleSquads(Hit.Location);
+        }
+        
         for (auto& Squad : ChoisenSquads)
         {
             Squad->EndUpdateRebuildingSquad();
@@ -323,7 +338,8 @@ int32 ATeamController::CalculateMultiSquadWidth(float RebuildVectorLength, float
     return FMath::Clamp(RebuildVectorLengthInt / AverageOneColumnWidthRise, RebuidSquadClampWidth.Min,100);  
 }  
 
-void ATeamController::RebuildSquadsPositions(const TArray<TObjectPtr<ABaseSquadCreeps>>& Squads, const FVector& EndPoint, const FVector& RebuildForwardVector, FVector RebuildVector, int32 RebuildSquadsWidth, bool ChangeSquadWidth)  
+void ATeamController::RebuildSquadsPositions(const TArray<TObjectPtr<ABaseSquadCreeps>>& Squads, const FVector& EndPoint, const FVector& RebuildForwardVector,
+    FVector RebuildVector, int32 RebuildSquadsWidth, bool ChangeSquadWidth)  
 {  
     double RebuildSquadLength = 0.0f;  
     for (auto& Squad : Squads)  

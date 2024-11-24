@@ -46,7 +46,8 @@ public:
     void SetSquadIsChoisen();
     void SquadUnChoisen();
     void SquadUnChoisenBySelectBox();
-   
+    FVector GetRightCornerCreepLocation() const;
+    
     void MoveAndRotatingSquadToLocation(FVector Destination);
     void StopAllMovement();
 
@@ -106,8 +107,7 @@ private:
     
     bool bSquadIsChosen                         = false;
     bool InstancedMeshNewLocIsSet               = false;
-
-    FVector GetRightCornerCreepLocation() const;
+    
     FVector GetLeftCornerCreepLocation() const;
     FVector GetRightBackCornerCreepLocation() const;
     FVector GetLeftBackCornerCreepLocation() const;

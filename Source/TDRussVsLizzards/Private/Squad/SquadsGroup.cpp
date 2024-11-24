@@ -39,7 +39,7 @@ void USquadsGroup::CalculateSquadRotationsAndLocationsFromCenter()
 {
     for (const auto& Squad : GroupedSquads)
     {
-        SquadGroupLocationsFromCenter.Add(CenterLocationGroup - Squad->GetActorLocation());
-        SquadGroupRotationsFromCenter.Add(Squad->GetActorQuat());
+        SquadGroupRightCornerLocationsFromCenter.Add(CenterLocationGroup - Squad->GetRightCornerCreepLocation());
+        SquadGroupRotationsFromCenter.Add(Squad->GetActorForwardVector());
     }
 }
