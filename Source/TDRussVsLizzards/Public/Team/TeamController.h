@@ -9,6 +9,7 @@
 class ABaseSquadCreeps;
 class ATDCameraController;
 class ASelectionBox;
+class USquadsGroup;
 
 USTRUCT(BlueprintType)
 struct FRebuidSquadClampWidth
@@ -45,6 +46,7 @@ private:
     TObjectPtr<ATDCameraController> CameraController;
     TArray<TObjectPtr<ABaseSquadCreeps>> SquadsOnLevel;
     TArray<TObjectPtr<ABaseSquadCreeps>> ChoisenSquads;
+    TArray<TObjectPtr<USquadsGroup>> SquadGroups;
     bool bMultiplySelectSquadByClick       = false;
     bool bMultiplySelectSquadBySelectedBox = false;
 

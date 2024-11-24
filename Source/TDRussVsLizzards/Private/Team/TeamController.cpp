@@ -7,10 +7,13 @@
 #include "Components/BoxComponent.h"
 #include "Camera/SelectionBox.h"
 #include "DrawDebugHelpers.h"
+#include "Squad/SquadsGroup.h"
 
 ATeamController::ATeamController()
 {
     PrimaryActorTick.bCanEverTick = true;
+
+    
 }
 
 void ATeamController::BeginPlay()
@@ -187,9 +190,9 @@ void ATeamController::OnStopSquad()
 void ATeamController::OnGroupingSquad()
 {
     if (ChoisenSquads.IsEmpty() || ChoisenSquads.Num() == 1) return;
-
-    GEngine->AddOnScreenDebugMessage(0, 1.5f, FColor::Red, "Squad Grouping");
-
+    
+    SquadGroups.Add(NewObject<USquadsGroup>(this));
+    SquadGroups[0]->AddSquad(ChoisenSquads);
     
 }
 
@@ -325,6 +328,8 @@ void ATeamController::RebuildSquadsPositions(const TArray<TObjectPtr<ABaseSquadC
     double RebuildSquadLength = 0.0f;  
     for (auto& Squad : Squads)  
     {
+        if (!IsValid(Squad)) return;
+        
         int32 SquadWidth = ChangeSquadWidth ? RebuildSquadsWidth : Squad->GetCurrentSquadSizes().Width;
         FVector RebuildStartLocation = EndPoint + RebuildVector * RebuildSquadLength;  
         Squad->UpdateRebuildngSquad(SquadWidth, RebuildStartLocation, RebuildForwardVector);  

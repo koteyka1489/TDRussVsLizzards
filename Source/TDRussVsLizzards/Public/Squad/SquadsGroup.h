@@ -15,18 +15,18 @@ class TDRUSSVSLIZZARDS_API USquadsGroup : public UObject
 
 public:
     USquadsGroup();
-    void AddSquad(const TObjectPtr<ABaseSquadCreeps>& Squad);
+    void AddSquad(const TArray<TObjectPtr<ABaseSquadCreeps>>& ChoisenSquads);
     
 protected:
 
     
 private:
     TArray<TObjectPtr<ABaseSquadCreeps>> GroupedSquads;
-
     FVector CenterLocationGroup = FVector::ZeroVector;
-    FVector RightFrontCornerGroup = FVector::ZeroVector;
-    FVector LeftFrontCornerGroup = FVector::ZeroVector;
+    TArray<FVector> SquadGroupLocationsFromCenter;
+    TArray<FQuat> SquadGroupRotationsFromCenter; 
     
     void CalculateBaseGroupLocations();
+    void CalculateSquadRotationsAndLocationsFromCenter();
     
 };
