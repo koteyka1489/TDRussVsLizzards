@@ -18,7 +18,7 @@ public:
     void AddSquad(const TArray<TObjectPtr<ABaseSquadCreeps>>& ChoisenSquads);
     TArray<TObjectPtr<ABaseSquadCreeps>>& GetSquads() { return GroupedSquads; }
     TArray<FVector>& GetSquadGroupRightCornerLocationsFromCenter() {return SquadGroupRightCornerLocationsFromCenter;};
-    TArray<FVector>& GetSquadGroupRotationsFromCenter() {return SquadGroupRotationsFromCenter;}; 
+    TArray<FVector>& GetSquadGroupRotationsFromCenter() { return SquadGroupRotationsFromCenter; }; 
 
     
 private:

@@ -11,13 +11,8 @@ USquadsGroup::USquadsGroup()
 
 void USquadsGroup::AddSquad(const TArray<TObjectPtr<ABaseSquadCreeps>>& ChoisenSquads)
 {
-    for (int i = 0; i < ChoisenSquads.Num(); i++)
-    {
-        if (!GroupedSquads.Contains(ChoisenSquads[i]))
-        {
-            GroupedSquads.Add(ChoisenSquads[i]);
-        }
-    }
+    GroupedSquads.Empty();
+    GroupedSquads = ChoisenSquads;
 
     CalculateBaseGroupLocations();
     CalculateSquadRotationsAndLocationsFromCenter();
@@ -39,7 +34,10 @@ void USquadsGroup::CalculateSquadRotationsAndLocationsFromCenter()
 {
     for (const auto& Squad : GroupedSquads)
     {
-        SquadGroupRightCornerLocationsFromCenter.Add(CenterLocationGroup - Squad->GetRightCornerCreepLocation());
+        FVector VecToSquad = Squad->GetRightCornerCreepLocation() - CenterLocationGroup;
+        SquadGroupRightCornerLocationsFromCenter.Add(VecToSquad);
         SquadGroupRotationsFromCenter.Add(Squad->GetActorForwardVector());
+
+        DrawDebugLine(GetWorld(), CenterLocationGroup, CenterLocationGroup + VecToSquad, FColor::Red, false, 10.0f, 0u, 20.f);
     }
 }
